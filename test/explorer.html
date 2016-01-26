@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Test componente</title>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-2.2.0.js"></script>
+	
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.1/basic/jquery.qtip.js"></script>
+<script type="text/javascript" src="../js/libs/cytoscape.js"></script>
+<script type="text/javascript" src="../js/libs/dagre.js"></script>
+<script type="text/javascript" src="../js/libs/cytoscape-dagre.js"></script>
+
+<script type="text/javascript" src="../js/libs/cytoscape-qtip.js"></script>
+<script type="text/javascript" src="../js/ii.sparqlLib.js"></script>
+<script type="text/javascript" src="../js/ii.sparqlLib.graph.js"></script>
+<script type="text/javascript" src="../js/ii.cytoscape.js"></script>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.1/basic/jquery.qtip.css" >
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+<style>
+.ii-graph-legend-container {
+	background-color: #F8F9FA !important;
+}
+.legend-circle-node{
+	width: 30px;
+	height: 30px;
+	-moz-border-radius: 50px;
+	-webkit-border-radius: 50px;
+	border-radius: 50px;
+}
+
+.legend-arrow-line {
+	width: 30px;
+	height: 8px;
+}
+
+.ii-graph-legend-container{
+     background:white;
+     float:left;
+     z-index:999;
+     position:relative;
+     border:1px solid #CCC;
+}
+.ii-graph-legend{
+     width:300px;
+}
+
+.ii-graph-legend-actions-list{
+   margin-top:30px;
+
+}
+.ii-graph-legend-action i{
+   font-size:30px; 
+   padding-left:20px;
+}
+
+.container-graph-full-screen{
+   position:fixed;
+   left:0px;
+   top:130px;
+   width:100%;
+   height:100%;
+   background:#F8F9FA;
+   z-index:50;
+}
+
+.legend-graph-full-screen{
+    //position:fixed;
+    //bottom:0px;
+   margin:10px;
+}
+
+.graph-full-screen{
+     height:100%;
+}
+
+
+
+</style>
+
+</head>
+<body>
+
+
+	<script type="text/javascript">
+ var smwQueryPrefixes = window.smwQueryPrefixes = [];
+ smwQueryPrefixes.push({
+ 	pre : 'ii-app-m',
+ 	ns : 'http://www.imolinfo.it/ontologie/ea/v1/ii-application-domain-model#'
+ });
+ smwQueryPrefixes.push({
+ 	pre : 'ii-overall-m',
+ 	ns : 'http://www.imolinfo.it/ontologie/ea/v2/ii-overall-model#'
+ });
+ smwQueryPrefixes
+ 		.push({
+ 			pre : 'abi-app',
+ 			ns : 'http://www.imolinfo.it/ontologie/abi-lab/v3/abilab_tassonomia_applicativa#'
+ 		});
+ smwQueryPrefixes
+ 		.push({
+ 			pre : 'abi-inf',
+ 			ns : 'http://www.imolinfo.it/ontologie/abi-lab/v4/abilab_tassonomia_infrastrutturale#'
+ 		});
+ smwQueryPrefixes
+ 		.push({
+ 			pre : 'abi-proc',
+ 			ns : 'http://www.imolinfo.it/ontologie/abi-lab/v2/abilab_tassonomia_processi#'
+ 		});
+ smwQueryPrefixes.push({
+ 	pre : 'ent-m',
+ 	ns : 'http://www.imolinfo.it/ontologie/ea/v2/enterprise-domain-model#'
+ });
+ smwQueryPrefixes.push({
+ 	pre : 'skos',
+ 	ns : 'http://www.w3.org/2004/02/skos/core#'
+ });
+ smwQueryPrefixes.push({
+ 	pre : 'foaf',
+ 	ns : 'http://xmlns.com/foaf/0.1/'
+ });
+ smwQueryPrefixes.push({
+ 	pre : 'project-domain-model',
+ 	ns : 'http://www.imolinfo.it/ontologie/v2/project-domain-model#'
+ });
+ smwQueryPrefixes.push({
+ 	pre : 'rdf',
+ 	ns : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+ });
+ smwQueryPrefixes.push({
+ 	pre : 'rdfs',
+ 	ns : 'http://www.w3.org/2000/01/rdf-schema#'
+ });
+ smwQueryPrefixes.push({
+ 	pre : 'ii-bus-m',
+ 	ns : 'http://www.imolinfo.it/ontologie/ea/v1/ii-business-model#'
+ });
+ smwQueryPrefixes.push({
+ 	pre : 'ubi-overall-m',
+ 	ns : 'http://www.ubibanca.com/ontologies/ea/v1/ubi-overall-model#'
+ });
+ smwQueryPrefixes.push({
+ 	pre : 'ii-inf-m',
+ 	ns : 'http://www.imolinfo.it/ontologie/ea/v1/ii-infrastructure-model#'
+ });
+    
+</script>
+
+ 
+ <script type="text/javascript">
+
+ $(document).ready(function() {
+     var config={};
+     config.divId="mynetwork7"
+     config.endpoint= "https://ubiss-test.imolinfo.it/fuseki/ds/query"
+     config.rootElement="ASS - Assegni";
+     config.rootElementColor=""
+     config.linkBasePath="https://ubiss-test.imolinfo.it/eap/index.php/";
+     config.rootElementImage="https://ubiss-test.imolinfo.it/eap/index.php/Special:FilePath/Target.png"
+     //config.sparql = generateInitialQuery(config.rootElement);
+     config.nodeConfiguration=[{ category:"Informatic Resource",nodeColor:"#000000", image:"https://ubiss-test.imolinfo.it/eap/index.php/Special:FilePath/Governance_icon.png",explore:[{property:{ uri:"ubi-overall-m:containsApplication", label:"Contains application"} },{property:{uri:"ubi-overall-m:involvedInProcess",label:"Involved in Process"} },{property:{uri:"ubi-overall-m:usedByCompany",label:"Used by company"} },{property:{uri:"abi-app:haClassificazioneApplicativaABILab",label:"ABILab classification"} }]},
+{ category:"Application",nodeColor:"#00FF00", image:"https://ubiss-test.imolinfo.it/eap/index.php/Special:FilePath/Application_icon.png",explore:[{property:{uri:"ii-app-m:isComposedByComponent",label:"Is composed by component"} }]},
+{ category:"Application Component",nodeColor:"#FFF700", image:"https://ubiss-test.imolinfo.it/eap/index.php/Special:FilePath/Software_component_icon.png",explore:[{property:{uri:"ii-overall-m:runsOnHost",label:"Runs on host"} },{property:{uri:"ii-overall-m:hasOwner",label:"Owner"} },{property:{uri:"ii-overall-m:hasUnitOwner",label:"Unit owner"} },{property:{uri:"ii-app-m:hasSupplier",label:"Supplier"} }]},
+{ category:"Virtual Host",nodeColor:"#0400FF", image:"https://ubiss-test.imolinfo.it/eap/index.php/Special:FilePath/Virtual_Host_icon.png",explore:[{property:{uri:"ii-inf-m:installedSoftware",label:"Installed software"} }]},
+{ category:"Physical Host",nodeColor:"#FF0000"},{ category:"Cluster",nodeColor:"#FF00EB"},
+{ category:"Business Process",nodeColor:"#FF07FF",explore:[{property:{uri:"ii-bus-m:hasParentInProcessTree",label:"Has parent in process tree"} },{property:{uri:"ii-bus-m:hasParentInProcessTree",label:"Has parent in process tree",direction:"IN"} }]},
+{ category:"Macro Process",nodeColor:"#CC00CC",explore:[{property:{uri:"ii-bus-m:hasParentInProcessTree",label:"Has parent"} }]},
+{ category:"Business Ambit",nodeColor:"#0000CC",explore:[{property:{uri:"ii-bus-m:hasParentInProcessTree",label:"Has parent"} }]},
+{ category:"Business Macro Ambit",nodeColor:"#00CCCC",explore:[{property:{uri:"ii-bus-m:hasParentInProcessTree",label:"Has parent"} }]},
+{ category:"Business Area",nodeColor:"#AA00AA",explore:[{property:{uri:"ii-bus-m:hasParentInProcessTree",label:"Has parent"} }]},
+{ category:"Employee",nodeColor:"#00FFAA"},
+{ category:"Organizational Unit",nodeColor:"#005F36",explore:[{property:{uri:"ent-m:hasUnitHead",label:"Unit head"} }, {property:{uri:"ent-m:isSubUnitOf",label:"Subunit of"} }]},
+{ category:"Company",nodeColor:"#CC0A36",explore:[{property:{uri:"ent-m:isMemberOfCorporateGroup",label:"Member of corporate group"} }]},
+{ category:"Corporate Group",nodeColor:"#CC0AAA",explore:[{property:{uri:"ent-m:isMemberOfCorporateGroup",label:"Member of corporate group",direction:"IN"} }]},
+{ category:"Software Component",nodeColor:"#220ACC",explore:[{property:{uri:"ii-inf-m:belongsToSoftwareCategory",label:"Software category"} }]}
+]
+     config.edgeConfiguration={}
+     config.showLegend="true";
+     config.defaultNodeColor="#CCC";
+     config.defaultEdgeColor="#CCC";
+     config.minZoom=0.3
+     config.maxZoom=1.2
+     config.linkBasePath=""
+     config.layout="dagre";
+     config.layoutOptions = {}
+     config.spinnerImagePath=config.linkBasePath+"../resources/src/jquery/images/spinner-large.gif";
+     spqlib.sparql2GraphExplorer(config);
+ });
+ 
+ </script>
+ <div id="mynetwork7" style="width:100%;height:700px;" sparql-query=""></div>
+</body>
+</html>
