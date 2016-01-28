@@ -147,180 +147,14 @@
 			centerGraphToNode(divId, g[divId].config.rootElement);
 		}
 
-		/**
-		 * nasconde il div container della legenda
-		 */
-		function hideLegend(divId) {
-			$("#" + divId).hide();
-		}
-
-		/**
-		 * genera il codice html della legenda
-		 */
-		function drawLegend(config) {
-			var divId = config.divId + "-legend";
-			var table = $("<table>").attr("id", "table-" + divId);
-			var showLegend = false;
-			var nodeConfiguration = config.nodeConfiguration;
-			var edgeConfiguration = config.edgeConfiguration;
-			// aggiungo la voce per l'elemento root
-			if (config.rootElement) {
-				if (config.rootElementColor || config.rootElementImage) {
-					showLegend = true;
-					var colorDiv = $("<div>").addClass("legend-circle-node")
-							.attr("type", "rootElement").attr(
-									"style",
-									"background:" + config.rootElementColor
-											+ "; background-size:100% 100%;");
-					var col1 = $("<td>").append(colorDiv);
-					var col2 = $("<td>").append(
-							"Current item (" + config.rootElement + ")");
-					var row = $("<tr>").append(col1).append(col2);
-					table.append(row);
-				}
-			}
-			for (var i = 0; i < nodeConfiguration.length; i++) {
-				var colorDiv = $("<div>").addClass("legend-circle-node").attr(
-						"category-name", nodeConfiguration[i].category).attr(
-						"style",
-						"background:" + nodeConfiguration[i].nodeColor
-								+ "; background-size:100% 100%;");
-				var col1 = $("<td>").append(colorDiv);
-				var col2 = $("<td>").append(nodeConfiguration[i].category);
-				var row = $("<tr>").append(col1).append(col2);
-				table.append(row);
-				showLegend = true;
-			}
-			for (var i = 0; i < edgeConfiguration.length; i++) {
-				var colorDiv = $("<div>").addClass("legend-arrow-line").attr(
-						"style",
-						"background:" + edgeConfiguration[i].edgeColor + "");
-				var col1 = $("<td>").append(colorDiv);
-				var col2 = $("<td>").append(edgeConfiguration[i].relation);
-				var row = $("<tr>").append(col1).append(col2);
-				table.append(row);
-				showLegend = true;
-			}
-			if (showLegend) {
-				$("#" + divId).append(table);
-			} else {
-				hideLegend(divId);
-			}
-		}
-
-
-
-		function renderExploreSection(props, nodeLabel, divId) {
-			var incomingHeader = "<div class='qtip-section'><b>Incoming connections</b></div>";
-			var outgoingHeader = "<div class='qtip-section'><b>Outgoing connections</b></div>";
-			var incomingLinks = "";
-			var outgoingLinks = "";
-			var output = "";
-			for (var i = 0; i < props.length; i++) {
-				if (props[i].property.direction == "IN") {
-					incomingLinks += renderExpandNodeLink(props[i], nodeLabel,
-							divId);
-				} else {
-					outgoingLinks += renderExpandNodeLink(props[i], nodeLabel,
-							divId);
-				}
-			}
-			if (incomingLinks != "") {
-				output += incomingHeader + incomingLinks;
-			}
-			if (outgoingLinks != "") {
-				output += outgoingHeader + outgoingLinks;
-			}
-			return output;
-		}
-
-		function renderExpandNodeLink(prop, nodeLabel, divId) {
-			var ICON_PLUS = "<span class='glyphicon glyphicon-plus-sign' style='margin-right:5px;'></span>";
-			var ICON_MINUS = "<span class='glyphicon glyphicon-minus-sign' style='margin-right:5px;'></span>";
-			var funcName = "";
-
-			var linkLabel = prop.property.label;
-			var icon = "";
-			if (isNodeExpandedForRelation(divId, nodeLabel, prop.property.uri,
-					prop.property.direction)) {
-				icon = ICON_MINUS;
-				funcName = "spqlib.graph.collapseNode";
-			} else {
-				icon = ICON_PLUS;
-				funcName = "spqlib.graph.expandNode";
-			}
-			linkLabel = icon + linkLabel;
-			linkLabel += "</a></br>";
-			var aLink = "<a href='#' onclick='" + funcName + "(\"" + divId
-					+ "\",\"" + nodeLabel + "\",\"" + prop.property.uri
-					+ "\",\"" + prop.property.direction + "\")' >";
-			return aLink + linkLabel;
-		}
-
-		function renderSingleCategoryLink(type) {
-			return "<a href='./EAP:PageList?category=" + type
-					+ "' target='_blank'>" + type + "</a>";
-		}
-
-		function renderCategoryLink(types) {
-			var out = "";
-			if (types instanceof Array) {
-				for (var i = 0; i < types.length; i++) {
-					out += renderSingleCategoryLink(types[i]);
-					if (i < types.length - 1) {
-						out += ",";
-					}
-				}
-			} else {
-				out = renderSingleCategoryLink(types);
-			}
-			return "Category: " + out + "</br>";
-		}
 
 		function enableTooltipOnNodes(divId) {
 
 			// just use the regular qtip api but on cy elements
-						 g[divId]
-					.elements()
-					.nodes()
-					.qtip(
+			g[divId].elements().nodes().qtip(
 							{
 								content : function() {
-									var conf = this.cy().config;
-									var pageLink = $("<a>").attr(
-											"href",
-											conf.linkBasePath
-													+ this.data("label")).attr(
-											"target", "_blank");
-									var pageCategory = $("<span>").addClass(
-											"cytoscape-qtip-category");
-									var target = "_self";
-									if (conf.tipLinkTarget) {
-										target = conf.tipLinkTarget;
-									}
-									var linkHref = conf.linkBasePath
-											+ ""
-											+ spqlib.util.htmlEncode(this.data("id"))
-													.replace(/'/g, "&apos;");
-									var tip = "<a href='" + linkHref
-											+ "' target='" + target + "'>"
-											+ this.data("id") + "</a></br>";
-									tip += renderCategoryLink(this.data("type"));
-									if (conf.globalConfiguration) {
-										if (conf.globalConfiguration[this
-												.data("type")]) {
-											if (conf.globalConfiguration[this
-													.data("type")].explore) {
-												extra = conf.globalConfiguration[this
-														.data("type")].explore;
-												tip += renderExploreSection(
-														extra, this
-																.data('id'),
-														this.cy().config.divId);
-											}
-										}
-									}
-									return tip;
+									 return spqlib.graph.createNodeTooltip(this);
 								},
 								position : {
 									my : 'top center',
@@ -334,17 +168,12 @@
 									}
 								}
 							});
-			 
-
 		}
 		function enableTooltipOnEdges(divId) {
-
 			// just use the regular qtip api but on cy elements
-			
-
-						  g[divId].elements().edges().qtip({
+			  g[divId].elements().edges().qtip({
 				content : function() {
-					return "" + this.data("property") + ""
+					return spqlib.graph.createEdgeTooltip(this);
 				},
 				position : {
 					my : 'top center',
@@ -358,8 +187,6 @@
 					}
 				}
 			});
-			 
-
 		}
 
 		/**
@@ -476,7 +303,7 @@
 					userZoomingEnabled : true,
 				});
 				if (config.showLegend == "true" || config.rootElement) {
-					drawLegend(config);
+					spqlib.graph.drawLegend(config);
 				} else {
 					hideLegend(config.divId + "-legend");
 				}
@@ -527,12 +354,12 @@
 																.attr("href");
 														var t = $(tabDivId)
 																.find(
-																		".cytoscape-graph-container div.cytoscape-graph")
+																		".ii-graph-container div.ii-graph")
 																.attr("id");
 														if (t) {
 															g[t].resize();
 															$(
-																	".cytoscape-graph-container")
+																	".ii-graph-container")
 																	.show();
 															centerGraphToNode(
 																	t,

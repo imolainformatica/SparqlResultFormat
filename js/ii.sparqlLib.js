@@ -107,7 +107,7 @@ var spqlib = ( function ( $, undefined ) {
 	        	}
         	}
         	var jqxhr = $.post(endpoint, {
-        		query : sparql
+        		query : sparql,format:mime
         	}, function() {
         	}).done(function(json) {
         		//togliere loading

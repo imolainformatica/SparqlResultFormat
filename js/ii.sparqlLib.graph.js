@@ -11,6 +11,7 @@ spqlib.graph = (function () {
 		spqlib.graph.graphImpl().exportAsImage();
 	}
 	
+	
 	my.render = function (json, config) {
 		var head = json.head.vars;
 		var data = json.results.bindings;
@@ -38,29 +39,39 @@ spqlib.graph = (function () {
 			var parent = data[i]["parent_name"].value;
 			var child = data[i]["child_name"].value;
 			if (!distinctNodes[parent]) {
-				var node = new Object();
 				var type = data[i]["parent_type"].value;
+				if (data[i]["parent_uri"]){
+					var uri = data[i]["parent_uri"].value;
+				}
+				var node = new Object();
+				node.uri = uri;
 				node.type = type;
-				distinctNodes[parent] = node.id = parent;
-				nodeIds++;
+				node.id = parent;
 				node.label = spqlib.util.cutLongLabel(parent,config.maxLabelLength,config.maxWordLength);
 				node.color = mapTypeToColor(type, colorConf,
 						config.defaultNodeColor);
+				distinctNodes[parent] = parent;
+				nodeIds++;
 				nodes.push({
 					data : node,
 					classes : "background"
 				});
 			}
 			if (!distinctNodes[child]) {
+				if (data[i]["child_uri"]){ 
+					var uri = data[i]["child_uri"].value;
+				}
+				var type = data[i]["child_type"].value;
 				var node = new Object();
-				type = data[i]["child_type"].value;
+				node.id = child;
 				node.type = type;
-				distinctNodes[child] = node.id = child;
-				nodeIds++;
 				node.label = spqlib.util.cutLongLabel(child,config.maxLabelLength,config.maxWordLength);
 				node.color = mapTypeToColor(type, colorConf,
 						config.defaultNodeColor);
 				node.image = null;
+				
+				distinctNodes[child] = child;
+				nodeIds++;
 				nodes.push({
 					data : node,
 					classes : "background"
@@ -344,6 +355,178 @@ spqlib.graph = (function () {
 			return true;
 		}
 	}
+	
+	my.createEdgeTooltip = function(obj){
+		return "" + obj.data("property") + ""
+	}
+	
+	my.createNodeTooltip = function(obj){
+
+		var conf = obj.cy().config;
+		var pageLink = $("<a>").attr(
+				"href",
+				conf.linkBasePath
+						+ obj.data("label")).attr(
+				"target", "_blank");
+		var pageCategory = $("<span>").addClass(
+				"cytoscape-qtip-category");
+		var target = "_self";
+		if (conf.tipLinkTarget) {
+			target = conf.tipLinkTarget;
+		}
+		var linkHref = conf.linkBasePath
+				+ ""
+				+ spqlib.util.htmlEncode(obj.data("id"))
+						.replace(/'/g, "&apos;");
+		var tip = "<a href='" + linkHref
+				+ "' target='" + target + "'>"
+				+ obj.data("id") + "</a></br>";
+		tip += renderCategoryLink(obj.data("type"));
+		if (conf.globalConfiguration) {
+			if (conf.globalConfiguration[obj
+					.data("type")]) {
+				if (conf.globalConfiguration[obj
+						.data("type")].explore) {
+					extra = conf.globalConfiguration[obj
+							.data("type")].explore;
+					tip += renderExploreSection(
+							extra, obj.data('id'),
+									obj.cy().config.divId);
+				}
+			}
+		}
+		return tip;
+		
+	}
+	function renderExploreSection(props, nodeLabel, divId) {
+		var incomingHeader = "<div class='qtip-section'><b>Incoming connections</b></div>";
+		var outgoingHeader = "<div class='qtip-section'><b>Outgoing connections</b></div>";
+		var incomingLinks = "";
+		var outgoingLinks = "";
+		var output = "";
+		for (var i = 0; i < props.length; i++) {
+			if (props[i].property.direction == "IN") {
+				incomingLinks += renderExpandNodeLink(props[i], nodeLabel,
+						divId);
+			} else {
+				outgoingLinks += renderExpandNodeLink(props[i], nodeLabel,
+						divId);
+			}
+		}
+		if (incomingLinks != "") {
+			output += incomingHeader + incomingLinks;
+		}
+		if (outgoingLinks != "") {
+			output += outgoingHeader + outgoingLinks;
+		}
+		return output;
+	}
+
+	function renderExpandNodeLink(prop, nodeLabel, divId) {
+		var ICON_PLUS = "<span class='glyphicon glyphicon-plus-sign' style='margin-right:5px;'></span>";
+		var ICON_MINUS = "<span class='glyphicon glyphicon-minus-sign' style='margin-right:5px;'></span>";
+		var funcName = "";
+
+		var linkLabel = prop.property.label;
+		var icon = "";
+		if (isNodeExpandedForRelation(divId, nodeLabel, prop.property.uri,
+				prop.property.direction)) {
+			icon = ICON_MINUS;
+			funcName = "spqlib.graph.collapseNode";
+		} else {
+			icon = ICON_PLUS;
+			funcName = "spqlib.graph.expandNode";
+		}
+		linkLabel = icon + linkLabel;
+		linkLabel += "</a></br>";
+		var aLink = "<a href='#' onclick='" + funcName + "(\"" + divId
+				+ "\",\"" + nodeLabel + "\",\"" + prop.property.uri
+				+ "\",\"" + prop.property.direction + "\")' >";
+		return aLink + linkLabel;
+	}
+
+	function renderSingleCategoryLink(type) {
+		return "<a href='./EAP:PageList?category=" + type
+				+ "' target='_blank'>" + type + "</a>";
+	}
+
+	function renderCategoryLink(types) {
+		var out = "";
+		if (types instanceof Array) {
+			for (var i = 0; i < types.length; i++) {
+				out += renderSingleCategoryLink(types[i]);
+				if (i < types.length - 1) {
+					out += ",";
+				}
+			}
+		} else {
+			out = renderSingleCategoryLink(types);
+		}
+		return "Category: " + out + "</br>";
+	}
+	
+	/**
+	 * nasconde il div container della legenda
+	 */
+	function hideLegend(divId) {
+		$("#" + divId).hide();
+	}
+
+	/**
+	 * genera il codice html della legenda
+	 */
+	my.drawLegend = function (config) {
+		var divId = config.divId + "-legend";
+		var table = $("<table>").attr("id", "table-" + divId);
+		var showLegend = false;
+		var nodeConfiguration = config.nodeConfiguration;
+		var edgeConfiguration = config.edgeConfiguration;
+		// aggiungo la voce per l'elemento root
+		if (config.rootElement) {
+			if (config.rootElementColor || config.rootElementImage) {
+				showLegend = true;
+				var colorDiv = $("<div>").addClass("legend-circle-node")
+						.attr("type", "rootElement").attr(
+								"style",
+								"background:" + config.rootElementColor
+										+ "; background-size:100% 100%;");
+				var col1 = $("<td>").append(colorDiv);
+				var col2 = $("<td>").append(
+						"Current item (" + config.rootElement + ")");
+				var row = $("<tr>").append(col1).append(col2);
+				table.append(row);
+			}
+		}
+		for (var i = 0; i < nodeConfiguration.length; i++) {
+			var colorDiv = $("<div>").addClass("legend-circle-node").attr(
+					"category-name", nodeConfiguration[i].category).attr(
+					"style",
+					"background:" + nodeConfiguration[i].nodeColor
+							+ "; background-size:100% 100%;");
+			var col1 = $("<td>").append(colorDiv);
+			var col2 = $("<td>").append(nodeConfiguration[i].category);
+			var row = $("<tr>").append(col1).append(col2);
+			table.append(row);
+			showLegend = true;
+		}
+		for (var i = 0; i < edgeConfiguration.length; i++) {
+			var colorDiv = $("<div>").addClass("legend-arrow-line").attr(
+					"style",
+					"background:" + edgeConfiguration[i].edgeColor + "");
+			var col1 = $("<td>").append(colorDiv);
+			var col2 = $("<td>").append(edgeConfiguration[i].relation);
+			var row = $("<tr>").append(col1).append(col2);
+			table.append(row);
+			showLegend = true;
+		}
+		if (showLegend) {
+			$("#" + divId).append(table);
+		} else {
+			hideLegend(divId);
+		}
+	}
+	
+	
 	
 
 	return my;
