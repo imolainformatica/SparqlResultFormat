@@ -27,12 +27,12 @@ spqlib.donutchart = (function () {
 		var labels = [];
 		var series = [];
 		for (var i = 0; i < data.length; i++) {
-			labels.push(getSparqlFieldValue(data[i][field_label]));
+			labels.push(spqlib.util.getSparqlFieldValue(data[i][field_label]));
 			for (var j=0;j<numSeries;j++){
 				if (!series[j]){
 					series[j] = [data.length];
 				}
-				series[j][i]=getSparqlFieldValueToNumber(data[i][head[j+1]]);
+				series[j][i]=spqlib.util.getSparqlFieldValueToNumber(data[i][head[j+1]]);
 			}
 		}
 
@@ -41,7 +41,7 @@ spqlib.donutchart = (function () {
 	}
 
 	
-	function getSparqlFieldValue(field){
+	/*function getSparqlFieldValue(field){
 		if (field){
 			return field.value;
 		} else {
@@ -55,7 +55,7 @@ spqlib.donutchart = (function () {
 		} else {
 			return "";
 		}
-	}
+	}*/
 	
 	
 

@@ -115,6 +115,12 @@ $wgResourceModules['ext.SparqlResultFormat.donutchart'] = array(
 		'js/libs/jqplot/jqplot.donutRenderer.js'),
 );
 
+$wgResourceModules['ext.SparqlResultFormat.csv'] = array(
+	'localBasePath' => $dir,
+	'remoteExtPath' => 'SparqlResultFormat',
+	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js','js/ii.sparql.format.csv.js'),
+);
+
 
 
 $wgResourceModules['ext.SparqlResultFormat.formats'] = array(

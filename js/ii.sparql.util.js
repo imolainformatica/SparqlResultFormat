@@ -92,8 +92,10 @@ spqlib.util = (function () {
 		 * richiamata la funzione di callback passata come parametro
 		 */
         my.doQuery = function query(endpoint, sparql, successCallback, configuration,preQueryCallback,failCallback) {
-        	
         	var mime = "application/sparql-results+json";
+			/*if (configuration.format && configuration.format=="csv"){
+				mime = "text/csv";
+			} */
         	//mettere loading
 			if (preQueryCallback && typeof preQueryCallback=="function"){
 				preQueryCallback(configuration);
@@ -103,7 +105,8 @@ spqlib.util = (function () {
 					url:endpoint,
 					type:'POST',
 					beforeSend: function(xhr) {
-						xhr.setRequestHeader('Authorization', 'Basic ' + basicAuthBase64String)
+						xhr.setRequestHeader('Authorization', 'Basic ' + basicAuthBase64String);
+						xhr.setRequestHeader("Accept", mime);
 					},
 					data:{query:sparql}
         	}).done(function(json) {
@@ -118,6 +121,23 @@ spqlib.util = (function () {
         	jqxhr.always(function() {
         	});
         };
+		
+	
+	my.getSparqlFieldValue = function(field){
+		if (field){
+			return field.value;
+		} else {
+			return "";
+		}
+	}
+	
+	my.getSparqlFieldValueToNumber = function(field){
+		if (field){
+			return Number(field.value);
+		} else {
+			return "";
+		}
+	}
 
 	
 

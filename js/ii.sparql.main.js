@@ -48,6 +48,13 @@ var spqlib = ( function ( $, undefined ) {
 		}
 		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.donutchart.render, config);
 	}
+	
+	function sparql2CSV(config){
+		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
+			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
+		}
+		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.csv.render, config);
+	}
 
 	
 	function createColorConfiguration(nodeConfiguration, edgeConfiguration) {
@@ -78,13 +85,13 @@ var spqlib = ( function ( $, undefined ) {
 
 		return {
 		VERSION : VERSION,
-		/*util : S.util,*/
 		sparql2Table : sparql2Table,
 		sparql2Graph : sparql2Graph,
 		sparql2GraphExplorer : sparql2GraphExplorer,
 		sparql2BarChart : sparql2BarChart,
 		sparql2PieChart : sparql2PieChart,
-		sparql2DonutChart : sparql2DonutChart
+		sparql2DonutChart : sparql2DonutChart,
+		sparql2CSV : sparql2CSV
 		//...other kind of output format here
 	};
 	
