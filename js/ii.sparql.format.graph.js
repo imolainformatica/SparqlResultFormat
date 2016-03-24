@@ -59,8 +59,76 @@ spqlib.graph = (function () {
 		
 	}
 	
+	my.preQuery = function(configuration){
+		if (!configuration.divStyle){
+        	    configuration.divStyle="";
+        }
+		//if (!loading){
+			$("#"+configuration.divId+"-container").find(".ii-graph-legend-actions-list").hide();
+			$("#"+configuration.divId+"-legend-container").attr("style",configuration.divStyle+" display:block; width:100%; border:none !important;");
+			$("#"+configuration.divId+"-legend").attr("style",configuration.divStyle+" width:100% !important; text-align: center;");
+			
+			if (configuration.spinnerImagePath){
+				$("#"+configuration.divId+"-legend").html("<img src='"+configuration.spinnerImagePath+"' style='vertical-align:middle;'>");
+			} else {
+				$("#"+configuration.divId+"-legend").html("Loading...");
+			}
+		//}
+	}
+	
+	my.failQuery = function(configuration,jqXHR,textStatus){
+		$("#"+configuration.divId+"-legend").html("");
+		$("#"+configuration.divId+"-legend").html(printErrorBox(textStatus));
+		throw new Error("Error invoking sparql endpoint "+textStatus+" "+JSON.stringify(jqXHR));
+	}
+	
+	function printErrorBox(message) {
+		var html = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span><span class='sr-only'>Error:</span>"
+				+ message + "</div>";
+		return html;
+	}
+	
+	my.initHtml = function(config){
+		var idContainer = config.divId+"-container";
+		var idLegendContainer = config.divId+"-legend-container";
+		var idLegendHeader = config.divId+"-legend-header";
+		var idLegend = config.divId+"-legend";
+		var idLegendActionList = config.divId+"-legend-actions-list";
+		var actionFullScreen = "<a href='#' onclick=\"javascript:spqlib.graph.toggleFullScreen('"+config.divId+"');\"><i class='glyphicon glyphicon-fullscreen'></i><spac class='fullscreen-label' style='padding-left:10px;'>Go fullscreen</span></a>"
+		$( "#"+config.divId ).wrap( "<div id='"+idContainer+"' class='ii-graph-container'></div>" );
+		$( "#"+idContainer).prepend("<div id='"+idLegendContainer+"' class='ii-graph-legend-container'></div>");
+		$( "#"+idLegendContainer).append("<div id='"+idLegendHeader+"' class='ii-graph-legend-header'>"+createLegendHeader(config)+"</div> ");
+		$( "#"+idLegendContainer).append("<div id='"+idLegend+"' class='ii-graph-legend'></div> ");
+		$( "#"+idLegendContainer).append("<div id='"+idLegendActionList+"' class='ii-graph-legend-actions-list'></div> ");
+		$( "#"+idLegendActionList).append("<div class='ii-graph-legend-action'>"+actionFullScreen+"</div>");
+	}
+	
+		
+	function createLegendHeader(config){
+		var html = "";
+		if (config.legendConfiguration){
+			var conf = config.legendConfiguration;
+			if (conf.expandable=='true'){
+				html +="<a href='#' onclick='javascript:spqlib.graph.toggleLegendExpansion('"+config.divId+"')'>Legend</a>"
+			} else {
+				
+			}
+			if (conf.expanded="true"){
+				
+			} else {
+				
+			}
+		}
+		return html;
+	}
+	
 	
 	my.render = function (json, config) {
+		
+		$("#"+config.divId+"-legend").html("");
+		$("#"+config.divId+"-legend").attr("style","");
+		$("#"+config.divId+"-container").find(".ii-graph-legend-actions-list").show();
+		$("#"+config.divId+"-legend-container").attr("style","");
 		var head = json.head.vars;
 		var data = json.results.bindings;
 		var edges = [];
