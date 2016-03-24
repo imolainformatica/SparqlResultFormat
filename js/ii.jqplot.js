@@ -154,19 +154,6 @@
 		
 		function getPieChartOptions(config){
 			var options = spqlib.util.cloneObject(defaultPieChartOptions);
-			if (config.seriesConfiguration){
-				var sc = config.seriesConfiguration;
-				for (var i=0;i<sc.length;i++){
-					var label = sc[i].label;
-					var color = sc[i].color;
-					if (!options.series){
-						options.series = [];
-					}
-					options.series[i] = {};
-					options.series[i].label = label;
-					options.series[i].color = color;
-				}				
-			}	
 			if (config.chartTitle){
 				options.title.text=config.chartTitle;
 			}
@@ -175,19 +162,6 @@
 		
 		function getDonutChartOptions(config){
 			var options = spqlib.util.cloneObject(defaultDonutChartOptions);
-			if (config.seriesConfiguration){
-				var sc = config.seriesConfiguration;
-				for (var i=0;i<sc.length;i++){
-					var label = sc[i].label;
-					var color = sc[i].color;
-					if (!options.series){
-						options.series = [];
-					}
-					options.series[i] = {};
-					options.series[i].label = label;
-					options.series[i].color = color;
-				}				
-			}	
 			if (config.chartTitle){
 				options.title.text=config.chartTitle;
 			}
