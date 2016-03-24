@@ -52,6 +52,26 @@
 				  highlighter: { show: true,tooltipLocation:'n',useAxesFormatters: false,formatString:'%s, %P'  },
 				  legend: { show:true, location: 'e' }
 				}
+				
+			var defaultDonutChartOptions = {
+				title: {text:'',show:true},
+				seriesDefaults: {
+				  // make this a donut chart.
+				  renderer:$.jqplot.DonutRenderer,
+				  rendererOptions:{
+					// Donut's can be cut into slices like pies.
+					sliceMargin: 3,
+					// Pies and donuts can start at any arbitrary angle.
+					startAngle: -90,
+					showDataLabels: true,
+					// By default, data labels show the percentage of the donut/pie.
+					// You can show the data 'value' or data 'label' instead.
+					dataLabels: 'value',
+				  }
+				},
+				highlighter: { show: true,tooltipLocation:'n',useAxesFormatters: false,formatString:'%s, %P'  },
+				legend: { show:true, location: 'e' }
+			  }
 	
 	     /**
 		 *  label - array di stringhe
@@ -71,17 +91,18 @@
 		 *  series - array di array
 		 **/
 	    function drawPieChart(label,series,config){
-			/*var s = createSeries(label,series);
-			 		
-		    var options= getPieChartOptions(config);	
-            options.seriesDefaults.renderer=$.jqplot.PieRenderer;			
-			var plot1 = $.jqplot(config.divId, s,options );	*/
-			
-			 /*var data = [
-				['Heavy Industry', 12],['Retail', 9], ['Light Industry', 14], 
-				['Out of home', 16],['Commuting', 7], ['Orientation', 9]
-			  ];*/
 			  var options= getPieChartOptions(config);
+			  var data = createSeries(label,series);
+			  var plot1 = jQuery.jqplot (config.divId, [data], options);
+		}
+		
+		
+		/**
+		 *  label - array di stringhe
+		 *  series - array di array
+		 **/
+	    function drawDonutChart(label,series,config){
+			  var options= getDonutChartOptions(config);
 			  var data = createSeries(label,series);
 			  var plot1 = jQuery.jqplot (config.divId, [data], options);
 		}
@@ -94,7 +115,6 @@
 					var value = series[0][i];
 					s.push([lab,value]);
 				}
-				//s=series[0];
 			} else {
 				for (var i=0;i<series.length;i++){
 					for (var j=0;j<series[i].length;j++){
@@ -151,9 +171,31 @@
 			return options;
 		}
 		
+		function getDonutChartOptions(config){
+			var options = spqlib.util.cloneObject(defaultDonutChartOptions);
+			if (config.seriesConfiguration){
+				var sc = config.seriesConfiguration;
+				for (var i=0;i<sc.length;i++){
+					var label = sc[i].label;
+					var color = sc[i].color;
+					if (!options.series){
+						options.series = [];
+					}
+					options.series[i] = {};
+					options.series[i].label = label;
+					options.series[i].color = color;
+				}				
+			}	
+			if (config.chartTitle){
+				options.title.text=config.chartTitle;
+			}
+			return options;
+		}
+		
 		return { 
 		     drawBarChart:drawBarChart,
-			 drawPieChart:drawPieChart
+			 drawPieChart:drawPieChart,
+			 drawDonutChart:drawDonutChart
 		}
 
 	});

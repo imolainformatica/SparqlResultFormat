@@ -95,6 +95,26 @@ $wgResourceModules['ext.SparqlResultFormat.piechart'] = array(
 		'js/libs/jqplot/jqplot.pieRenderer.js'),
 );
 
+$wgResourceModules['ext.SparqlResultFormat.donutchart'] = array(
+	'localBasePath' => $dir,
+	'remoteExtPath' => 'SparqlResultFormat',
+	'styles' => array(
+        'css/jquery.jqplot.min.css' => array('media' => 'screen')),		
+	'scripts' => array('js/ii.sparql.main.js',
+	    'js/ii.sparql.format.donutchart.js',
+		'js/ii.jqplot.js',
+		'js/libs/jqplot/jquery.jqplot.min.js',
+		'js/libs/jqplot/jqplot.barRenderer.js',
+		'js/libs/jqplot/jqplot.highlighter.js',
+		'js/libs/jqplot/jqplot.categoryAxisRenderer.js',
+		'js/libs/jqplot/jqplot.canvasTextRenderer.js',
+		'js/libs/jqplot/jqplot.canvasAxisTickRenderer.js',
+		'js/libs/jqplot/jqplot.canvasAxisLabelRenderer.js',
+		'js/libs/jqplot/jqplot.donutRenderer.js'),
+);
+
+
+
 $wgResourceModules['ext.SparqlResultFormat.formats'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
@@ -104,7 +124,7 @@ $wgResourceModules['ext.SparqlResultFormat.formats'] = array(
 $wgResourceModules['ext.SparqlResultFormat.formats.table'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
-	'scripts' => array('js/ii.sparql.format.table.js','js/dagre.min.js','js/cytoscape-dagre.js','js/cytoscape-qtip.js'/*,'js/dagre.core.js'*/)
+	'scripts' => array('js/ii.sparql.format.table.js')
 );
 
 $wgResourceModules['ext.SparqlResultFormat.formats.graph'] = array(

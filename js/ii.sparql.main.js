@@ -190,6 +190,13 @@ var spqlib = ( function ( $, undefined ) {
 		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.piechart.render, config);
 	}
 	
+	function sparql2DonutChart(config){
+		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
+			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
+		}
+		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.donutchart.render, config);
+	}
+	
 	
 	
 	function initHtml(config){
@@ -272,7 +279,8 @@ var spqlib = ( function ( $, undefined ) {
 		sparql2Graph : sparql2Graph,
 		sparql2GraphExplorer : sparql2GraphExplorer,
 		sparql2BarChart : sparql2BarChart,
-		sparql2PieChart : sparql2PieChart
+		sparql2PieChart : sparql2PieChart,
+		sparql2DonutChart : sparql2DonutChart
 		//...other kind of output format here
 	};
 	
