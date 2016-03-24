@@ -106,7 +106,7 @@
 		/**
 		 * attiva/disattiva la modalità schermo intero per un determinato grafo
 		 */
-		window.toggleFullScreen = function(divId) {
+		/*window.toggleFullScreen = function(divId) {
 			if (g[divId].isfullScreen) {
 				g[divId].isFullScreen = false;
 			}
@@ -145,7 +145,7 @@
 			}
 			g[divId].resize();
 			centerGraphToNode(divId, g[divId].config.rootElement);
-		}
+		}*/
 
 
 		function enableTooltipOnNodes(divId) {
@@ -212,12 +212,25 @@
 
 		
 		return { 
-			    graphs: function (graphId){
+			    getGraph: function (graphId){
 			    	if (g[graphId]){
 			    		return g[graphId];
 			    	} else {
 			    		return null;
 			    	}
+			    },
+			    isFullScreen:function(graphId){
+			    	if (!g[graphId].isFullScreen){
+			    		return false;
+			    	} else {
+			    		return true;
+			    	}
+			    },
+			    setFullScreen:function(graphId,value){
+			    	g[graphId].isFullScreen = value;			    	
+			    },			    
+			    resize: function(graphId){
+			    	g[graphId].resize();
 			    },
 			    getElementsFromSourceAndTarget:function(graphId,source,target){
 			    	return g[graphId].elements("edge[source='" + source
@@ -235,9 +248,12 @@
 			    enableTooltipOnEdges:enableTooltipOnEdges,
 			    assignBackgrounImageToNodesByCategory:assignBackgrounImageToNodesByCategory,
 			    centerGraphToNode:centerGraphToNode,
-			    setNodeExpandedForRelation:setNodeExpandedForRelation,
-			    collapseNode:collapseNode,
 			    exportAsImage:exportAsImage,
+			    getGraphElementData:getGraphElementData,
+			    setGraphElementData:setGraphElementData,
+			    newDefaultStyleObject:newDefaultStyleObject,
+			    collapseIncomers:collapseIncomers,
+			    collapseOutgoers:collapseOutgoers,
 			    getSelectedLayout: function getSelectedLayout(config) {
 					if (!layouts[config.layout]) {
 						alert('layout ' + config.layout + ' not supported');
@@ -251,246 +267,121 @@
 			 /**
 			 * funzione che si occupa di inizializzare il grafo cytoscape
 			 */
-					drawGraph : function(nodes, edges, config) {
+				drawGraph: function (config,nodes,edges,style,layout){
+					var divId = config.divId;
+					g[divId] = cytoscape({
+						container : document.getElementById(config.divId), // container
+						// to render
+						// in
+						elements : {
+							nodes : nodes,
+							edges : edges
+						},
+						style : style,
 
-				var divId = config.divId;
-				var layout = this.getSelectedLayout(config);
-				// add extra property to layout
-				for ( var key in config.layoutOptions) {
-					var value = config.layoutOptions[key];
-					layout[key] = value;
-				}
-				var style = newDefaultStyleObject();
-				if (config.nodeStyle) {
-					for ( var key in config.nodeStyle) {
-						var value = config.nodeStyle[key];
-						style[0].style[key] = value;
-					}
-				}
-				if (config.edgeStyle) {
-					for ( var key in config.edgeStyle) {
-						var value = config.edgeStyle[key];
-						style[1].style[key] = value;
-					}
-				}
+						layout : layout,
+						motionBlur : true,
+						selectionType : 'single',
+						boxSelectionEnabled : false,
+						/* autoungrabify: true, */
+						zoom : 0.9,
+						minZoom : config.minZoom,
+						maxZoom : config.maxZoom,
+						wheelSensitivity : 0.1,
+						pan : {
+							x : 0,
+							y : 0
+						},
 
-				g[divId] = cytoscape({
-					container : document.getElementById(config.divId), // container
-					// to render
-					// in
-					elements : {
-						nodes : nodes,
-						edges : edges
-					},
-					style : style,
+						// interaction options:
+						zoomingEnabled : true,
+						userZoomingEnabled : true,
+					});
+					
+					g[divId].config = config;
+					g[divId].on('select', 'node', function(e) {
+					});
 
-					layout : layout,
-					motionBlur : true,
-					selectionType : 'single',
-					boxSelectionEnabled : false,
-					/* autoungrabify: true, */
-					zoom : 0.9,
-					minZoom : config.minZoom,
-					maxZoom : config.maxZoom,
-					wheelSensitivity : 0.1,
-					pan : {
-						x : 0,
-						y : 0
-					},
+					g[divId]
+							.on(
+									'ready',
+									function(e) {
+										var conf = e.cy.config;
+										var divIdentifier = conf.divId;
 
-					// interaction options:
-					zoomingEnabled : true,
-					userZoomingEnabled : true,
-				});
-				if (config.showLegend == "true" || config.rootElement) {
-					spqlib.graph.drawLegend(config);
-				} else {
-					hideLegend(config.divId + "-legend");
-				}
-
-				enableTooltipOnNodes(divId);
-				enableTooltipOnEdges(divId);
-
-				g[divId].config = config;
-				g[divId].on('select', 'node', function(e) {
-				});
-
-				g[divId]
-						.on(
-								'ready',
-								function(e) {
-									var conf = e.cy.config;
-									var divIdentifier = conf.divId;
-
-									assignBgImageToNodes(conf);
-									if (conf.rootElement) {
-										if (conf.rootElementColor) {
-											var el = e.cy
-													.getElementById(conf.rootElement);
-											el.style('background-color',
-													conf.rootElementColor);
-										}
-										if (conf.rootElementImage) {
-											var el = e.cy
-													.getElementById(conf.rootElement);
-											if (el.length > 0) {
+										spqlib.graph.assignBgImageToNodes(conf);
+										if (conf.rootElement) {
+											if (conf.rootElementColor) {
+												var el = e.cy
+														.getElementById(conf.rootElement);
 												el.style('background-color',
-														"white");
-												el.style('background-image',
-														conf.rootElementImage);
+														conf.rootElementColor);
+											}
+											if (conf.rootElementImage) {
+												var el = e.cy
+														.getElementById(conf.rootElement);
+												if (el.length > 0) {
+													el.style('background-color',
+															"white");
+													el.style('background-image',
+															conf.rootElementImage);
+												}
+
 											}
 
 										}
 
-									}
+										centerGraphToNode(divIdentifier,
+												conf.rootElement);
+										$("#headertabs ul li a")
+												.on(
+														'click',
+														function(event, ui) {
+															var tabDivId = $(this)
+																	.attr("href");
+															var t = $(tabDivId)
+																	.find(
+																			".ii-graph-container div.ii-graph")
+																	.attr("id");
+															if (t) {
+																g[t].resize();
+																$(
+																		".ii-graph-container")
+																		.show();
+																centerGraphToNode(
+																		t,
+																		g[t].config.rootElement);
+															}
+														});
 
-									centerGraphToNode(divIdentifier,
-											conf.rootElement);
-									$("#headertabs ul li a")
-											.on(
-													'click',
-													function(event, ui) {
-														var tabDivId = $(this)
-																.attr("href");
-														var t = $(tabDivId)
-																.find(
-																		".ii-graph-container div.ii-graph")
-																.attr("id");
-														if (t) {
-															g[t].resize();
-															$(
-																	".ii-graph-container")
-																	.show();
-															centerGraphToNode(
-																	t,
-																	g[t].config.rootElement);
-														}
-													});
-
-								});
-			}
-		}
-
-		function assignBgImageToNodes(conf) {
-
-			if (conf.rootElementImage) {
-				var legendDiv = $("#table-" + conf.divId
-						+ "-legend div[type='rootElement']");
-				legendDiv.css("background-color", "white");
-				legendDiv.css("background-image", 'url("'
-						+ conf.rootElementImage + '")');
-
-			}
-			for (var i = 0; i < conf.nodeConfiguration.length; i++) {
-				var obj = conf.nodeConfiguration[i];
-				// in caso di nodi con immagini devo aggiornare i nodi e la
-				// legenda settando l'immagine di sfondo
-				if (obj.image) {
-					var eles = g[conf.divId].elements('node[type="'
-							+ obj.category + '"]');
-					for (var j = 0; j < eles.length; j++) {
-						var ele = eles[j];
-						ele.style('background-image', obj.image);
-						ele.style('background-opacity', 0);
-					}
-					// aggiorno anche la legenda
-					var legendDiv = $("#table-" + conf.divId
-							+ "-legend div[category-name='" + obj.category
-							+ "']");
-					legendDiv.css("background-color", "white");
-					legendDiv.css("background-image", 'url("' + obj.image
-							+ '")');
+									});
+					
+					
 				}
-			}
 		}
 
-		function collapseNode(graphId, label, property, direction) {
 
-			if (direction && direction == "IN") {
-				getGraphElementById(graphId, label).incomers(
-						"edge[propertyURI='" + property + "']").forEach(
-						function(ele) {
-							ele.source().successors().remove();
-							ele.source().remove();
-							ele.remove();
-						});
-			} else {
-				getGraphElementById(graphId, label).outgoers(
-						"edge[propertyURI='" + property + "']").forEach(
-						function(ele) {
-							ele.target().successors().remove();
-							ele.target().remove();
-							ele.remove();
-						});
-			}
-			setNodeExpandedForRelation(graphId, label, property, direction,
-					false);
-		}
-
-		function addNodesIn(json, config) {
-			var head = json.head.vars;
-			var data = json.results.bindings;
-			var edges = [];
-			var nodes = [];
-			for (var i = 0; i < data.length; i++) {
-				var label = data[i]["parent_label"].value;
-				var node = new Object();
-				type = data[i]["parent_type_label"].value;
-				var relation = data[i]["relation_label"].value;
-				node.type = type;
-				node.id = label;
-				node.label = cutLongLabel(label, config.maxLabelLength,
-						config.maxWordLength);
-				node.color = mapTypeToColor(type, config.colorConf,
-						config.defaultNodeColor);
-				nodes.push({
-					data : node,
-					classes : "background"
-				});
-				// per ogni nodo creo anche il relativo arco ma solo se non
-				// esiste già
-				var edge = new Object();
-				edge.source = node.label;
-				edge.target = config.expandNodeInfo.source;
-				edge.property = relation;
-				edge.propertyURI = config.expandNodeInfo.property;
-				edge.color = mapTypeToColor(edge.property, config.colorConf,
-						config.defaultEdgeColor);
-
-				if (!existEdge(config.divId, edge.source, edge.target)) {
-					edges.push({
-						data : edge
+		function collapseIncomers(graphId, label, property, direction) {
+			getGraphElementById(graphId, label).incomers(
+					"edge[propertyURI='" + property + "']").forEach(
+					function(ele) {
+						ele.source().successors().remove();
+						ele.source().remove();
+						ele.remove();
 					});
-				}
-			}
-			if (data.length > 0) {
-				addNodesToGraph(config.divId, nodes);
-				addEdgesToGraph(config.divId, edges);
-				setLayoutToGraph(config.divId, getSelectedLayout(config));
-				enableTooltipOnNodes(config.divId);
-				enableTooltipOnEdges(config.divId);
-				assignBgImageToNodes(config);
-				centerGraphToNode(config.divId, config.expandNodeInfo.source);
-				setNodeExpandedForRelation(config.divId,
-						config.expandNodeInfo.source,
-						config.expandNodeInfo.property,
-						config.expandNodeInfo.direction, true);
-			}
 		}
-
-
-		/**
-		 * ritorna il nome dell'oggetto e il tipo del nodo iniziale
-		 */
-		/*function generateInitialQuery(label) {
-			return "SELECT ?label ?type_label WHERE { { VALUES ?root_label {'"
-					+ label
-					+ "'}   ?s rdfs:label ?label.   ?s rdfs:label ?root_label.   ?s rdf:type ?type.   ?type rdfs:label ?type_label.} }";
-		}*/
-
 		
 
-		/* SET DI FUNZIONI PER DISACCOPPIARE DALL'INTERFACCIA DI CYTOSCAPE */
+		function collapseOutgoers(graphId, label, property, direction) {
+			getGraphElementById(graphId, label).outgoers(
+					"edge[propertyURI='" + property + "']").forEach(
+					function(ele) {
+						ele.target().successors().remove();
+						ele.target().remove();
+						ele.remove();
+					});
+		}
+
 		function getGraphElementById(graphId, elementId) {
 			return g[graphId].getElementById(elementId);
 		}
@@ -502,51 +393,6 @@
 		function setGraphElementData(graphId, elementId, attribute, value) {
 			getGraphElementById(graphId, elementId).data(attribute, value);
 		}
-
-		function setNodeExpandedForRelation(graphId, elementId, propertyURI,
-				propertyDirection, value) {
-			var exp = getGraphElementData(graphId, elementId, "nodeExpansion");
-			if (!exp) {
-				exp = [];
-			}
-			var prop = "";
-			if (propertyDirection) {
-				if (propertyDirection == "IN") {
-					prop = "IN-" + propertyURI;
-				} else {
-					prop = "OUT-" + propertyURI;
-				}
-			} else {
-				prop = "OUT-" + propertyURI;
-			}
-			exp[prop] = value;
-			setGraphElementData(graphId, elementId, "nodeExpansion", exp);
-		}
-
-		function isNodeExpandedForRelation(graphId, elementId, propertyURI,
-				propertyDirection) {
-			var exp = getGraphElementData(graphId, elementId, "nodeExpansion");
-			var prop = "";
-			if (propertyDirection) {
-				if (propertyDirection == "IN") {
-					prop = "IN-" + propertyURI;
-				} else {
-					prop = "OUT-" + propertyURI;
-				}
-			} else {
-				prop = "OUT-" + propertyURI;
-			}
-			if (exp) {
-				if (exp[prop] == true) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return false;
-			}
-		}
-
 
 		function existEdge(graphId, sourceNodeId, targetNodeId) {
 			if (g[graphId].elements("edge[source='" + sourceNodeId
