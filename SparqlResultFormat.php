@@ -41,7 +41,7 @@ $dir = dirname( __FILE__ );
 $wgResourceModules['ext.SparqlResultFormat.all'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
-	'scripts' => array('js/ii.sparql.main.js'),
+	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js'),
  	'dependencies' => array('ext.SparqlResultFormat.formats')
 );
 
@@ -49,14 +49,14 @@ $wgResourceModules['ext.SparqlResultFormat.all'] = array(
 $wgResourceModules['ext.SparqlResultFormat.graph'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
-	'scripts' => array('js/ii.sparql.main.js'),
+	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js'),
  	'dependencies' => array('ext.SparqlResultFormat.formats.graph')
 );
 
 $wgResourceModules['ext.SparqlResultFormat.table'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
-	'scripts' => array('js/ii.sparql.main.js'),
+	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js'),
  	'dependencies' => array('ext.SparqlResultFormat.formats.table')
 );
 
@@ -66,6 +66,7 @@ $wgResourceModules['ext.SparqlResultFormat.barchart'] = array(
 	'styles' => array(
         'css/jquery.jqplot.min.css' => array('media' => 'screen')),		
 	'scripts' => array('js/ii.sparql.main.js',
+	    'js/ii.sparql.util.js',
 	    'js/ii.sparql.format.barchart.js',
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',
@@ -83,6 +84,7 @@ $wgResourceModules['ext.SparqlResultFormat.piechart'] = array(
 	'styles' => array(
         'css/jquery.jqplot.min.css' => array('media' => 'screen')),		
 	'scripts' => array('js/ii.sparql.main.js',
+	    'js/ii.sparql.util.js',
 	    'js/ii.sparql.format.piechart.js',
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',
@@ -100,7 +102,7 @@ $wgResourceModules['ext.SparqlResultFormat.donutchart'] = array(
 	'remoteExtPath' => 'SparqlResultFormat',
 	'styles' => array(
         'css/jquery.jqplot.min.css' => array('media' => 'screen')),		
-	'scripts' => array('js/ii.sparql.main.js',
+	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js',
 	    'js/ii.sparql.format.donutchart.js',
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',

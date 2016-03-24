@@ -66,7 +66,20 @@ spqlib.table = (function () {
 		}
 		tbody+="</tbody>";
 		var table = "<table class='"+config.tableClass+"'>"+thead+tbody+"</table>";
-		$("#"+config.divId).html(table);	
+		$("#"+config.divId).html(table);
+		var csvExport = config.csvExport || false;
+		if (window.exportTableToCSV && csvExport){
+			//aggiungo il link per l'export csv delle pagine
+			var filename = config.csvFileName || 'export.csv';
+			var label = config.csvLinkLabel || 'Export as CSV';
+			var csvFormAction = config.csvFormAction;
+			if (!csvFormAction){
+				throw ("csvFormAction vuota -> l'export pdf non funzionerà");
+			}
+			var tableContainer = $("#"+config.divId).find("table");
+			tableContainer.after("<span class='export-table-csv'><a class='export'>"+label+"</a><form action='"+csvFormAction+"' method ='post' ><input type='hidden' id='csv_text' name='csv_text' /><input type='hidden' id='csv_file_name' name='csv_file_name' value='"+filename+"'/></form></span>");
+			window.exportTableToCSVClickHandler();
+		}		
 	}
 
 	function isEven(i){
