@@ -66,7 +66,6 @@
 					showDataLabels: true,
 					// By default, data labels show the percentage of the donut/pie.
 					// You can show the data 'value' or data 'label' instead.
-					dataLabels: 'value',
 				  }
 				},
 				highlighter: { show: true,tooltipLocation:'n',useAxesFormatters: false,formatString:'%s, %P'  },
@@ -104,7 +103,10 @@
 	    function drawDonutChart(label,series,config){
 			  var options= getDonutChartOptions(config);
 			  var data = createSeries(label,series);
-			  var plot1 = jQuery.jqplot (config.divId, [data], options);
+			   if (series.length==1){
+				   data = [data];			  	
+			  }
+			  var plot1 = jQuery.jqplot (config.divId, data, options);
 		}
 		
 		function createSeries(label,series){
