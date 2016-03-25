@@ -78,11 +78,11 @@ spqlib.graph = (function () {
 	
 	my.failQuery = function(configuration,jqXHR,textStatus){
 		$("#"+configuration.divId+"-legend").html("");
-		$("#"+configuration.divId+"-legend").html(printErrorBox(textStatus));
+		$("#"+configuration.divId+"-legend").html(generateErrorBox(textStatus));
 		throw new Error("Error invoking sparql endpoint "+textStatus+" "+JSON.stringify(jqXHR));
 	}
 	
-	function printErrorBox(message) {
+	function generateErrorBox(message) {
 		var html = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span><span class='sr-only'>Error:</span>"
 				+ message + "</div>";
 		return html;

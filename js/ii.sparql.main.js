@@ -60,7 +60,7 @@ var spqlib = ( function ( $, undefined ) {
 		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
-		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.bubblechart.render, config);
+		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.bubblechart.render, config,spqlib.bubblechart.preQuery,spqlib.bubblechart.failQuery);
 	}
 
 	

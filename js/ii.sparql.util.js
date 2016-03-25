@@ -122,6 +122,12 @@ spqlib.util = (function () {
         	});
         };
 		
+	my.generateErrorBox = function(message) {
+		var html = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span><span class='sr-only'>Error:</span>"
+				+ message + "</div>";
+		return html;
+	}
+		
 	
 	my.getSparqlFieldValue = function(field){
 		if (field){
