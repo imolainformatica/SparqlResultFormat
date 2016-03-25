@@ -115,6 +115,24 @@ $wgResourceModules['ext.SparqlResultFormat.donutchart'] = array(
 		'js/libs/jqplot/jqplot.donutRenderer.js'),
 );
 
+$wgResourceModules['ext.SparqlResultFormat.bubblechart'] = array(
+	'localBasePath' => $dir,
+	'remoteExtPath' => 'SparqlResultFormat',
+	'styles' => array(
+        'css/jquery.jqplot.min.css' => array('media' => 'screen')),		
+	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js',
+	    'js/ii.sparql.format.bubblechart.js',
+		'js/ii.jqplot.js',
+		'js/libs/jqplot/jquery.jqplot.min.js',
+		'js/libs/jqplot/jqplot.barRenderer.js',
+		'js/libs/jqplot/jqplot.highlighter.js',
+		'js/libs/jqplot/jqplot.categoryAxisRenderer.js',
+		'js/libs/jqplot/jqplot.canvasTextRenderer.js',
+		'js/libs/jqplot/jqplot.canvasAxisTickRenderer.js',
+		'js/libs/jqplot/jqplot.canvasAxisLabelRenderer.js',
+		'js/libs/jqplot/jqplot.bubbleRenderer.js'),
+);
+
 $wgResourceModules['ext.SparqlResultFormat.csv'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',

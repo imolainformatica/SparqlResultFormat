@@ -115,6 +115,20 @@
 				highlighter: { show: true,tooltipLocation:'n',useAxesFormatters: false,formatString:'%s, %P'  },
 				legend: { show:true, location: 'e' }
 			  }
+			  
+			 var defaultBubbleChartOptions = {
+				title: {text:'',show:true},
+				seriesDefaults:{
+					renderer: $.jqplot.BubbleRenderer,
+					rendererOptions: {
+						bubbleAlpha: 0.6,
+						highlightAlpha: 0.8,
+						showLabels: true
+					},
+					shadow: true,
+					shadowAlpha: 0.05
+				}
+			}
 	
 	     /**
 		 *  label - array di stringhe
@@ -157,6 +171,60 @@
 			  c[config.divId]=plot1;
 		}
 		
+	    /**
+		 *  label - array di stringhe
+		 *  series - array di array
+		 **/
+	    function drawBubbleChart(label,series,config){
+			  var options= getBubbleChartOptions(config);
+			  var data = createBubbleSeries(label,series);
+			  var graphId = config.divId;
+			  var plot1 = jQuery.jqplot (graphId, [data], options);
+			  c[graphId]=plot1;
+			  if (config.drawLegendCallback && typeof config.drawLegendCallback =="function"){
+				  config.drawLegendCallback(config,data);
+			  } else {
+				  defaultDrawLegend(config,data);
+			  }
+			  $("#"+graphId).bind('jqplotDataHighlight', config.bubbleChartDataHighlightCallback || defaultBubbleChartDataHighlight);
+			  $("#"+graphId).bind('jqplotDataUnhighlight', config.bubbleChartDataUnhighlightCallback || defaultBubbleChartDataUnhighlight);
+		}
+		
+		function defaultDrawLegend(config,data){
+			var graphId = config.divId;
+			$.each(data, function(index, val) {
+				$('#'+graphId+"-legend").append('<tr><td>'+val[3]+'</td><td>'+val[2]+'</td></tr>');
+			  });
+		}
+		
+		function defaultBubbleChartDataHighlight(ev, seriesIndex, pointIndex, data, radius){
+			var graphId = $(ev.target).attr("id");
+			var legendIdSelector = "#"+graphId+"-legend";
+			var plot = c[graphId];
+			var chart_left = $("#"+graphId).offset().left,
+				chart_top = $("#"+graphId).offset().top,
+				x = plot.axes.xaxis.u2p(data[0]),  // convert x axis unita to pixels on grid
+				y = plot.axes.yaxis.u2p(data[1]);  // convert y axis units to pixels on grid
+			var color = 'rgb(50%,50%,100%)';
+			$('#tooltip1b').css({left:chart_left+x+radius+5, top:chart_top+y});
+			$('#tooltip1b').html('<span style="font-size:14px;font-weight:bold;color:'+color+';">' + 
+			data[3] + '</span><br />' + 'x: '+data[0] + '<br />' + 'y: ' + 
+			data[1] + '<br />' + 'r: ' + data[2]);
+			$('#tooltip1b').show();
+			$(legendIdSelector+' tr td').css('background-color', '#ffffff !important');
+			$(legendIdSelector+' tr td').eq(pointIndex+1).css('background-color', color);
+		}
+		
+		function defaultBubbleChartDataUnhighlight(ev, seriesIndex, pointIndex, data) {
+			var graphId = $(ev.target).attr("id");
+			var legendIdSelector = "#"+graphId+"-legend";
+			$('#tooltip1b').empty();
+            $('#tooltip1b').hide();
+            $(legendIdSelector+' tr').css('background-color', '#ffffff');
+		}
+		
+		
+		
 		function createSeries(label,series){
 			var s = [];
 			if (series.length==1){
@@ -178,6 +246,18 @@
 			}
 			return s;
 		}
+		
+		function createBubbleSeries(label,series){
+			var s = [];
+			for (var j=0;j<series[0].length;j++){
+				var x = series[0][j];
+				var y = series[1][j];
+				var r = series[2][j];
+				s.push([x,y,r,label[j]]);//x,y,radius,label
+			}
+			return s;
+		}
+		
 			
 		function getBarChartOptions(config){
 			var options = spqlib.util.cloneObject(defaultBarChartOptions);
@@ -216,6 +296,14 @@
 			return options;
 		}
 		
+		function getBubbleChartOptions(config){
+			var options = spqlib.util.cloneObject(defaultBubbleChartOptions);
+			if (config.chartTitle){
+				options.title.text=config.chartTitle;
+			}
+			return options;
+		}
+		
 		function getChart(chartId){
 			if (c[chartId]){
 				return c[chartId];
@@ -228,6 +316,7 @@
 		     drawBarChart:drawBarChart,
 			 drawPieChart:drawPieChart,
 			 drawDonutChart:drawDonutChart,
+			 drawBubbleChart:drawBubbleChart,
 			 getChart:getChart
 		}
 
