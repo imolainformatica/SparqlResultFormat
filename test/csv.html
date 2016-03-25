@@ -184,7 +184,7 @@ WHERE
  ?app ubi-overall-m:belongsToInformaticResource ?ir.
  ?ir rdfs:label ?ir_label.
  } } ORDER BY ?ir_label"><!--<a onclick="javascript:downloadCSV()">Download</a>-->
-<form id="mynetwork-csv-form" action="/eap/getCSV.php" method="post">
+<form id="mynetwork-csv-form" action="/eap/extensions/SparqlResultFormat/getCSV.php" method="post">
     <input type="hidden" name="csv_text" value="">
     <input type="hidden" name="csv_file_name" value="">
     <a onclick="javascript:downloadCSV()">Download</a>

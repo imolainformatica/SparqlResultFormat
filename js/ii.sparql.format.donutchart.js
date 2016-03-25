@@ -40,24 +40,5 @@ spqlib.donutchart = (function () {
 		spqlib.donutchart.chartImpl().drawDonutChart(labels,series,config);
 	}
 
-	
-	/*function getSparqlFieldValue(field){
-		if (field){
-			return field.value;
-		} else {
-			return "";
-		}
-	}
-	
-	function getSparqlFieldValueToNumber(field){
-		if (field){
-			return Number(field.value);
-		} else {
-			return "";
-		}
-	}*/
-	
-	
-
 	return my;
 }());
