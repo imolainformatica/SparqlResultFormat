@@ -80,6 +80,36 @@ rect.parent,
   fill: #bbb;
 }
 
+#tooltip {
+  position: absolute;
+  width: 220px;
+  height: auto;
+  padding: 10px;
+  background-color: white;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+#tooltip.hidden {
+  display: none;
+}
+
+#tooltip p {
+  margin: 0;
+  font-family: sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.treemap-tooltip-instance-name{
+   font-weight:bold;
+}
+
 
 
 </style>
@@ -179,8 +209,14 @@ WHERE {
     ?child rdfs:label ?child_label.
      ?parent rdf:type  ?parent_type.
     ?child rdf:type  ?child_type.
+    OPTIONAL {?child  <http://www.ubibanca.com/ontologie/ea-wiki/ubi-wiki-instances#Property-3ACounterApplication> ?value.}
 }
 }">
+</div>
+
+<div id="tooltip" class="hidden">
+  <p><strong id="heading"></strong></p>
+  <p><span id="tooltip-text"></span></p>
 </div>
 </body>
 </html>

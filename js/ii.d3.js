@@ -5,11 +5,27 @@
 	
 	
 	spqlib.d3 = (function(){
+		
+		var defaultMousemove = function(d) {
+		  var xPosition = d3.event.pageX + 5;
+		  var yPosition = d3.event.pageY + 5;
+
+		  d3.select("#tooltip")
+			.style("left", xPosition + "px")
+			.style("top", yPosition + "px");
+		  d3.select("#tooltip-text")
+			.html("<span class='treemap-tooltip-instance-name'>"+d["name"]+"</span> </br>Value: "+d["value"]);
+		  d3.select("#tooltip").classed("hidden", false);
+		};
+		
+		var defaultMouseout = function() {
+		    d3.select("#tooltip").classed("hidden", true);
+		};
 
 	    function drawTreemap(res,config){
 			var margin = {top: 20, right: 0, bottom: 0, left: 0},
-			width = 960,
-			height = 500 - margin.top - margin.bottom,
+			width = config.width || 960,
+			height = config.height || 500 - margin.top - margin.bottom,
 			formatNumber = d3.format(",d"),
 			transitioning;
 			var x = d3.scale.linear()
@@ -26,6 +42,10 @@
 				.ratio(height / width * 0.5 * (1 + Math.sqrt(5)))
 				.round(false);
 				
+
+			
+
+							
 			var svg = d3.select("#"+config.divId).append("svg")
 				.attr("width", width + margin.left + margin.right)
 				.attr("height", height + margin.bottom + margin.top)
@@ -109,7 +129,17 @@
 
 					g.filter(function(d) { return d._children; })
 						.classed("children", true)
-						.on("click", transition);
+						.on("click", transition)
+						.on("mousemove", config.mousemoveCallback || defaultMousemove)
+						.on("mouseout", config.mouseoutCallback || defaultMouseout);
+						
+					g.filter(function(d) { return !d._children; })
+						.classed("leaves", true)
+						.on("click", function(d) { 
+							if(!d.children){
+							window.open(d.url); 
+							}
+							})
 
 					g.selectAll(".child")
 						.data(function(d) { return d._children || [d]; })
@@ -123,19 +153,17 @@
 					  .append("title")
 						.text(function(d) { return formatNumber(d.value); });
 						
-					/*g.append("text")
+					g.append("text")
 						.attr("dy", ".75em")
 						.text(function(d) {
 							return d.name; 
 							})
-						.call(text)*/
+						.call(text)
 						//.call(wrap);
 						
 						/* Adding a foreign object instead of a text object, allows for text wrapping */
-					g.append("foreignObject")
+					/*g.append("foreignObject")
 						.call(rect)
-					/* open new window based on the json's URL value for leaf nodes */
-					/* Firefox displays this on top */
 					//.on("click", function(d) { 
 					//if(!d.children){
 					//window.open(d.url); 
@@ -145,7 +173,7 @@
 					.append("xhtml:div") 
 					.attr("dy", ".75em")
 					.html(function(d) { return d.name; })
-					.attr("class","textdiv");
+					.attr("class","textdiv");*/
 
 					function transition(d) {
 					  if (transitioning || !d) return;

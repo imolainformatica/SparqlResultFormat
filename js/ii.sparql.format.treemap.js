@@ -39,6 +39,7 @@ spqlib.treemap = (function () {
 		}
 		var parent_label_field = head[0];
 		var child_label_field = head[1];
+		var value_field = (head[2] ? head[2] : false);
 		var obj = {};
 		
 		for (var i = 0; i < data.length; i++) {
@@ -47,23 +48,35 @@ spqlib.treemap = (function () {
 				obj[parent]={name:parent, children:[]}
 			}
 			var child = spqlib.util.getSparqlFieldValue(data[i][child_label_field]);
+			var val = 1;
+			if (value_field){
+				val = spqlib.util.getSparqlFieldValueToNumber(data[i][value_field]);
+				if (val==""){val=1;}
+			}
+			if (!obj[child]){
+				obj[child]={name:parent, children:[],value:val}
+			}
 			obj[parent].children.push(child);
 		}
 		var root = config.rootElement;
-		var res = createStructure(root,obj);
+		var res = createStructure(root,obj,config);
 
 		spqlib.treemap.chartImpl().drawTreemap(res,config);
 	}
 	
-	function createStructure(elem,obj){
+	function createStructure(elem,obj,config){
 		var res = {name:elem,children:[]};
-		if (!obj[elem]){
+		if (obj[elem].children.length==0){
 			//è una foglia
-			return {name:elem,value:1};
+			var url="";
+			if (config.linkBasePath){
+				url = config.linkBasePath+elem;
+			}
+			return {name:elem,value:obj[elem].value,url:url};
 		}
 		for (var i = 0; i < obj[elem].children.length; i++) {
 			var child = obj[elem].children[i];
-			res.children.push(createStructure(child,obj));		
+			res.children.push(createStructure(child,obj,config));		
 		}
 		return res;
 	}
