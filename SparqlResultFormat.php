@@ -56,8 +56,7 @@ $wgResourceModules['ext.SparqlResultFormat.graph'] = array(
 $wgResourceModules['ext.SparqlResultFormat.table'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
-	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js'),
- 	'dependencies' => array('ext.SparqlResultFormat.formats.table')
+	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js','js/ii.sparql.format.table.js','js/ii.sparql.format.csv.js')
 );
 
 $wgResourceModules['ext.SparqlResultFormat.barchart'] = array(

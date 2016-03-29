@@ -62,6 +62,13 @@ var spqlib = ( function ( $, undefined ) {
 		}
 		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.bubblechart.render, config,spqlib.bubblechart.preQuery,spqlib.bubblechart.failQuery);
 	}
+	
+	function sparql2Treemap(config){
+		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
+			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
+		}
+		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.treemap.render, config,spqlib.treemap.preQuery,spqlib.treemap.failQuery);
+	}
 
 	
 	function createColorConfiguration(nodeConfiguration, edgeConfiguration) {
@@ -99,7 +106,8 @@ var spqlib = ( function ( $, undefined ) {
 		sparql2PieChart : sparql2PieChart,
 		sparql2DonutChart : sparql2DonutChart,
 		sparql2BubbleChart : sparql2BubbleChart,
-		sparql2CSV : sparql2CSV
+		sparql2CSV : sparql2CSV,
+		sparql2Treemap : sparql2Treemap
 		//...other kind of output format here
 	};
 	
