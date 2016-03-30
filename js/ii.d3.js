@@ -21,9 +21,15 @@
 		var defaultMouseout = function() {
 		    d3.select("#tooltip").classed("hidden", true);
 		};
+		
+		var defaultLeavesClickCallback = function(d) { 
+			if(!d.children){
+				window.open(d.url); 
+			}
+		}
 
 	    function drawTreemap(res,config){
-			var margin = {top: 20, right: 0, bottom: 0, left: 0},
+			var margin = {top: 40, right: 0, bottom: 0, left: 0},
 			width = config.width || 960,
 			height = config.height || 500 - margin.top - margin.bottom,
 			formatNumber = d3.format(",d"),
@@ -37,7 +43,7 @@
 				.range([0, height]);
 				
 			var treemap = d3.layout.treemap()
-				.children(function(d, depth) { return depth ? null : d._children; })
+				.children(function(d, depth) { return /*depth ? null :*/ d._children; })
 				.sort(function(a, b) { return a.value - b.value; })
 				.ratio(height / width * 0.5 * (1 + Math.sqrt(5)))
 				.round(false);
@@ -72,7 +78,7 @@
 				  initialize(res);
 				  accumulate(res);
 				  layout(res);
-				  display(res);
+				  display(res,true);
 
 				  function initialize(root) {
 					root.x = root.y = 0;
@@ -112,7 +118,7 @@
 					}
 				  }
 
-				  function display(d) {
+				  function display(d,wrap) {
 					grandparent
 						.datum(d.parent)
 						.on("click", transition)
@@ -134,12 +140,10 @@
 						.on("mouseout", config.mouseoutCallback || defaultMouseout);
 						
 					g.filter(function(d) { return !d._children; })
-						.classed("leaves", true)
-						.on("click", function(d) { 
-							if(!d.children){
-							window.open(d.url); 
-							}
-							})
+						.classed("leaves", true);
+					g.selectAll(".leaves")
+						.on("click", defaultLeavesClickCallback )
+
 
 					g.selectAll(".child")
 						.data(function(d) { return d._children || [d]; })
@@ -159,29 +163,11 @@
 							return d.name; 
 							})
 						.call(text)
-						//.call(wrap);
+						.call(wrap ? wordWrap : empty)
 						
-						/* Adding a foreign object instead of a text object, allows for text wrapping */
-					/*g.append("foreignObject")
-						.call(rect)
-					//.on("click", function(d) { 
-					//if(!d.children){
-					//window.open(d.url); 
-					//}
-					//})
-					.attr("class","foreignobj")
-					.append("xhtml:div") 
-					.attr("dy", ".75em")
-					.html(function(d) { return d.name; })
-					.attr("class","textdiv");*/
-
 					function transition(d) {
-					  if (transitioning || !d) return;
-					  transitioning = true;
-
-					  var g2 = display(d),
-						  t1 = g1.transition().duration(750),
-						  t2 = g2.transition().duration(750);
+						d3.select("#tooltip").classed("hidden", true);
+					  var g2 = display(d,false)
 
 					  // Update the domain only after entering new elements.
 					  x.domain([d.x, d.x + d.dx]);
@@ -195,23 +181,9 @@
 
 					  // Fade-in entering text.
 					  g2.selectAll("text").style("fill-opacity", 0);
-
-					  // Transition to the new view.
-					  t1.selectAll("text").call(text).style("fill-opacity", 0);
-					  t2.selectAll("text").call(text).style("fill-opacity", 1);
-					  t1.selectAll("rect").call(rect);
-					  t2.selectAll("rect").call(rect);
-					  
-					  t1.selectAll(".textdiv").style("display", "none"); /* added */
-						t1.selectAll(".foreignobj").call(foreign); /* added */
-						t2.selectAll(".textdiv").style("display", "block"); /* added */
-						t2.selectAll(".foreignobj").call(foreign); /* added */ 
-
-					  // Remove the old node when the transition is finished.
-					  t1.remove().each("end", function() {
-						svg.style("shape-rendering", "crispEdges");
-						transitioning = false;
-					  });
+					  g2.selectAll("rect").call(rect);
+					  g2.selectAll("text").call(text).call(wordWrap).style("fill-opacity", 1);
+						g1.remove();
 					}
 
 					return g;
@@ -225,21 +197,58 @@
 							return y(d.y) + 6; 
 							});
 				  }
-				  
-				  function foreign(foreign){ /* added */
-					foreign.attr("x", function(d) { return x(d.x); })
-					.attr("y", function(d) { return y(d.y); })
-					.attr("width", function(d) { return x(d.x + d.dx) - x(d.x); })
-					.attr("height", function(d) { return y(d.y + d.dy) - y(d.y); });
-}
-				  			  
 
 				  function rect(rect) {
-					rect.attr("x", function(d) { return x(d.x); })
-						.attr("y", function(d) { return y(d.y); })
-						.attr("width", function(d) { return x(d.x + d.dx) - x(d.x); })
-						.attr("height", function(d) { return y(d.y + d.dy) - y(d.y); });
+					rect.attr("x", function(d) { 
+					return x(d.x); })
+						.attr("y", function(d) { 
+						return y(d.y); })
+						.attr("width", function(d) { 
+						return x(d.x + d.dx) - x(d.x); })
+						.attr("height", function(d) { 
+						return y(d.y + d.dy) - y(d.y); });
 				  }
+				  
+				  function empty(text){
+					  //do nothing
+				  }
+				  
+				  function wordWrap(text) {
+					  text.each(function() {
+						var text = d3.select(this);
+						var words = text.text().split(/\s+/).reverse();
+						var	word;
+						var	line = [];
+						var	lineNumber = 0;
+						var	lineHeight = 1.1; // ems
+						var	y = text.attr("y");
+						var	x = text.attr("x");
+						var	dy = parseFloat(text.attr("dy"));
+						var	tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+						var maxWidth = d3.select(this.previousElementSibling).attr("width");
+						var maxHeight = d3.select(this.previousElementSibling).attr("height");
+						//devo calcolare la size del rettangolo contenitore
+						while (word = words.pop()) {
+						  line.push(word);
+						  tspan.text(line.join(" "));
+						  var tspanHeight = window.getComputedStyle(tspan.node(), null).getPropertyValue("font-size").replace("px","");
+						  var altezzaLibera = tspanHeight*(lineNumber+2)+6 < maxHeight;
+						  if (!altezzaLibera){
+							  line.push("...");
+							  tspan.text(line.join(" "));
+							  break;
+						  }
+						  if (tspan.node().getComputedTextLength()+6 > maxWidth && altezzaLibera ) {
+							line.pop();
+							tspan.text(line.join(" "));
+							line = [word];
+							tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+						  }
+						}
+					  });
+
+				  }
+				  
 				 
 				  function name(d) {
 					return d.parent

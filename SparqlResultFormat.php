@@ -138,6 +138,12 @@ $wgResourceModules['ext.SparqlResultFormat.csv'] = array(
 	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js','js/ii.sparql.format.csv.js'),
 );
 
+$wgResourceModules['ext.SparqlResultFormat.treemap'] = array(
+	'localBasePath' => $dir,
+	'remoteExtPath' => 'SparqlResultFormat',
+	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js','js/ii.sparql.format.treemap.js','js/ii.d3.js','js/libs/d3.v3.min.js')
+);
+
 
 
 $wgResourceModules['ext.SparqlResultFormat.formats'] = array(
