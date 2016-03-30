@@ -100,12 +100,14 @@ spqlib.util = (function () {
 			if (preQueryCallback && typeof preQueryCallback=="function"){
 				preQueryCallback(configuration);
 			}
-			var basicAuthBase64String = configuration.basicAuthBase64String; 
+			var basicAuthBase64String = configuration.basicAuthBase64String || false; 
         	var jqxhr = $.ajax({
 					url:endpoint,
 					type:'POST',
 					beforeSend: function(xhr) {
-						xhr.setRequestHeader('Authorization', 'Basic ' + basicAuthBase64String);
+						if (basicAuthBase64String){
+							xhr.setRequestHeader('Authorization', 'Basic ' + basicAuthBase64String);
+						}
 						xhr.setRequestHeader("Accept", mime);
 					},
 					data:{query:sparql}
