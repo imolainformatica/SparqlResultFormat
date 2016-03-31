@@ -71,12 +71,30 @@
 						//ticks: ticks
 					}
 				},
-				highlighter: { show: true,tooltipLocation:'n',useAxesFormatters: true  },
+				highlighter: { 
+					show: true,tooltipLocation:'n',
+					useAxesFormatters: true ,
+					tooltipContentEditor:defaultBarchartTooltipContentEditor
+				},
 				legend: {
 					show: true,
 					location: 'ne',
 					placement: 'inside'
 				}      
+			}
+			
+			function defaultBarchartTooltipContentEditor(str, seriesIndex, pointIndex, plot) {
+				var label = plot.axes.xaxis.ticks[pointIndex];
+				var html = "<span class='jqplot-tooltip-label'>"+label+"</span></br><span class='jqplot-tooltip-series-name'>"+plot.series[seriesIndex]["label"] + " = </span>";
+				var value = "";
+				if (Array.isArray(plot.data[seriesIndex][pointIndex])){
+					var arrayLength = plot.data[seriesIndex][pointIndex].length;
+					value = plot.data[seriesIndex][pointIndex][arrayLength-1];
+				} else {
+					value = plot.data[seriesIndex][pointIndex];
+				}
+				html+="<span class='jqplot-tooltip-value'>"+value+"</span>";
+				return html;
 			}
 			
 			var defaultPieChartOptions = {
@@ -135,10 +153,12 @@
 		 *  series - array di array
 		 **/
 	    function drawBarChart(label,series,config){
-			var s = createSeries(label,series);		
+			var s = createBarchartSeries(label,series);		
 		    var options= getBarChartOptions(config);	
 			options.seriesDefaults.renderer=$.jqplot.BarRenderer;
-			
+			if (s.length==1){
+				options.axes.xaxis.ticks = label;
+			}
 			var plot1 = $.jqplot(config.divId, s,options );
 			c[config.divId]=plot1;
 
@@ -223,6 +243,29 @@
             $(legendIdSelector+' tr').css('background-color', '#ffffff');
 		}
 		
+		
+		function createBarchartSeries(label,series){
+			var s = [];
+			if (series.length==1){
+				for (var i=0;i<series[0].length;i++){
+					var lab = label[i];
+					var value = series[0][i];
+					s.push(value);
+				}
+				s=[s];
+			} else {
+				for (var i=0;i<series.length;i++){
+					for (var j=0;j<series[i].length;j++){
+						var value = series[i][j];
+						series[i][j]=[label[j],value];
+					}
+				}
+				for (var i=0;i<series.length;i++){
+					s.push(series[i]);
+				}
+			}
+			return s;
+		}
 		
 		
 		function createSeries(label,series){

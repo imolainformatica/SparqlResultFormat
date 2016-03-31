@@ -146,6 +146,19 @@ spqlib.util = (function () {
 			return "";
 		}
 	}
+	
+	my.sanitizeString = function(string) {
+		//Lower case everything
+		var res = string.toLowerCase();
+		//Make alphanumeric (removes all other characters)
+		//$string = preg_replace("/[^a-z0-9_\s-]/", "", $string);
+		//Clean up multiple dashes or whitespaces
+		//$string = preg_replace("/[\s-]+/", " ", $string);
+		//Convert whitespaces and underscore to dash
+		res = res.replace(" ","-");
+		res = res.replace("_","-");
+		return res;
+	}
 
 	
 

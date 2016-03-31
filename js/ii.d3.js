@@ -133,6 +133,10 @@
 						.data(d._children)
 					  .enter().append("g");
 
+					  g.attr("class",function(d){ 
+						   return spqlib.util.sanitizeString(d.name);
+					  });
+					  
 					g.filter(function(d) { return d._children; })
 						.classed("children", true)
 						.on("click", transition)
