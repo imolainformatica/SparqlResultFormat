@@ -191,9 +191,6 @@
 			var s = createBarchartSeries(label,series);		
 		    var options= getBarChartOptions(config);	
 			options.seriesDefaults.renderer=$.jqplot.BarRenderer;
-			if (s.length==1){
-				options.axes.xaxis.ticks = label;
-			}
 			var plot1 = $.jqplot(config.divId, s,options );
 			c[config.divId]=plot1;
 
@@ -285,7 +282,7 @@
 				for (var i=0;i<series[0].length;i++){
 					var lab = label[i];
 					var value = series[0][i];
-					s.push(value);
+					s.push([lab,value]);
 				}
 				s=[s];
 			} else {

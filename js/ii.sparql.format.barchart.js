@@ -8,51 +8,11 @@ spqlib.barchart = (function () {
 	}
 	
 	my.exportAsImage = function(){
-		//spqlib.graph.chartImpl().exportAsImage();
+		
 	}
 	
 	my.toggleFullScreen = function(graphId){
-		/*var isFullScreen = spqlib.graph.chartImpl().isFullScreen(graphId);
-		if (isFullScreen==null) {
-			spqlib.graph.chartImpl().setFullScreen(graphId,false);
-		}
-		
-		var containerSelector = "#" + graphId + "-container";
-		var graphSelector = "#" + graphId + "";
-		var legendSelector = "#" + graphId + "-legend-container";
-		if (isFullScreen == true) {
-			$(containerSelector).toggleClass(
-					'container-graph-full-screen');
-			$(legendSelector).toggleClass('legend-graph-full-screen');
-			$(graphSelector).toggleClass('graph-full-screen');
-			$(graphSelector).css("height", spqlib.graph.chartImpl().getGraph(graphId).normalGraphHeight);
-			$(legendSelector).find(".fullscreen-label").text(
-					"Go fullscreen");
-			$(legendSelector).find("i.glyphicon-resize-small").removeClass(
-					"glyphicon-resize-small").addClass(
-					"glyphicon-fullscreen");
-			$(".ii-graph-container").show();
-			$(window).scrollTop($("#" + graphId).offset().top);
-			spqlib.graph.chartImpl().setFullScreen(graphId,false);
-		} else {
-			$(".ii-graph-container").hide();
-			$(containerSelector).show();
-			$(containerSelector).toggleClass(
-					'container-graph-full-screen');
-			$(legendSelector).toggleClass('legend-graph-full-screen');
-			$(graphSelector).toggleClass('graph-full-screen');
-			spqlib.graph.chartImpl().getGraph(graphId).normalGraphHeight = $(graphSelector).css("height");
-			$(graphSelector).css("height", "100%");
-			$(legendSelector).find(".fullscreen-label").text(
-					"Exit fullscreen");
-			$(legendSelector).find("i.glyphicon-fullscreen").addClass(
-					"glyphicon-resize-small").removeClass(
-					"glyphicon-fullscreen");
-			spqlib.graph.chartImpl().setFullScreen(graphId,true);
-		}
-		spqlib.graph.chartImpl().resize(graphId);
-		centerGraphToNode(graphId, spqlib.graph.chartImpl().getGraph(graphId).config.rootElement);
-		*/
+
 	}
 	
 	
