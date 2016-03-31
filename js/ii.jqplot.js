@@ -53,26 +53,35 @@
 				seriesDefaults:{
 					renderer:$.jqplot.BarRenderer,
 					rendererOptions: {
+						barDirection: 'vertical',
 						showDataLabels: true
 					},
 					pointLabels: { show: false }
 				},
 				seriesColor:colorscheme['rdgy'][9],
 				axesDefaults: {
-					tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
-					tickOptions: {
-					  angle: -30,
-					  fontSize: '10pt'
-					}
+					tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+					/*tickOptions: {
+						  angle: -30,
+						  fontSize: '8pt',
+						  formatter:defaultCutLongLabelFormatter
+						}*/
 				},
 				axes: {
 					xaxis: {
 						renderer: $.jqplot.CategoryAxisRenderer,
-						//ticks: ticks
+						tickOptions: {
+						  angle: -30,
+						  fontSize: '10pt',
+						  formatter:function(format,value){ 
+								return spqlib.jqplot().defaultCutLongLabelFormatter(format,value); 
+							}
+						}
 					}
 				},
 				highlighter: { 
-					show: true,tooltipLocation:'n',
+					show: true,
+					tooltipLocation:'n',
 					useAxesFormatters: true ,
 					tooltipContentEditor:defaultBarchartTooltipContentEditor
 				},
@@ -82,6 +91,14 @@
 					placement: 'inside'
 				}      
 			}
+			
+			var defaultCutLongLabelFormatter = function(format,value){
+				  var maxLength = 15;
+				  if (value.length>maxLength){
+					  value = value.substr(0,maxLength)+"...";
+				  }
+				  return value;
+			  }
 			
 			function defaultBarchartTooltipContentEditor(str, seriesIndex, pointIndex, plot) {
 				var label = plot.axes.xaxis.ticks[pointIndex];
@@ -338,6 +355,9 @@
 			if (config.chartTitle){
 				options.title.text=config.chartTitle;
 			}
+			if (config.direction && config.direction!=null && config.direction!=""){
+				options.seriesDefaults.rendererOptions.barDirection=config.direction;
+			}
 			return options;
 		}
 		
@@ -378,6 +398,7 @@
 			 drawPieChart:drawPieChart,
 			 drawDonutChart:drawDonutChart,
 			 drawBubbleChart:drawBubbleChart,
+			 defaultCutLongLabelFormatter:defaultCutLongLabelFormatter,
 			 getChart:getChart
 		}
 

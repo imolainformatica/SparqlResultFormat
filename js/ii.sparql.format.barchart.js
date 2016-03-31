@@ -75,8 +75,6 @@ spqlib.barchart = (function () {
 				series[j][i]=spqlib.util.getSparqlFieldValueToNumber(data[i][head[j+1]]);
 			}
 		}
-
-		
 		spqlib.barchart.chartImpl().drawBarChart(labels,series,config);
 	}
 	
