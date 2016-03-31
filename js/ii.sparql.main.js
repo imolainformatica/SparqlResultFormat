@@ -2,6 +2,8 @@ var spqlib = ( function ( $, undefined ) {
 	'use strict';
 	
     var VERSION = "0.0.1";
+	
+	var reg = [];
 
 	function sparql2Table(config){
 		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
@@ -29,6 +31,7 @@ var spqlib = ( function ( $, undefined ) {
 	}
 	
 	function sparql2BarChart(config){
+		var chartId = config.divId;
 		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
@@ -69,6 +72,19 @@ var spqlib = ( function ( $, undefined ) {
 		}
 		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.treemap.render, config,spqlib.treemap.preQuery,spqlib.treemap.failQuery);
 	}
+	
+	function addToRegistry(id,elem){
+		if (elem){
+			reg[id]=elem;
+		}
+	}
+	
+	function getById(id){
+		if (reg[id]){
+			return reg[id];
+		}
+		return;
+	}
 
 	
 	function createColorConfiguration(nodeConfiguration, edgeConfiguration) {
@@ -107,7 +123,9 @@ var spqlib = ( function ( $, undefined ) {
 		sparql2DonutChart : sparql2DonutChart,
 		sparql2BubbleChart : sparql2BubbleChart,
 		sparql2CSV : sparql2CSV,
-		sparql2Treemap : sparql2Treemap
+		sparql2Treemap : sparql2Treemap,
+		addToRegistry : addToRegistry,
+		getById : getById
 		//...other kind of output format here
 	};
 	

@@ -35,7 +35,9 @@ spqlib.barchart = (function () {
 				series[j][i]=spqlib.util.getSparqlFieldValueToNumber(data[i][head[j+1]]);
 			}
 		}
-		spqlib.barchart.chartImpl().drawBarChart(labels,series,config);
+		var chartId = config.divId;
+		var chart =  spqlib.barchart.chartImpl().drawBarChart(labels,series,config);
+		spqlib.addToRegistry(chartId,chart);
 	}
 	
 

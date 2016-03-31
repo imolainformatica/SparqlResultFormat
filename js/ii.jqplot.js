@@ -193,8 +193,7 @@
 			options.seriesDefaults.renderer=$.jqplot.BarRenderer;
 			var plot1 = $.jqplot(config.divId, s,options );
 			c[config.divId]=plot1;
-
-				
+			return plot1;				
 		}
 		
 		 /**
@@ -206,6 +205,7 @@
 			  var data = createSeries(label,series);
 			  var plot1 = jQuery.jqplot (config.divId, [data], options);
 			  c[config.divId]=plot1;
+			  return plot1;
 		}
 		
 		
@@ -221,6 +221,7 @@
 			  }
 			  var plot1 = jQuery.jqplot (config.divId, data, options);
 			  c[config.divId]=plot1;
+			  return plot1;
 		}
 		
 	    /**
@@ -240,6 +241,7 @@
 			  }
 			  $("#"+graphId).bind('jqplotDataHighlight', config.bubbleChartDataHighlightCallback || defaultBubbleChartDataHighlight);
 			  $("#"+graphId).bind('jqplotDataUnhighlight', config.bubbleChartDataUnhighlightCallback || defaultBubbleChartDataUnhighlight);
+			  return plot1;
 		}
 		
 		function defaultDrawLegend(config,data){

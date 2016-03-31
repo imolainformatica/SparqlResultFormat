@@ -35,9 +35,9 @@ spqlib.donutchart = (function () {
 				series[j][i]=spqlib.util.getSparqlFieldValueToNumber(data[i][head[j+1]]);
 			}
 		}
-
-		
-		spqlib.donutchart.chartImpl().drawDonutChart(labels,series,config);
+		var chartId = config.divId;
+		var chart = spqlib.donutchart.chartImpl().drawDonutChart(labels,series,config);
+		spqlib.addToRegistry(chartId,chart);
 	}
 
 	return my;

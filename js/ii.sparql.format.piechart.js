@@ -36,8 +36,9 @@ spqlib.piechart = (function () {
 			}
 		}
 
-		
-		spqlib.piechart.chartImpl().drawPieChart(labels,series,config);
+		var chartId = config.divId;
+		var chart =  spqlib.piechart.chartImpl().drawPieChart(labels,series,config);
+		spqlib.addToRegistry(chartId,chart);
 	}
 	
 

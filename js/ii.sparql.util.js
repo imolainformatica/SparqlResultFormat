@@ -112,7 +112,7 @@ spqlib.util = (function () {
 					},
 					data:{query:sparql}
         	}).done(function(json) {
-        		successCallback(json, configuration);
+				successCallback(json, configuration);
         	}).fail(function(jqXHR, textStatus, errorThrown) {
 				if (failCallback && typeof failCallback=="function"){
 					failCallback(configuration,jqXHR,textStatus);

@@ -50,9 +50,9 @@ spqlib.bubblechart = (function () {
 				series[j][i]=spqlib.util.getSparqlFieldValueToNumber(data[i][head[j+1]]);
 			}
 		}
-
-		
-		spqlib.bubblechart.chartImpl().drawBubbleChart(labels,series,config);
+		var chartId = config.divId;
+		var chart =  spqlib.bubblechart.chartImpl().drawBubbleChart(labels,series,config);
+		spqlib.addToRegistry(chartId,chart);
 	}
 	
 
