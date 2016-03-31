@@ -110,9 +110,22 @@
 					  sliceMargin: 0, 
 					}
 				  }, 
-				  highlighter: { show: true,tooltipLocation:'n',useAxesFormatters: false,formatString:'%s, %P'  },
+				  highlighter: { 
+					show: true,
+					tooltipLocation:'n',
+					useAxesFormatters: false,
+					formatString:'%s, %P',
+					tooltipContentEditor:defaultPiechartTooltipContentEditor  },
 				  legend: { show:true, location: 'e' }
 				}
+				
+			function defaultPiechartTooltipContentEditor(str, seriesIndex, pointIndex, plot) {
+				var label =  plot.data[seriesIndex][pointIndex][0];
+				var html = "<span class='jqplot-tooltip-label'>"+label+"</span>, ";
+				var value = plot.data[seriesIndex][pointIndex][1];
+				html+="<span class='jqplot-tooltip-value'>"+value+"</span>";
+				return html;
+			}
 				
 			var defaultDonutChartOptions = {
 				title: {text:'',show:true},
@@ -130,7 +143,12 @@
 					// You can show the data 'value' or data 'label' instead.
 				  }
 				},
-				highlighter: { show: true,tooltipLocation:'n',useAxesFormatters: false,formatString:'%s, %P'  },
+				highlighter: { 
+					show: true,tooltipLocation:'n',
+					useAxesFormatters: false,
+					formatString:'%s, %P',
+					tooltipContentEditor:defaultPiechartTooltipContentEditor 					
+					},
 				legend: { show:true, location: 'e' }
 			  }
 			  
