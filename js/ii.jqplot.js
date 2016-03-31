@@ -76,7 +76,17 @@
 						  formatter:function(format,value){ 
 								return spqlib.jqplot().defaultCutLongLabelFormatter(format,value); 
 							}
-						}
+						},
+						 labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+						 labelOptions: {
+							fontSize: '14pt'
+						  }
+					},
+					yaxis:{
+						 labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+						 labelOptions: {
+							fontSize: '14pt'
+						  }
 					}
 				},
 				highlighter: { 
@@ -357,6 +367,13 @@
 			if (config.direction && config.direction!=null && config.direction!=""){
 				options.seriesDefaults.rendererOptions.barDirection=config.direction;
 			}
+			if (config.xAxisLabel){
+				options.axes.xaxis.label=config.xAxisLabel;
+			}
+			if (config.yAxisLabel){
+				options.axes.yaxis.label=config.yAxisLabel;
+			}
+			
 			return options;
 		}
 		
