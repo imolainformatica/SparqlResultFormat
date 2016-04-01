@@ -41,22 +41,26 @@ $dir = dirname( __FILE__ );
 $wgResourceModules['ext.SparqlResultFormat.all'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
+	'dependencies' => array('ext.SparqlResultFormat.main','ext.SparqlResultFormat.formats')
+);
+
+$wgResourceModules['ext.SparqlResultFormat.main'] = array(
+	'localBasePath' => $dir,
+	'remoteExtPath' => 'SparqlResultFormat',
 	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js'),
- 	'dependencies' => array('ext.SparqlResultFormat.formats')
 );
 
 
 $wgResourceModules['ext.SparqlResultFormat.graph'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
-	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js'),
  	'dependencies' => array('ext.SparqlResultFormat.formats.graph')
 );
 
 $wgResourceModules['ext.SparqlResultFormat.table'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
-	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js','js/ii.sparql.format.table.js','js/ii.sparql.format.csv.js')
+	'scripts' => array('js/ii.sparql.format.table.js','js/ii.sparql.format.csv.js')
 );
 
 $wgResourceModules['ext.SparqlResultFormat.barchart'] = array(
@@ -64,9 +68,7 @@ $wgResourceModules['ext.SparqlResultFormat.barchart'] = array(
 	'remoteExtPath' => 'SparqlResultFormat',
 	'styles' => array(
         'css/jquery.jqplot.min.css' => array('media' => 'screen')),		
-	'scripts' => array('js/ii.sparql.main.js',
-	    'js/ii.sparql.util.js',
-	    'js/ii.sparql.format.barchart.js',
+	'scripts' => array('js/ii.sparql.format.barchart.js',
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',
 		'js/libs/jqplot/jqplot.barRenderer.js',
@@ -74,7 +76,7 @@ $wgResourceModules['ext.SparqlResultFormat.barchart'] = array(
 		'js/libs/jqplot/jqplot.categoryAxisRenderer.js',
 		'js/libs/jqplot/jqplot.canvasTextRenderer.js',
 		'js/libs/jqplot/jqplot.canvasAxisTickRenderer.js',
-		'js/libs/jqplot/jqplot.canvasAxisLabelRenderer.js'),
+		'js/libs/jqplot/jqplot.canvasAxisLabelRenderer.js')
 );
 
 $wgResourceModules['ext.SparqlResultFormat.piechart'] = array(
@@ -82,8 +84,7 @@ $wgResourceModules['ext.SparqlResultFormat.piechart'] = array(
 	'remoteExtPath' => 'SparqlResultFormat',
 	'styles' => array(
         'css/jquery.jqplot.min.css' => array('media' => 'screen')),		
-	'scripts' => array('js/ii.sparql.main.js',
-	    'js/ii.sparql.util.js',
+	'scripts' => array(
 	    'js/ii.sparql.format.piechart.js',
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',
@@ -101,8 +102,7 @@ $wgResourceModules['ext.SparqlResultFormat.donutchart'] = array(
 	'remoteExtPath' => 'SparqlResultFormat',
 	'styles' => array(
         'css/jquery.jqplot.min.css' => array('media' => 'screen')),		
-	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js',
-	    'js/ii.sparql.format.donutchart.js',
+	'scripts' => array('js/ii.sparql.format.donutchart.js',
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',
 		'js/libs/jqplot/jqplot.barRenderer.js',
@@ -119,8 +119,7 @@ $wgResourceModules['ext.SparqlResultFormat.bubblechart'] = array(
 	'remoteExtPath' => 'SparqlResultFormat',
 	'styles' => array(
         'css/jquery.jqplot.min.css' => array('media' => 'screen')),		
-	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js',
-	    'js/ii.sparql.format.bubblechart.js',
+	'scripts' => array(  'js/ii.sparql.format.bubblechart.js',
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',
 		'js/libs/jqplot/jqplot.barRenderer.js',
@@ -135,13 +134,13 @@ $wgResourceModules['ext.SparqlResultFormat.bubblechart'] = array(
 $wgResourceModules['ext.SparqlResultFormat.csv'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
-	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js','js/ii.sparql.format.csv.js'),
+	'scripts' => array('js/ii.sparql.format.csv.js'),
 );
 
 $wgResourceModules['ext.SparqlResultFormat.treemap'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
-	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js','js/ii.sparql.format.treemap.js','js/ii.d3.js','js/libs/d3.v3.min.js')
+	'scripts' => array('js/ii.sparql.format.treemap.js','js/ii.d3.js','js/libs/d3.v3.min.js')
 );
 
 
@@ -149,25 +148,22 @@ $wgResourceModules['ext.SparqlResultFormat.treemap'] = array(
 $wgResourceModules['ext.SparqlResultFormat.formats'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
-	'dependencies' => array('ext.SparqlResultFormat.formats.table','ext.SparqlResultFormat.formats.graph','ext.SparqlResultFormat.formats.barchart')
+	'dependencies' => array('ext.SparqlResultFormat.graph',
+	'ext.SparqlResultFormat.table',
+	'ext.SparqlResultFormat.barchart',
+	'ext.SparqlResultFormat.piechart',
+	'ext.SparqlResultFormat.donutchart',
+	'ext.SparqlResultFormat.bubblechart',
+	'ext.SparqlResultFormat.csv',
+	'ext.SparqlResultFormat.treemap'
+	)
 );
 
-$wgResourceModules['ext.SparqlResultFormat.formats.table'] = array(
-	'localBasePath' => $dir,
-	'remoteExtPath' => 'SparqlResultFormat',
-	'scripts' => array('js/ii.sparql.format.table.js')
-);
 
 $wgResourceModules['ext.SparqlResultFormat.formats.graph'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
 	'scripts' => array('js/ii.sparql.format.graph.js','js/ii.cytoscape.js','js/libs/cytoscape.js','js/libs/dagre.min.js','js/libs/cytoscape-dagre.js','js/libs/cytoscape-qtip.js'/*,'js/dagre.core.js'*/)
-);
-
-$wgResourceModules['ext.SparqlResultFormat.formats.barchart'] = array(
-	'localBasePath' => $dir,
-	'remoteExtPath' => 'SparqlResultFormat',
-	'scripts' => array('js/ii.sparql.format.barchart.js','js/libs/jqplot/jquery.jqplot.min.js','js/libs/jqplot/jqplot.barRenderer.js')
 );
 
 

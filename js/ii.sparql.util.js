@@ -159,6 +159,19 @@ spqlib.util = (function () {
 		res = res.replace("_","-");
 		return res;
 	}
+	
+	my.splitPropertySet = function(str,propSep,keyValueSep){
+		var array = str.split(propSep || "||");
+		var res = {};
+		for (var i=0;i<array.length;i++){
+			var prop = array[i];
+			var keyval = prop.split(keyValueSep || ":");
+			if (keyval.length==2){
+				res[keyval[0]]=keyval[1];
+			}
+		}
+		return res;
+	}
 
 	
 

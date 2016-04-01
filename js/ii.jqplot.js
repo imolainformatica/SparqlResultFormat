@@ -5,6 +5,19 @@
 	
 	spqlib.jqplot = (function(){
 		
+		var PROP_CHART_TITLE = "chart.title";
+		var PROP_CHART_AXIS_X_LABEL = "chart.axis.x.label";
+		var PROP_CHART_AXIS_Y_LABEL = "chart.axis.y.label";
+		var PROP_CHART_AXIS_X_LABEL_FONT_SIZE = "chart.axis.x.label.font.size";
+		var PROP_CHART_AXIS_Y_LABEL_FONT_SIZE = "chart.axis.x.label.font.size";
+		var PROP_CHART_AXIS_X_FONT_SIZE = "chart.axis.x.font.size";
+		var PROP_CHART_AXIS_Y_FONT_SIZE = "chart.axis.x.font.size";
+		var PROP_CHART_DIRECTION = "chart.direction";
+		var PROP_CHART_LEGEND_SHOW = "chart.legend.show";
+		var PROP_CHART_LEGEND_LOCATION = "chart.legend.location";
+		var PROP_CHART_AXIS_X_ANGLE = "chart.axis.x.angle";
+		var PROP_CHART_AXIS_Y_ANGLE = "chart.axis.y.angle";
+		
 		var colorscheme = {
 			0:    [ '#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5' ] ,
 			cc124:{9: [ '#E8D0A9', '#B7AFA3', '#C1DAD6', '#F5FAFA', '#ACD1E9', '#6D929B' ] },
@@ -83,6 +96,9 @@
 						  }
 					},
 					yaxis:{
+						tickOptions: {
+						  fontSize: '10pt'
+						},
 						 labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
 						 labelOptions: {
 							fontSize: '14pt'
@@ -361,19 +377,55 @@
 					options.series[i].color = color;
 				}				
 			}	
-			if (config.chartTitle){
-				options.title.text=config.chartTitle;
+			var title = config.extraOptions[PROP_CHART_TITLE];
+			if (title){
+				options.title.text=title;
 			}
-			if (config.direction && config.direction!=null && config.direction!=""){
+			var direction = config.extraOptions[PROP_CHART_DIRECTION];
+			if (direction && direction!=null && direction!=""){
 				options.seriesDefaults.rendererOptions.barDirection=config.direction;
 			}
-			if (config.xAxisLabel){
-				options.axes.xaxis.label=config.xAxisLabel;
+			var xAxisLabel = config.extraOptions[PROP_CHART_AXIS_X_LABEL];
+			if (xAxisLabel){
+				options.axes.xaxis.label=xAxisLabel;
 			}
-			if (config.yAxisLabel){
-				options.axes.yaxis.label=config.yAxisLabel;
+			var yAxisLabel = config.extraOptions[PROP_CHART_AXIS_Y_LABEL];
+			if (yAxisLabel){
+				options.axes.yaxis.label=yAxisLabel;
+			}
+			var showLegend = config.extraOptions[PROP_CHART_LEGEND_SHOW];
+			if (showLegend){
+				options.legend.show=showLegend=="true" ? true : false;
+			}
+			var legendLocation = config.extraOptions[PROP_CHART_LEGEND_LOCATION];
+			if (legendLocation){
+				options.legend.location=legendLocation;
+			}
+			var xAxisLabelFontSize = config.extraOptions[PROP_CHART_AXIS_X_LABEL_FONT_SIZE];
+			if (xAxisLabelFontSize){
+				options.axes.xaxis.labelOptions.fontSize=xAxisLabelFontSize;
+			}
+			var yAxisLabelFontSize = config.extraOptions[PROP_CHART_AXIS_Y_LABEL_FONT_SIZE];
+			if (yAxisLabelFontSize){
+				options.axes.yaxis.labelOptions.fontSize=yAxisLabelFontSize;
 			}
 			
+			var xAxisFontSize = config.extraOptions[PROP_CHART_AXIS_X_FONT_SIZE];
+			if (xAxisFontSize){
+				options.axes.xaxis.tickOptions.fontSize=xAxisFontSize;
+			}
+			var yAxisFontSize = config.extraOptions[PROP_CHART_AXIS_Y_FONT_SIZE];
+			if (yAxisFontSize){
+				options.axes.yaxis.tickOptions.fontSize=yAxisFontSize;
+			}
+			var  xAxisAngle = config.extraOptions[PROP_CHART_AXIS_X_ANGLE];
+			if (xAxisAngle){
+				options.axes.xaxis.tickOptions.angle = xAxisAngle;
+			}
+			var  yAxisAngle = config.extraOptions[PROP_CHART_AXIS_Y_ANGLE];
+			if (yAxisAngle){
+				options.axes.yaxis.tickOptions.angle = yAxisAngle;
+			}
 			return options;
 		}
 		
