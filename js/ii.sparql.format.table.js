@@ -14,11 +14,16 @@ spqlib.table = (function () {
 			$("#"+config.divId).html("<div class'warning'>"+config.noResultMessage+"</div>");	
 			return;
 	   }
-	   var colTitles = config.columnTitles;
+	   var colTitles = config.columnTitles || config.columnConfiguration;
 	   var colTitleMapping = {};
 	   if (colTitles){
 		   for (var i = 0; i < colTitles.length; i++) {
-			   colTitleMapping[colTitles[i].queryField] = {label:colTitles[i].label,showLink:colTitles[i].showLink};
+			   colTitleMapping[colTitles[i].queryField] = {
+				   label:colTitles[i].label,
+				   showLink:colTitles[i].showLink,
+				   cellValuePattern:colTitles[i].cellValuePattern,
+				   cellLinkPattern:colTitles[i].cellLinkPattern,
+			   };
 		   }
 	   }
 		   
@@ -50,10 +55,10 @@ spqlib.table = (function () {
 				var mappedColumnInfo = mapColumnTitle(headers[j],colTitleMapping);
 				var linkCellValue = "";
 				if (mappedColumnInfo){
-					if (mappedColumnInfo.showLink = 'true'){
-						linkCellValue = "<a href='"+spqlib.util.htmlEncode(config.linkBasePath).replace(/'/g, "&apos;")+cellValue+"'>"+cellValue+"</a>";
+					if (mappedColumnInfo.showLink == 'true'){
+						linkCellValue = getCellLinkValue(config,cellValue,mappedColumnInfo); 
 					} else {
-						linkCellValue = cellValue;
+						linkCellValue = getCellValue(cellValue,mappedColumnInfo);
 					}
 				} else {
 					linkCellValue = cellValue;
@@ -80,6 +85,30 @@ spqlib.table = (function () {
 			tableContainer.after("<span class='export-table-csv'><a class='export'>"+label+"</a><form action='"+csvFormAction+"' method ='post' ><input type='hidden' id='csv_text' name='csv_text' /><input type='hidden' id='csv_file_name' name='csv_file_name' value='"+filename+"'/></form></span>");
 			window.exportTableToCSVClickHandler();
 		}		
+	}
+	
+	function getCellLinkValue(config,cellValue,columnConfiguration){
+		
+		var link = "";
+		if (columnConfiguration.cellLinkPattern){
+			link = formatString(columnConfiguration.cellLinkPattern,cellValue);
+		} else {
+			link = config.linkBasePath+cellValue;
+		}
+		var formattedCellValue = getCellValue(cellValue,columnConfiguration);
+		return "<a href='"+spqlib.util.htmlEncode(link).replace(/'/g, "&apos;")+"'>"+formattedCellValue+"</a>";
+	}
+	
+	function getCellValue(cellValue,columnConfiguration){
+		if (columnConfiguration.cellValuePattern){
+			return formatString(columnConfiguration.cellValuePattern,cellValue)
+		}
+		return cellValue;
+	}
+	
+	function formatString(format,param){
+		 var formatted = format.replace("{%s}", param);
+		 return formatted;
 	}
 
 	function isEven(i){
