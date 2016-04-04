@@ -29,11 +29,14 @@
 		}
 
 	    function drawTreemap(res,config){
-			var margin = {top: 40, right: 0, bottom: 0, left: 0},
-			width = config.width || 960,
-			height = config.height || 500 - margin.top - margin.bottom,
-			formatNumber = d3.format(",d"),
-			transitioning;
+			$("#"+config.divId).html("");
+			var margin = {top: 40, right: 0, bottom: 0, left: 0};
+			var width = $("#"+config.divId).outerWidth(true);
+			var height = $("#"+config.divId).outerHeight(true)- margin.top - margin.bottom;
+			//width = config.width || 960,
+			//height = config.height || 500 ,
+			var formatNumber = d3.format(",d");
+			var transitioning;
 			var x = d3.scale.linear()
 				.domain([0, width])
 				.range([0, width]);

@@ -60,8 +60,14 @@ spqlib.treemap = (function () {
 		}
 		var root = config.rootElement;
 		var res = createStructure(root,obj,config);
-
+		var chartId = config.divId;
+		var chart = {
+			res:res,
+			config:config,
+			resize:spqlib.treemap.chartImpl().drawTreemap
+		}
 		spqlib.treemap.chartImpl().drawTreemap(res,config);
+		spqlib.addToRegistry(chartId,chart); 
 	}
 	
 	function createStructure(elem,obj,config){

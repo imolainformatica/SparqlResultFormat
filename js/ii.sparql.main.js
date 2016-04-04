@@ -36,7 +36,7 @@ var spqlib = ( function ( $, undefined ) {
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
 		parseExtraOptions(config);
-		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.barchart.render, config);
+		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.barchart.render, config,spqlib.barchart.preQuery,spqlib.barchart.failQuery);
 	}
 	
 	function sparql2PieChart(config){
