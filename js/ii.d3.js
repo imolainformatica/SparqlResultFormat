@@ -30,9 +30,10 @@
 
 	    function drawTreemap(res,config){
 			$("#"+config.divId).html("");
-			var margin = {top: 40, right: 0, bottom: 0, left: 0};
+			var margin = {top: 0, right: 0, bottom: 0, left: 0};
 			var width = $("#"+config.divId).outerWidth(true);
-			var height = $("#"+config.divId).outerHeight(true)- margin.top - margin.bottom;
+			var headerHeight = $("#"+config.divId+" .grandparent").outerHeight(true);
+			var height = $("#"+config.divId).outerHeight(true)- margin.top - margin.bottom -headerHeight;
 			//width = config.width || 960,
 			//height = config.height || 500 ,
 			var formatNumber = d3.format(",d");
@@ -53,7 +54,9 @@
 				
 
 			
-
+            var grandparent = d3.select("#"+config.divId).append("div")
+				.attr("class", "grandparent");
+				grandparent.html("<span>ciao</span>");
 							
 			var svg = d3.select("#"+config.divId).append("svg")
 				.attr("width", width + margin.left + margin.right)
@@ -64,7 +67,9 @@
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 				.style("shape-rendering", "crispEdges");
 				
-			var grandparent = svg.append("g")
+				
+				
+			/*var grandparent = svg.append("g")
 				.attr("class", "grandparent");
 
 			grandparent.append("rect")
@@ -75,7 +80,7 @@
 			grandparent.append("text")
 				.attr("x", 6)
 				.attr("y", 6 - margin.top)
-				.attr("dy", ".75em");
+				.attr("dy", ".75em");*/
 				
 			setTimeout(function(root) {
 				  initialize(res);
@@ -122,11 +127,16 @@
 				  }
 
 				  function display(d,wrap) {
-					grandparent
+					/*grandparent
 						.datum(d.parent)
 						.on("click", transition)
 					  .select("text")
-						.text(name(d));
+						.text(name(d));*/
+				  grandparent
+						.datum(d.parent)
+						.on("click", transition)
+					  .select("span")
+						.html(name(d));
 
 					var g1 = svg.insert("g", ".grandparent")
 						.datum(d)

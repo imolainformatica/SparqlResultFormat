@@ -43,6 +43,7 @@ var spqlib = ( function ( $, undefined ) {
 		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
+		parseExtraOptions(config);
 		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.piechart.render, config);
 	}
 	
@@ -89,7 +90,7 @@ var spqlib = ( function ( $, undefined ) {
 	
 	function parseExtraOptions(config){
 		if (!config.extraOptions){
-			config.extraOptions=[];
+			config.extraOptions={};
 		}
 		if (config.extraOptionsString){
 			config.extraOptions = spqlib.util.splitPropertySet(config.extraOptionsString);

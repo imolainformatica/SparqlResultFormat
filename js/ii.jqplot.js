@@ -5,7 +5,9 @@
 	
 	spqlib.jqplot = (function(){
 		
+		/*COMUNI*/
 		var PROP_CHART_TITLE = "chart.title";
+		/*BARCHART*/
 		var PROP_CHART_AXIS_X_LABEL = "chart.axis.x.label";
 		var PROP_CHART_AXIS_Y_LABEL = "chart.axis.y.label";
 		var PROP_CHART_AXIS_X_LABEL_FONT_SIZE = "chart.axis.x.label.font.size";
@@ -153,22 +155,22 @@
 					  sliceMargin: 0, 
 					}
 				  }, 
-				  highlighter: { 
+				  /*highlighter: { 
 					show: true,
 					tooltipLocation:'n',
 					useAxesFormatters: false,
 					formatString:'%s, %P',
-					tooltipContentEditor:defaultPiechartTooltipContentEditor  },
+					tooltipContentEditor:defaultPiechartTooltipContentEditor  },*/
 				  legend: { show:true, location: 'e' }
 				}
 				
 			function defaultPiechartTooltipContentEditor(str, seriesIndex, pointIndex, plot) {
 				var label =  plot.data[seriesIndex][pointIndex][0];
-				var html = "<span class='jqplot-tooltip-label'>"+label+"</span>, ";
 				var value = plot.data[seriesIndex][pointIndex][1];
-				html+="<span class='jqplot-tooltip-value'>"+value+"</span>";
+				var html = spqlib.piechart.defaultPieChartTooltipContent(label,value);
 				return html;
-			}
+
+			}			
 				
 			var defaultDonutChartOptions = {
 				title: {text:'',show:true},
@@ -230,7 +232,37 @@
 			  var options= getPieChartOptions(config);
 			  var data = createSeries(label,series);
 			  var plot1 = jQuery.jqplot (config.divId, [data], options);
+			  plot1.config = config;
 			  c[config.divId]=plot1;
+				$("#"+config.divId).bind('jqplotDataClick',
+					function (ev, seriesIndex, pointIndex, data,plot) { 
+                        var tooltip = $(".jqplot-highlighter-tooltip");							
+					    var chartId = ev.currentTarget.id;
+                        var chart = $("#"+chartId)[0];
+                       	var offsetLeft = chart.offsetLeft;	
+						var offsetTop = chart.offsetTop;	
+					    var oldHtml = tooltip.html();
+						var x = ev.pageX - offsetLeft;
+						var y = ev.pageY - offsetTop;
+						var oldPointIndex = tooltip.attr("pointIndex");
+						tooltip.attr("pointIndex",pointIndex);
+						tooltip.css("position","absolute");
+						tooltip.css("left",x+"px");
+						tooltip.css("top",y+"px");
+						tooltip.css("z-index","999");
+						var html = config.pieChartTooltipContent ? config.pieChartTooltipContent.call(data[0],data[1],config) : spqlib.piechart.defaultPieChartTooltipContent(data[0],data[1],config);
+						if (oldPointIndex!=pointIndex){
+							tooltip.show();
+						} else {
+							tooltip.toggle();
+						}
+						tooltip.html(html);
+					}
+				);
+
+
+			  
+			  
 			  return plot1;
 		}
 		
@@ -431,8 +463,9 @@
 		
 		function getPieChartOptions(config){
 			var options = spqlib.util.cloneObject(defaultPieChartOptions);
-			if (config.chartTitle){
-				options.title.text=config.chartTitle;
+			var title = config.extraOptions[PROP_CHART_TITLE];
+			if (title){
+				options.title.text=title;
 			}
 			return options;
 		}
@@ -452,7 +485,7 @@
 			}
 			return options;
 		}
-		
+
 		function getChart(chartId){
 			if (c[chartId]){
 				return c[chartId];

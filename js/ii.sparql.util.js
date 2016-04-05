@@ -160,15 +160,25 @@ spqlib.util = (function () {
 		return res;
 	}
 	
+	my.formatString = function(format,param){
+		 var formatted = format.replace("{%s}", param);
+		 return formatted;
+	}	
+	
 	my.splitPropertySet = function(str,propSep,keyValueSep){
 		var array = str.split(propSep || "||");
 		var res = {};
 		for (var i=0;i<array.length;i++){
 			var prop = array[i];
-			var keyval = prop.split(keyValueSep || ":");
-			if (keyval.length==2){
+			var index = prop.indexOf(":");
+			var key = prop.substring(0,index);
+			var val = prop.substring(index+1);
+			res[key]=val;
+			//var keyval = prop.slice(  );
+			//var keyval = prop.split(keyValueSep || ":");
+			/*if (keyval.length==2){
 				res[keyval[0]]=keyval[1];
-			}
+			}*/
 		}
 		return res;
 	}
