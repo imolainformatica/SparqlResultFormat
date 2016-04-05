@@ -235,10 +235,10 @@
 			  plot1.config = config;
 			  c[config.divId]=plot1;
 				$("#"+config.divId).bind('jqplotDataClick',
-					function (ev, seriesIndex, pointIndex, data,plot) { 
-                        var tooltip = $(".jqplot-highlighter-tooltip");							
+					function (ev, seriesIndex, pointIndex, data,plot) { 			
 					    var chartId = ev.currentTarget.id;
-                        var chart = $("#"+chartId)[0];
+						var chart = $("#"+chartId)[0];
+						var tooltip = $("#"+chartId+" .jqplot-highlighter-tooltip");		
                        	var offsetLeft = chart.offsetLeft;	
 						var offsetTop = chart.offsetTop;	
 					    var oldHtml = tooltip.html();
