@@ -56,6 +56,39 @@ spqlib.barchart = (function () {
 		spqlib.addToRegistry(chartId,chart);
 	}
 	
+	my.defaultBarChartTooltipContent = function(label,value,config,seriesIndex){
+		var op = config.extraOptions || {};
+		var spanLabel = "";
+		var textLabel = "";
+		var labelPattern = config.seriesConfiguration[seriesIndex].assetPattern;
+		var linkPattern = config.seriesConfiguration[seriesIndex].assetLinkPattern;
+		var showLink = config.seriesConfiguration[seriesIndex].showLink;
+		var seriesLabel = config.seriesConfiguration[seriesIndex].label;
+		var valuePattern = config.seriesConfiguration[seriesIndex].valuePattern;
+		if (labelPattern){
+			textLabel = spqlib.util.formatString(labelPattern,label);
+		} else {
+			textLabel = label;
+		}
+		if (showLink=="true"){
+			var url = "#";
+			if (linkPattern){
+				url = spqlib.util.formatString(linkPattern,label);
+			}
+			spanLabel = "<a href='"+url+"'>"+textLabel+"</a>";
+		} else {
+			spanLabel = textLabel;
+		}
+		value = " "+value;
+		if (valuePattern){
+			value = spqlib.util.formatString(valuePattern,value);
+		}
+		var html = "<span class=\"jqplot-tooltip-label\">"+spanLabel+"</span></br>";
+		html+="<span class=\"jqplot-tooltip-serie-label\">"+seriesLabel+"</span>";
+		html+="<span class=\"jqplot-tooltip-value\">"+value+"</span>";
+		return html;
+	}
+	
 
 	return my;
 }());

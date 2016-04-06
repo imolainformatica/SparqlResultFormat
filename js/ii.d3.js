@@ -32,6 +32,9 @@
 			$("#"+config.divId).html("");
 			var margin = {top: 0, right: 0, bottom: 0, left: 0};
 			var width = $("#"+config.divId).outerWidth(true);
+			var grandparent = d3.select("#"+config.divId).append("div")
+				.attr("class", "grandparent");
+				grandparent.html("<span>ciao</span>");
 			var headerHeight = $("#"+config.divId+" .grandparent").outerHeight(true);
 			var height = $("#"+config.divId).outerHeight(true)- margin.top - margin.bottom -headerHeight;
 			//width = config.width || 960,
@@ -54,9 +57,7 @@
 				
 
 			
-            var grandparent = d3.select("#"+config.divId).append("div")
-				.attr("class", "grandparent");
-				grandparent.html("<span>ciao</span>");
+
 							
 			var svg = d3.select("#"+config.divId).append("svg")
 				.attr("width", width + margin.left + margin.right)

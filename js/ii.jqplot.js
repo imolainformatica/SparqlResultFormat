@@ -107,12 +107,12 @@
 						  }
 					}
 				},
-				highlighter: { 
+				/*highlighter: { 
 					show: true,
 					tooltipLocation:'n',
 					useAxesFormatters: true ,
 					tooltipContentEditor:defaultBarchartTooltipContentEditor
-				},
+				},*/
 				legend: {
 					show: true,
 					location: 'ne',
@@ -219,9 +219,42 @@
 			var s = createBarchartSeries(label,series);		
 		    var options= getBarChartOptions(config);	
 			options.seriesDefaults.renderer=$.jqplot.BarRenderer;
-			var plot1 = $.jqplot(config.divId, s,options );
-			c[config.divId]=plot1;
-			return plot1;				
+			var plot = $.jqplot(config.divId, s,options );
+			c[config.divId]=config.plot=plot;
+			/*$("#"+config.divId).bind('jqplotClick',function(ev){
+				var chartId = ev.currentTarget.id;
+				var tooltip = $("#"+chartId+" .jqplot-highlighter-tooltip");
+				tooltip.hide();
+			});*/
+			$("#"+config.divId).bind('jqplotDataClick',
+				function (ev, seriesIndex, pointIndex, data) { 
+					var chartId = ev.currentTarget.id;
+					var chart = $("#"+chartId)[0];
+					var tooltip = $("#"+chartId+" .jqplot-highlighter-tooltip");		
+					var offsetLeft = chart.offsetLeft;	
+					var offsetTop = chart.offsetTop;	
+					var x = ev.pageX - offsetLeft;
+					var y = ev.pageY - offsetTop;
+					var oldPointIndex = tooltip.attr("pointIndex");
+					tooltip.attr("pointIndex",pointIndex+"-"+seriesIndex);
+					tooltip.css("position","absolute");
+					tooltip.css("left",x+"px");
+					tooltip.css("top",y+"px");
+					tooltip.css("z-index","999");
+					var plot = config.plot;
+					var label = plot.data[seriesIndex][pointIndex][0];
+					var value = plot.data[seriesIndex][pointIndex][1];
+					var html = config.barChartTooltipContent ? config.barChartTooltipContent.call(label,value,config,seriesIndex) : spqlib.barchart.defaultBarChartTooltipContent(label,value,config,seriesIndex);
+					if (oldPointIndex!=pointIndex+"-"+seriesIndex){
+						tooltip.show();
+					} else {
+						tooltip.toggle();
+					}
+					tooltip.html(html);
+					//ev.stopImmediatePropagation();//per evitare di triggere il jqplotClick
+				}
+			);					
+			return plot;				
 		}
 		
 		 /**
@@ -235,13 +268,12 @@
 			  plot1.config = config;
 			  c[config.divId]=plot1;
 				$("#"+config.divId).bind('jqplotDataClick',
-					function (ev, seriesIndex, pointIndex, data,plot) { 			
+					function (ev, seriesIndex, pointIndex, data) { 			
 					    var chartId = ev.currentTarget.id;
 						var chart = $("#"+chartId)[0];
 						var tooltip = $("#"+chartId+" .jqplot-highlighter-tooltip");		
                        	var offsetLeft = chart.offsetLeft;	
 						var offsetTop = chart.offsetTop;	
-					    var oldHtml = tooltip.html();
 						var x = ev.pageX - offsetLeft;
 						var y = ev.pageY - offsetTop;
 						var oldPointIndex = tooltip.attr("pointIndex");
