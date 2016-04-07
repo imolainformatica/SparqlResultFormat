@@ -160,8 +160,11 @@ spqlib.util = (function () {
 		return res;
 	}
 	
-	my.formatString = function(format,param){
-		 var formatted = format.replace("{%s}", param);
+	my.formatString = function(format,param,token){
+		 if (!token){
+			 token = "{%s}";
+		 }
+		 var formatted = format.replace(token, param);
 		 return formatted;
 	}	
 	

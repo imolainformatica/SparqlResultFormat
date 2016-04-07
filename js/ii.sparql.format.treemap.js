@@ -75,7 +75,10 @@ spqlib.treemap = (function () {
 		if (obj[elem].children.length==0){
 			//è una foglia
 			var url="";
-			if (config.linkBasePath){
+			var linkPattern = config.leavesLinkPattern;
+			if (linkPattern){
+				url = spqlib.util.formatString(linkPattern,elem);
+			} else if (config.linkBasePath){
 				url = config.linkBasePath+elem;
 			}
 			return {name:elem,value:obj[elem].value,url:url};

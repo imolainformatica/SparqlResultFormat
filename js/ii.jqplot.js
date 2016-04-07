@@ -19,6 +19,19 @@
 		var PROP_CHART_LEGEND_LOCATION = "chart.legend.location";
 		var PROP_CHART_AXIS_X_ANGLE = "chart.axis.x.angle";
 		var PROP_CHART_AXIS_Y_ANGLE = "chart.axis.y.angle";
+		/*BUBBLE CHART*/
+		var PROP_CHART_LEGEND_COLUMN_ASSET = "chart.legend.column.asset";
+		var PROP_CHART_LEGEND_COLUMN_RADIUS = "chart.legend.column.radius";
+		var PROP_CHART_TOOLTIP_LABEL_PATTERN = "chart.tooltip.asset.label.pattern";
+		var PROP_CHART_TOOLTIP_LABEL_LINK_SHOW = "chart.tooltip.asset.link.show";
+		var PROP_CHART_TOOLTIP_LABEL_LINK_PATTERN = "chart.tooltip.asset.label.link.pattern";
+		var PROP_CHART_TOOLTIP_X_LABEL = "chart.tooltip.x.label";
+		var PROP_CHART_TOOLTIP_Y_LABEL = "chart.tooltip.y.label";
+		var PROP_CHART_TOOLTIP_R_LABEL = "chart.tooltip.r.label";
+		var PROP_CHART_TOOLTIP_X_VALUE_PATTERN = "chart.tooltip.x.value.pattern";
+		var PROP_CHART_TOOLTIP_Y_VALUE_PATTERN = "chart.tooltip.y.value.pattern";
+		var PROP_CHART_TOOLTIP_R_VALUE_PATTERN = "chart.tooltip.r.value.pattern";
+		
 		
 		var colorscheme = {
 			0:    [ '#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5' ] ,
@@ -76,11 +89,6 @@
 				seriesColor:colorscheme['rdgy'][9],
 				axesDefaults: {
 					tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-					/*tickOptions: {
-						  angle: -30,
-						  fontSize: '8pt',
-						  formatter:defaultCutLongLabelFormatter
-						}*/
 				},
 				axes: {
 					xaxis: {
@@ -107,12 +115,6 @@
 						  }
 					}
 				},
-				/*highlighter: { 
-					show: true,
-					tooltipLocation:'n',
-					useAxesFormatters: true ,
-					tooltipContentEditor:defaultBarchartTooltipContentEditor
-				},*/
 				legend: {
 					show: true,
 					location: 'ne',
@@ -143,6 +145,7 @@
 			}
 			
 			var defaultPieChartOptions = {
+				animate: true,
 				title: {text:'',show:true},
 				seriesColor:colorscheme['rdgy'][9],
 				  seriesDefaults: {
@@ -155,12 +158,6 @@
 					  sliceMargin: 0, 
 					}
 				  }, 
-				  /*highlighter: { 
-					show: true,
-					tooltipLocation:'n',
-					useAxesFormatters: false,
-					formatString:'%s, %P',
-					tooltipContentEditor:defaultPiechartTooltipContentEditor  },*/
 				  legend: { show:true, location: 'e' }
 				}
 				
@@ -173,6 +170,7 @@
 			}			
 				
 			var defaultDonutChartOptions = {
+				animate: true,
 				title: {text:'',show:true},
 				seriesColor:colorscheme['spectral'][9],
 				seriesDefaults: {
@@ -208,7 +206,23 @@
 					},
 					shadow: true,
 					shadowAlpha: 0.05
-				}
+				},
+				axes: {
+						xaxis: {
+							 labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+							 labelOptions: {
+								fontSize: '14pt'
+							  },
+							  tickOptions: {}
+						},
+						yaxis:{
+							 labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+							 labelOptions: {
+								fontSize: '14pt'
+							  },
+							  tickOptions: {}
+						}
+					}
 			}
 	
 	     /**
@@ -323,21 +337,28 @@
 			  var data = createBubbleSeries(label,series);
 			  var graphId = config.divId;
 			  var plot1 = jQuery.jqplot (graphId, [data], options);
+			  plot1.config = config;
 			  c[graphId]=plot1;
-			  if (config.drawLegendCallback && typeof config.drawLegendCallback =="function"){
-				  config.drawLegendCallback(config,data);
-			  } else {
-				  defaultDrawLegend(config,data);
+			  if (config.extraOptions[PROP_CHART_LEGEND_SHOW]=="true"){
+				  if (config.drawLegendCallback && typeof config.drawLegendCallback =="function"){
+					  config.drawLegendCallback(config,data);
+				  } else {
+					  defaultDrawLegend(config,data);
+				  }
 			  }
-			  $("#"+graphId).bind('jqplotDataHighlight', config.bubbleChartDataHighlightCallback || defaultBubbleChartDataHighlight);
-			  $("#"+graphId).bind('jqplotDataUnhighlight', config.bubbleChartDataUnhighlightCallback || defaultBubbleChartDataUnhighlight);
+			  $("#"+graphId).bind('jqplotDataClick', config.bubbleChartDataHighlightCallback || defaultBubbleChartDataHighlight);
+			  //$("#"+graphId).bind('jqplotDataUnhighlight', config.bubbleChartDataUnhighlightCallback || defaultBubbleChartDataUnhighlight);
 			  return plot1;
 		}
 		
 		function defaultDrawLegend(config,data){
 			var graphId = config.divId;
+			var first = config.extraOptions[PROP_CHART_LEGEND_COLUMN_ASSET] || "Label";
+			var second = config.extraOptions[PROP_CHART_LEGEND_COLUMN_RADIUS] || "Radius";
+			$('#'+graphId+"-legend").html("");
+			$('#'+graphId+"-legend").append("<table><thead><tr><th>"+first+"</th><th>"+second+"</th></tr></thead><tbody></tbody></table>");
 			$.each(data, function(index, val) {
-				$('#'+graphId+"-legend").append('<tr><td>'+val[3]+'</td><td>'+val[2]+'</td></tr>');
+				$('#'+graphId+"-legend tbody").append('<tr><td>'+val[3]+'</td><td>'+val[2]+'</td></tr>');
 			  });
 		}
 		
@@ -345,15 +366,42 @@
 			var graphId = $(ev.target).attr("id");
 			var legendIdSelector = "#"+graphId+"-legend";
 			var plot = c[graphId];
-			var chart_left = $("#"+graphId).offset().left,
-				chart_top = $("#"+graphId).offset().top,
-				x = plot.axes.xaxis.u2p(data[0]),  // convert x axis unita to pixels on grid
-				y = plot.axes.yaxis.u2p(data[1]);  // convert y axis units to pixels on grid
+			var config = plot.config;
+			var chart_left = $("#"+graphId).offset().left;
+			var chart_top = $("#"+graphId).offset().top;
+			var x = plot.axes.xaxis.u2p(data[0]);  // convert x axis unita to pixels on grid
+			var	y = plot.axes.yaxis.u2p(data[1]);  // convert y axis units to pixels on grid
 			var color = 'rgb(50%,50%,100%)';
+			var assetName = data[3];
+			var xValue = data[0];
+			var yValue = data[1];
+			var rValue = data[2];
+			var xLabel = config.extraOptions[PROP_CHART_TOOLTIP_X_LABEL] || "x";
+			var yLabel = config.extraOptions[PROP_CHART_TOOLTIP_Y_LABEL] || "y";
+			var rLabel = config.extraOptions[PROP_CHART_TOOLTIP_R_LABEL] || "r";
+            var labelPattern = config.extraOptions[PROP_CHART_TOOLTIP_LABEL_PATTERN] || "{%s}";
+			var showLink = config.extraOptions[PROP_CHART_TOOLTIP_LABEL_LINK_SHOW] || "false";
+			var labelLinkPattern = config.extraOptions[PROP_CHART_TOOLTIP_LABEL_LINK_PATTERN];
+			var assetNameSpan = "";
+			var assetNameText = spqlib.util.formatString(labelPattern,assetName);
+			if (showLink){
+				var link = spqlib.util.formatString(labelLinkPattern,assetName);
+				assetNameSpan = "<a href='"+link+"'>"+assetNameText+"</a>";
+			} else {
+				assetNameSpan = assetNameText;
+			}
+			var xValuePattern = config.extraOptions[PROP_CHART_TOOLTIP_X_VALUE_PATTERN];
+			var yValuePattern = config.extraOptions[PROP_CHART_TOOLTIP_Y_VALUE_PATTERN];
+			var rValuePattern = config.extraOptions[PROP_CHART_TOOLTIP_R_VALUE_PATTERN];
+			xValue = xValuePattern ? spqlib.util.formatString(xValuePattern,xValue,"{%d}") : xValue;
+			yValue = yValuePattern ? spqlib.util.formatString(yValuePattern,yValue,"{%d}") : yValue;
+			rValue = rValuePattern ? spqlib.util.formatString(rValuePattern,rValue,"{%d}") : rValue;
+			
 			$('#tooltip1b').css({left:chart_left+x+radius+5, top:chart_top+y});
+			$('#tooltip1b').attr("label",assetName);
 			$('#tooltip1b').html('<span style="font-size:14px;font-weight:bold;color:'+color+';">' + 
-			data[3] + '</span><br />' + 'x: '+data[0] + '<br />' + 'y: ' + 
-			data[1] + '<br />' + 'r: ' + data[2]);
+			assetNameSpan + '</span><br />' +xLabel+' '+xValue + '<br />' +yLabel+ ' ' + 
+			yValue + '<br />' + rLabel+' ' + rValue);
 			$('#tooltip1b').show();
 			$(legendIdSelector+' tr td').css('background-color', '#ffffff !important');
 			$(legendIdSelector+' tr td').eq(pointIndex+1).css('background-color', color);
@@ -512,8 +560,34 @@
 		
 		function getBubbleChartOptions(config){
 			var options = spqlib.util.cloneObject(defaultBubbleChartOptions);
-			if (config.chartTitle){
-				options.title.text=config.chartTitle;
+			var op = config.extraOptions;
+			var title = op[PROP_CHART_TITLE];
+			if (title){
+				options.title.text=title;
+			}
+			var xAxisLabel = op[PROP_CHART_AXIS_X_LABEL];
+			if (xAxisLabel){
+				options.axes.xaxis.label=xAxisLabel;
+			}
+			var yAxisLabel = op[PROP_CHART_AXIS_Y_LABEL];
+			if (yAxisLabel){
+				options.axes.yaxis.label=yAxisLabel;
+			}
+			var xAxisLabelFontSize = op[PROP_CHART_AXIS_X_LABEL_FONT_SIZE];
+			if (xAxisLabelFontSize){
+				options.axes.xaxis.labelOptions.fontSize=xAxisLabelFontSize;
+			}
+			var yAxisLabelFontSize = op[PROP_CHART_AXIS_Y_LABEL_FONT_SIZE];
+			if (yAxisLabelFontSize){
+				options.axes.yaxis.labelOptions.fontSize=yAxisLabelFontSize;
+			}
+			var xAxisFontSize =op[PROP_CHART_AXIS_X_FONT_SIZE];
+			if (xAxisFontSize){
+				options.axes.xaxis.tickOptions.fontSize=xAxisFontSize;
+			}
+			var yAxisFontSize = op[PROP_CHART_AXIS_Y_FONT_SIZE];
+			if (yAxisFontSize){
+				options.axes.yaxis.tickOptions.fontSize=yAxisFontSize;
 			}
 			return options;
 		}

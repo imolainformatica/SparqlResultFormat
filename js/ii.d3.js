@@ -10,21 +10,47 @@
 		  var xPosition = d3.event.pageX + 5;
 		  var yPosition = d3.event.pageY + 5;
 
-		  d3.select("#tooltip")
+		  d3.select("#tooltip-treemap")
 			.style("left", xPosition + "px")
 			.style("top", yPosition + "px");
 		  d3.select("#tooltip-text")
 			.html("<span class='treemap-tooltip-instance-name'>"+d["name"]+"</span> </br>Value: "+d["value"]);
-		  d3.select("#tooltip").classed("hidden", false);
+		  d3.select("#tooltip-treemap").classed("hidden", false);
 		};
 		
 		var defaultMouseout = function() {
-		    d3.select("#tooltip").classed("hidden", true);
+		    d3.select("#tooltip-treemap").classed("hidden", true);
 		};
 		
+		var defaultMouseClickOnLeaves = function(ev){
+			var treemapId = $(ev.currentTarget).parents(".d3-treemap").attr("id");
+			var selected = d3.select(ev.currentTarget).classed("selected");
+			d3.select("#"+treemapId).selectAll("g.depth g").classed("selected",false)
+			d3.select(ev.currentTarget).classed("selected",!selected);
+			var xPosition = ev.pageX + 5;
+		    var yPosition = ev.pageY + 5;
+			var label = $(ev.currentTarget)[0].__data__.name;
+			var value = $(ev.currentTarget)[0].__data__.value;
+			var url = $(ev.currentTarget)[0].__data__.url;
+			var spanContent = "";
+			if (url){
+				spanContent="<a href='"+url+"'>"+label+"</a>";
+			} else {
+				spanContent = label;
+			}
+			var html = "<span class='treemap-info-box-selected-item'>Selected item:</span> \
+			<div class='treemap-info-box-content'><span class='treemap-tooltip-instance-name'>"+spanContent+"</span> </br>Value: "+value+"</div>";
+			if (selected){
+				$("#"+treemapId).find(".treemap-info-box").html("");
+			} else {
+				$("#"+treemapId).find(".treemap-info-box").html(html);
+			}
+		}
+		
 		var defaultLeavesClickCallback = function(d) { 
-			if(!d.children){
-				window.open(d.url); 
+		    var url = $(d.currentTarget)[0].__data__.url;
+			if(url){
+				window.open(url); 
 			}
 		}
 
@@ -34,11 +60,9 @@
 			var width = $("#"+config.divId).outerWidth(true);
 			var grandparent = d3.select("#"+config.divId).append("div")
 				.attr("class", "grandparent");
-				grandparent.html("<span>ciao</span>");
+				grandparent.html("<span></span>");
 			var headerHeight = $("#"+config.divId+" .grandparent").outerHeight(true);
 			var height = $("#"+config.divId).outerHeight(true)- margin.top - margin.bottom -headerHeight;
-			//width = config.width || 960,
-			//height = config.height || 500 ,
 			var formatNumber = d3.format(",d");
 			var transitioning;
 			var x = d3.scale.linear()
@@ -54,10 +78,6 @@
 				.sort(function(a, b) { return a.value - b.value; })
 				.ratio(height / width * 0.5 * (1 + Math.sqrt(5)))
 				.round(false);
-				
-
-			
-
 							
 			var svg = d3.select("#"+config.divId).append("svg")
 				.attr("width", width + margin.left + margin.right)
@@ -67,21 +87,8 @@
 			  .append("g")
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 				.style("shape-rendering", "crispEdges");
-				
-				
-				
-			/*var grandparent = svg.append("g")
-				.attr("class", "grandparent");
-
-			grandparent.append("rect")
-				.attr("y", -margin.top)
-				.attr("width", width)
-				.attr("height", margin.top);
-
-			grandparent.append("text")
-				.attr("x", 6)
-				.attr("y", 6 - margin.top)
-				.attr("dy", ".75em");*/
+			var infoBox = d3.select("#"+config.divId).append("div")
+				.attr("class", "treemap-info-box");
 				
 			setTimeout(function(root) {
 				  initialize(res);
@@ -133,6 +140,7 @@
 						.on("click", transition)
 					  .select("text")
 						.text(name(d));*/
+						d3.select("#"+config.divId).select(".treemap-info-box").html("");
 				  grandparent
 						.datum(d.parent)
 						.on("click", transition)
@@ -159,10 +167,8 @@
 						
 					g.filter(function(d) { return !d._children; })
 						.classed("leaves", true);
-					g.selectAll(".leaves")
-						.on("click", defaultLeavesClickCallback )
-
-
+					$("#"+config.divId).find(".leaves").on("click",defaultMouseClickOnLeaves);
+						
 					g.selectAll(".child")
 						.data(function(d) { return d._children || [d]; })
 					  .enter().append("rect")
@@ -184,7 +190,8 @@
 						.call(wrap ? wordWrap : empty)
 						
 					function transition(d) {
-						d3.select("#tooltip").classed("hidden", true);
+						d3.select(this.parentNode).select(".treemap-info-box").html("");
+						d3.select("#tooltip-treemap").classed("hidden", true);
 					  var g2 = display(d,false)
 
 					  // Update the domain only after entering new elements.
