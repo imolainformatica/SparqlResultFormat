@@ -371,7 +371,6 @@
 			var chart_top = $("#"+graphId).offset().top;
 			var x = plot.axes.xaxis.u2p(data[0]);  // convert x axis unita to pixels on grid
 			var	y = plot.axes.yaxis.u2p(data[1]);  // convert y axis units to pixels on grid
-			var color = 'rgb(50%,50%,100%)';
 			var assetName = data[3];
 			var xValue = data[0];
 			var yValue = data[1];
@@ -384,7 +383,7 @@
 			var labelLinkPattern = config.extraOptions[PROP_CHART_TOOLTIP_LABEL_LINK_PATTERN];
 			var assetNameSpan = "";
 			var assetNameText = spqlib.util.formatString(labelPattern,assetName);
-			if (showLink){
+			if (showLink && labelLinkPattern){
 				var link = spqlib.util.formatString(labelLinkPattern,assetName);
 				assetNameSpan = "<a href='"+link+"'>"+assetNameText+"</a>";
 			} else {
@@ -398,11 +397,16 @@
 			rValue = rValuePattern ? spqlib.util.formatString(rValuePattern,rValue,"{%d}") : rValue;
 			
 			$('#tooltip1b').css({left:chart_left+x+radius+5, top:chart_top+y});
+			var oldAssetName = $('#tooltip1b').attr("label");
 			$('#tooltip1b').attr("label",assetName);
-			$('#tooltip1b').html('<span style="font-size:14px;font-weight:bold;color:'+color+';">' + 
+			$('#tooltip1b').html('<span class="close" onclick="javascript:$(this).parent().hide();">x</span><span class="instance-name">' + 
 			assetNameSpan + '</span><br />' +xLabel+' '+xValue + '<br />' +yLabel+ ' ' + 
 			yValue + '<br />' + rLabel+' ' + rValue);
-			$('#tooltip1b').show();
+			if (oldAssetName!=assetName){
+				$('#tooltip1b').show();
+			} else {
+				$('#tooltip1b').toggle();
+			}
 			$(legendIdSelector+' tr td').css('background-color', '#ffffff !important');
 			$(legendIdSelector+' tr td').eq(pointIndex+1).css('background-color', color);
 		}

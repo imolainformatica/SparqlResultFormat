@@ -67,7 +67,8 @@ $wgResourceModules['ext.SparqlResultFormat.barchart'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
 	'styles' => array(
-        'css/jquery.jqplot.min.css' => array('media' => 'screen')),		
+        'css/jquery.jqplot.min.css' => array('media' => 'screen'),
+		'css/ii.style.css' => array('media' => 'screen')),		
 	'scripts' => array('js/ii.sparql.format.barchart.js',
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',
@@ -83,7 +84,8 @@ $wgResourceModules['ext.SparqlResultFormat.piechart'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
 	'styles' => array(
-        'css/jquery.jqplot.min.css' => array('media' => 'screen')),		
+        'css/jquery.jqplot.min.css' => array('media' => 'screen'),
+		'css/ii.style.css' => array('media' => 'screen')),		
 	'scripts' => array(
 	    'js/ii.sparql.format.piechart.js',
 		'js/ii.jqplot.js',
@@ -101,7 +103,8 @@ $wgResourceModules['ext.SparqlResultFormat.donutchart'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
 	'styles' => array(
-        'css/jquery.jqplot.min.css' => array('media' => 'screen')),		
+        'css/jquery.jqplot.min.css' => array('media' => 'screen'),
+		'css/ii.style.css' => array('media' => 'screen')),		
 	'scripts' => array('js/ii.sparql.format.donutchart.js',
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',
@@ -118,7 +121,9 @@ $wgResourceModules['ext.SparqlResultFormat.bubblechart'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
 	'styles' => array(
-        'css/jquery.jqplot.min.css' => array('media' => 'screen')),		
+        'css/jquery.jqplot.min.css' => array('media' => 'screen'),
+		'css/ii.style.css' => array('media' => 'screen')
+		),		
 	'scripts' => array(  'js/ii.sparql.format.bubblechart.js',
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',

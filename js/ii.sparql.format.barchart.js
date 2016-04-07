@@ -83,7 +83,7 @@ spqlib.barchart = (function () {
 		if (valuePattern){
 			value = spqlib.util.formatString(valuePattern,value);
 		}
-		var html = "<span class=\"jqplot-tooltip-label\">"+spanLabel+"</span></br>";
+		var html = "<span class='close' onclick='javascript:$(this).parent().hide();'>x</span><span class=\"jqplot-tooltip-label\">"+spanLabel+"</span></br>";
 		html+="<span class=\"jqplot-tooltip-serie-label\">"+seriesLabel+"</span>";
 		html+="<span class=\"jqplot-tooltip-value\">"+value+"</span>";
 		return html;

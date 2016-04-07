@@ -73,7 +73,7 @@ spqlib.piechart = (function () {
 		if (op[this.PROP.PROP_CHART_TOOLTIP_VALUE_PATTERN]){
 			value = spqlib.util.formatString(op[this.PROP.PROP_CHART_TOOLTIP_VALUE_PATTERN],value);
 		}
-		var html = "<span class=\"jqplot-tooltip-label\">"+spanLabel+"</span></br>";
+		var html = "<span class='close' onclick='javascript:$(this).parent().hide();'>x</span><span class=\"jqplot-tooltip-label\">"+spanLabel+"</span></br>";
 		html+="<span class=\"jqplot-tooltip-serie-label\">"+seriesLabel+"</span>";
 		html+="<span class=\"jqplot-tooltip-value\">"+value+"</span>";
 		return html;
