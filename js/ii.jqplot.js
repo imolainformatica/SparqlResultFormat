@@ -396,7 +396,7 @@
 			yValue = yValuePattern ? spqlib.util.formatString(yValuePattern,yValue,"{%d}") : yValue;
 			rValue = rValuePattern ? spqlib.util.formatString(rValuePattern,rValue,"{%d}") : rValue;
 			
-			$('#tooltip1b').css({left:chart_left+x+radius+5, top:chart_top+y});
+			$('#tooltip1b').css({left:chart_left+x+5, top:chart_top+y});
 			var oldAssetName = $('#tooltip1b').attr("label");
 			$('#tooltip1b').attr("label",assetName);
 			$('#tooltip1b').html('<span class="close" onclick="javascript:$(this).parent().hide();">x</span><span class="instance-name">' + 
@@ -407,8 +407,8 @@
 			} else {
 				$('#tooltip1b').toggle();
 			}
-			$(legendIdSelector+' tr td').css('background-color', '#ffffff !important');
-			$(legendIdSelector+' tr td').eq(pointIndex+1).css('background-color', color);
+			//$(legendIdSelector+' tr td').css('background-color', '#ffffff !important');
+			//$(legendIdSelector+' tr td').eq(pointIndex+1).css('background-color', color);
 		}
 		
 		function defaultBubbleChartDataUnhighlight(ev, seriesIndex, pointIndex, data) {

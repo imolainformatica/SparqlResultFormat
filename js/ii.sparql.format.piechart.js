@@ -70,8 +70,9 @@ spqlib.piechart = (function () {
 			spanLabel = textLabel;
 		}
 		var seriesLabel = op[this.PROP.PROP_CHART_SERIE_LABEL] || "";
-		if (op[this.PROP.PROP_CHART_TOOLTIP_VALUE_PATTERN]){
-			value = spqlib.util.formatString(op[this.PROP.PROP_CHART_TOOLTIP_VALUE_PATTERN],value);
+		var valuePattern =op[this.PROP.PROP_CHART_TOOLTIP_VALUE_PATTERN]; 
+		if (valuePattern){
+			value = spqlib.util.formatString(valuePattern,value,"{%d}");
 		}
 		var html = "<span class='close' onclick='javascript:$(this).parent().hide();'>x</span><span class=\"jqplot-tooltip-label\">"+spanLabel+"</span></br>";
 		html+="<span class=\"jqplot-tooltip-serie-label\">"+seriesLabel+"</span>";
