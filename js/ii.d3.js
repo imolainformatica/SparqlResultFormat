@@ -23,6 +23,14 @@
 		};
 		
 		var defaultMouseClickOnLeaves = function(ev){
+			var config=ev.data;
+			if (config.openLinkOnLeaves=="true"){
+				var url = $(ev.currentTarget)[0].__data__.url;
+				if(url){
+					window.open(url); 
+				}
+				return;
+			}
 			var treemapId = $(ev.currentTarget).parents(".d3-treemap").attr("id");
 			var selected = d3.select(ev.currentTarget).classed("selected");
 			d3.select("#"+treemapId).selectAll("g.depth g").classed("selected",false)
@@ -44,13 +52,6 @@
 				$("#"+treemapId).find(".treemap-info-box").html("");
 			} else {
 				$("#"+treemapId).find(".treemap-info-box").html(html);
-			}
-		}
-		
-		var defaultLeavesClickCallback = function(d) { 
-		    var url = $(d.currentTarget)[0].__data__.url;
-			if(url){
-				window.open(url); 
 			}
 		}
 
@@ -135,11 +136,6 @@
 				  }
 
 				  function display(d,wrap) {
-					/*grandparent
-						.datum(d.parent)
-						.on("click", transition)
-					  .select("text")
-						.text(name(d));*/
 						d3.select("#"+config.divId).select(".treemap-info-box").html("");
 				  grandparent
 						.datum(d.parent)
@@ -167,7 +163,7 @@
 						
 					g.filter(function(d) { return !d._children; })
 						.classed("leaves", true);
-					$("#"+config.divId).find(".leaves").on("click",defaultMouseClickOnLeaves);
+					$("#"+config.divId).find(".leaves").on("click",null,config,defaultMouseClickOnLeaves);
 						
 					g.selectAll(".child")
 						.data(function(d) { return d._children || [d]; })
@@ -187,7 +183,12 @@
 							return d.name; 
 							})
 						.call(text)
-						.call(wrap ? wordWrap : empty)
+						.call(wrap ? wordWrap : empty);
+						
+					g.selectAll(".leaves text")
+					     .style("text-decoration","underline")
+						 .style("cursor","pointer");
+					
 						
 					function transition(d) {
 						d3.select(this.parentNode).select(".treemap-info-box").html("");

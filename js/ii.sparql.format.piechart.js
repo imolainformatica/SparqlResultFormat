@@ -21,6 +21,7 @@ spqlib.piechart = (function () {
 		PROP_CHART_TOOLTIP_LABEL_LINK_PATTERN : "chart.tooltip.label.link.pattern",
 		PROP_CHART_TOOLTIP_LABEL_PATTERN : "chart.tooltip.label.pattern",
 		PROP_CHART_TOOLTIP_VALUE_PATTERN : "chart.tooltip.value.pattern",
+		PROP_CHART_SERIES_COLOR : "chart.series.color"
 	}
 	
 	

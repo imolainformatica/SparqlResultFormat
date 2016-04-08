@@ -8,6 +8,9 @@
 		/*COMUNI*/
 		var PROP_CHART_TITLE = "chart.title";
 		/*BARCHART*/
+		var PROP_CHART_BAR_WIDTH = "chart.bar.width";
+		var PROP_CHART_BAR_MARGIN = "chart.bar.margin";
+		var PROP_CHART_BAR_PADDING = "chart.bar.padding";
 		var PROP_CHART_AXIS_X_LABEL = "chart.axis.x.label";
 		var PROP_CHART_AXIS_Y_LABEL = "chart.axis.y.label";
 		var PROP_CHART_AXIS_X_LABEL_FONT_SIZE = "chart.axis.x.label.font.size";
@@ -82,7 +85,7 @@
 					renderer:$.jqplot.BarRenderer,
 					rendererOptions: {
 						barDirection: 'vertical',
-						showDataLabels: true
+						showDataLabels: true,
 					},
 					pointLabels: { show: false }
 				},
@@ -267,7 +270,10 @@
 					tooltip.html(html);
 					//ev.stopImmediatePropagation();//per evitare di triggere il jqplotClick
 				}
-			);					
+			);		
+
+
+			
 			return plot;				
 		}
 		
@@ -336,9 +342,9 @@
 			  var options= getBubbleChartOptions(config);
 			  var data = createBubbleSeries(label,series);
 			  var graphId = config.divId;
-			  var plot1 = jQuery.jqplot (graphId, [data], options);
-			  plot1.config = config;
-			  c[graphId]=plot1;
+			  var plot = jQuery.jqplot (graphId, [data], options);
+			  plot.config = config;
+			  c[graphId]=plot;
 			  if (config.extraOptions[PROP_CHART_LEGEND_SHOW]=="true"){
 				  if (config.drawLegendCallback && typeof config.drawLegendCallback =="function"){
 					  config.drawLegendCallback(config,data);
@@ -348,7 +354,8 @@
 			  }
 			  $("#"+graphId).bind('jqplotDataClick', config.bubbleChartDataHighlightCallback || defaultBubbleChartDataHighlight);
 			  //$("#"+graphId).bind('jqplotDataUnhighlight', config.bubbleChartDataUnhighlightCallback || defaultBubbleChartDataUnhighlight);
-			  return plot1;
+			  // $("#"+config.divId).bind('mousewheel DOMMouseScroll',plot,onMouseWheel ); 
+			  return plot;
 		}
 		
 		function defaultDrawLegend(config,data){
@@ -542,6 +549,18 @@
 			if (yAxisAngle){
 				options.axes.yaxis.tickOptions.angle = yAxisAngle;
 			}
+			var barWidth = config.extraOptions[PROP_CHART_BAR_WIDTH];
+			if (barWidth){
+				options.seriesDefaults.rendererOptions.barWidth = parseInt(barWidth);
+			}
+			var barMargin = config.extraOptions[PROP_CHART_BAR_MARGIN]; 
+			if (barMargin){
+				options.seriesDefaults.rendererOptions.barMargin = parseInt(barMargin);
+			}
+			var barPadding = config.extraOptions[PROP_CHART_BAR_PADDING]; 
+			if (barPadding){
+				options.seriesDefaults.rendererOptions.barPadding = parseInt(barPadding);
+			}
 			return options;
 		}
 		
@@ -550,6 +569,12 @@
 			var title = config.extraOptions[PROP_CHART_TITLE];
 			if (title){
 				options.title.text=title;
+			}
+			var seriesColorString = config.extraOptions[spqlib.piechart.PROP.PROP_CHART_SERIES_COLOR];
+			if (seriesColorString){
+				seriesColorString = seriesColorString.split("'").join("\"");
+				var seriesColor = JSON.parse(seriesColorString);
+				options.seriesColors = seriesColor;
 			}
 			return options;
 		}
@@ -603,6 +628,47 @@
 				return null;
 			}
 		}
+		
+		function onMouseWheel(event) {
+			event.preventDefault();
+			var plot1 = event.data;
+			var config = plot1.config;
+			var x = event.originalEvent.pageX - $("#"+config.divId).offset().left;
+			var y = event.originalEvent.pageY - $("#"+config.divId).offset().top;
+			var directionX = x /$("#"+config.divId).width() - 0.5 ;
+			var directionY = y / $("#"+config.divId).height() - 0.5 ;
+
+			v = 1;
+			zoomin = event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0;
+			if(zoomin){
+				v = 1;
+			}
+			else {
+				v = -1;
+			}
+			dtx = (plot1.axes.xaxis.max - plot1.axes.xaxis.min) / 8;
+			dty = (plot1.axes.yaxis.max - plot1.axes.yaxis.min) / 8;
+			plot1.axes.xaxis.min += dtx * v;
+			plot1.axes.yaxis.min += dty * v;
+			plot1.axes.xaxis.max -= dtx * v;
+			plot1.axes.yaxis.max -= dty * v;
+
+			if(zoomin){           
+				plot1.axes.xaxis.min += dtx * directionX * 2;    
+				plot1.axes.xaxis.max += dtx * directionX * 2; 
+				plot1.axes.yaxis.min -= dty * directionY * 2;    
+				plot1.axes.yaxis.max -= dty * directionY * 2; 
+			}
+
+			intervalx=(plot1.axes.xaxis.max - plot1.axes.xaxis.min) / (plot1.axes.xaxis.numberTicks);
+			plot1.axes.xaxis.tickInterval = intervalx;
+			intervaly=(plot1.axes.yaxis.max - plot1.axes.yaxis.min) / (plot1.axes.yaxis.numberTicks);
+			plot1.axes.yaxis.tickInterval = intervaly;
+
+			plot1.replot();
+		}
+		
+		
 		
 		return { 
 		     drawBarChart:drawBarChart,

@@ -69,10 +69,13 @@ $wgResourceModules['ext.SparqlResultFormat.barchart'] = array(
 	'styles' => array(
         'css/jquery.jqplot.min.css' => array('media' => 'screen'),
 		'css/ii.style.css' => array('media' => 'screen')),		
-	'scripts' => array('js/ii.sparql.format.barchart.js',
+	'scripts' => array(
+	    'js/ii.sparql.format.barchart.js',
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',
+		'js/libs/jqplot/jqplot.pieRenderer.js',
 		'js/libs/jqplot/jqplot.barRenderer.js',
+		'js/libs/jqplot/jqplot.bubbleRenderer.js',
 		'js/libs/jqplot/jqplot.highlighter.js',
 		'js/libs/jqplot/jqplot.categoryAxisRenderer.js',
 		'js/libs/jqplot/jqplot.canvasTextRenderer.js',
@@ -90,13 +93,14 @@ $wgResourceModules['ext.SparqlResultFormat.piechart'] = array(
 	    'js/ii.sparql.format.piechart.js',
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',
+		'js/libs/jqplot/jqplot.pieRenderer.js',
 		'js/libs/jqplot/jqplot.barRenderer.js',
+		'js/libs/jqplot/jqplot.bubbleRenderer.js',
 		'js/libs/jqplot/jqplot.highlighter.js',
 		'js/libs/jqplot/jqplot.categoryAxisRenderer.js',
 		'js/libs/jqplot/jqplot.canvasTextRenderer.js',
 		'js/libs/jqplot/jqplot.canvasAxisTickRenderer.js',
-		'js/libs/jqplot/jqplot.canvasAxisLabelRenderer.js',
-		'js/libs/jqplot/jqplot.pieRenderer.js'),
+		'js/libs/jqplot/jqplot.canvasAxisLabelRenderer.js')
 );
 
 $wgResourceModules['ext.SparqlResultFormat.donutchart'] = array(
@@ -109,6 +113,7 @@ $wgResourceModules['ext.SparqlResultFormat.donutchart'] = array(
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',
 		'js/libs/jqplot/jqplot.barRenderer.js',
+		'js/libs/jqplot/jqplot.bubbleRenderer.js',
 		'js/libs/jqplot/jqplot.highlighter.js',
 		'js/libs/jqplot/jqplot.categoryAxisRenderer.js',
 		'js/libs/jqplot/jqplot.canvasTextRenderer.js',
@@ -124,16 +129,18 @@ $wgResourceModules['ext.SparqlResultFormat.bubblechart'] = array(
         'css/jquery.jqplot.min.css' => array('media' => 'screen'),
 		'css/ii.style.css' => array('media' => 'screen')
 		),		
-	'scripts' => array(  'js/ii.sparql.format.bubblechart.js',
+	'scripts' => array(  
+	    'js/ii.sparql.format.bubblechart.js',
 		'js/ii.jqplot.js',
 		'js/libs/jqplot/jquery.jqplot.min.js',
 		'js/libs/jqplot/jqplot.barRenderer.js',
+		'js/libs/jqplot/jqplot.pieRenderer.js',
+		'js/libs/jqplot/jqplot.bubbleRenderer.js',
 		'js/libs/jqplot/jqplot.highlighter.js',
 		'js/libs/jqplot/jqplot.categoryAxisRenderer.js',
 		'js/libs/jqplot/jqplot.canvasTextRenderer.js',
 		'js/libs/jqplot/jqplot.canvasAxisTickRenderer.js',
-		'js/libs/jqplot/jqplot.canvasAxisLabelRenderer.js',
-		'js/libs/jqplot/jqplot.bubbleRenderer.js'),
+		'js/libs/jqplot/jqplot.canvasAxisLabelRenderer.js'),
 );
 
 $wgResourceModules['ext.SparqlResultFormat.csv'] = array(
