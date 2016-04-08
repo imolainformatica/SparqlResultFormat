@@ -12,7 +12,24 @@ spqlib.barchart = (function () {
 	}
 	
 	my.toggleFullScreen = function(graphId){
-
+		//$("#"+graphId).toggleClass("ii-sparql-chart-full-screen");
+		var className = "ii-sparql-chart-full-screen";
+		var graphDivBox = $("#"+graphId+"-box");
+		var graphDiv = $("#"+graphId);
+		if (!graphDivBox.hasClass(className)){
+			graphDivBox.addClass(className);
+			this.isFullScreen = true;
+			this.originalHeight = graphDiv.css("height");
+			graphDiv.css('height',800+'px !important');
+		} else {
+			graphDivBox.removeClass(className);
+			this.isFullScreen = false;
+			graphDiv.css('height',this.originalHeight+'px !important');
+		}
+		
+		//$("#"+graphId+"-box").toggleClass("ii-sparql-chart-full-screen");
+		//graphDiv.css('height',700+'px !important');
+		this.replot(this.options);
 	}
 	
 	my.preQuery = function(configuration){
@@ -53,6 +70,7 @@ spqlib.barchart = (function () {
 		}
 		var chartId = config.divId;
 		var chart =  spqlib.barchart.chartImpl().drawBarChart(labels,series,config);
+		chart.toggleFullScreen = my.toggleFullScreen;
 		spqlib.addToRegistry(chartId,chart);
 	}
 	

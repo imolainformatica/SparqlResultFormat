@@ -22,3 +22,14 @@
     color: black;
     opacity:0.8;
 }
+
+.ii-sparql-chart-full-screen {
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 999999999;
+    background-color: white !important;
+position: fixed !important;
+
+top: 0px;
+    left: 0px;
+}
