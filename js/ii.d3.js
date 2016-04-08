@@ -162,7 +162,9 @@
 						.on("mouseout", config.mouseoutCallback || defaultMouseout);
 						
 					g.filter(function(d) { return !d._children; })
-						.classed("leaves", true);
+						.classed("leaves", true)
+						.on("mousemove", config.mousemoveCallback || defaultMousemove)
+						.on("mouseout", config.mouseoutCallback || defaultMouseout);
 					$("#"+config.divId).find(".leaves").on("click",null,config,defaultMouseClickOnLeaves);
 						
 					g.selectAll(".child")
@@ -258,17 +260,32 @@
 						  line.push(word);
 						  tspan.text(line.join(" "));
 						  var tspanHeight = window.getComputedStyle(tspan.node(), null).getPropertyValue("font-size").replace("px","");
-						  var altezzaLibera = tspanHeight*(lineNumber+2)+6 < maxHeight;
+						  var altezzaLibera = tspanHeight*(lineNumber+2)+10 < maxHeight;
 						  if (!altezzaLibera){
 							  line.push("...");
 							  tspan.text(line.join(" "));
 							  break;
 						  }
-						  if (tspan.node().getComputedTextLength()+6 > maxWidth && altezzaLibera ) {
+						  if (tspan.node().getComputedTextLength()+10 > maxWidth && altezzaLibera ) {
 							line.pop();
 							tspan.text(line.join(" "));
 							line = [word];
+							
 							tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+							var width = tspan.node().getComputedTextLength()+10;
+							var cut = false;
+							while (width > maxWidth){
+								cut = true;
+								word = word.substring(0,word.length-1);
+								tspan.text(word);
+								width = tspan.node().getComputedTextLength()+10;
+								line = [word];
+							}
+							if (cut){
+								word = word.substring(0,word.length-3)+"...";
+								line = [word];
+							}
+							
 						  }
 						}
 					  });
