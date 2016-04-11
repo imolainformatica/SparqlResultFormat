@@ -12,7 +12,12 @@ spqlib.piechart = (function () {
 	}
 	
 	my.toggleFullScreen = function(graphId){
-
+		var graphDiv = $("#"+graphId+"-container");
+		var cssClass= this.config.divCssClass ;
+		var cssClassFullScreen = this.config.divCssClassFullScreen;
+		graphDiv.toggleClass(cssClass);
+		graphDiv.toggleClass(cssClassFullScreen);
+		this.replot(this.options);
 	}
 	
 	my.PROP = {
@@ -47,6 +52,7 @@ spqlib.piechart = (function () {
 
 		var chartId = config.divId;
 		var chart =  spqlib.piechart.chartImpl().drawPieChart(labels,series,config);
+		chart.toggleFullScreen = my.toggleFullScreen;
 		spqlib.addToRegistry(chartId,chart);
 	}
 	

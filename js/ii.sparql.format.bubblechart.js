@@ -11,7 +11,12 @@ spqlib.bubblechart = (function () {
 	}
 	
 	my.toggleFullScreen = function(graphId){
-
+		var graphDiv = $("#"+graphId+"-container");
+		var cssClass= this.config.divCssClass ;
+		var cssClassFullScreen = this.config.divCssClassFullScreen;
+		graphDiv.toggleClass(cssClass);
+		graphDiv.toggleClass(cssClassFullScreen);
+		this.replot(this.options);
 	}
 	
 	my.preQuery = function(configuration){
@@ -52,6 +57,7 @@ spqlib.bubblechart = (function () {
 		}
 		var chartId = config.divId;
 		var chart =  spqlib.bubblechart.chartImpl().drawBubbleChart(labels,series,config);
+		chart.toggleFullScreen = my.toggleFullScreen;
 		spqlib.addToRegistry(chartId,chart);
 	}
 	

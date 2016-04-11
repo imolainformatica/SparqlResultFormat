@@ -237,6 +237,7 @@
 		    var options= getBarChartOptions(config);	
 			options.seriesDefaults.renderer=$.jqplot.BarRenderer;
 			var plot = $.jqplot(config.divId, s,options );
+			plot.config = config;
 			c[config.divId]=config.plot=plot;
 			/*$("#"+config.divId).bind('jqplotClick',function(ev){
 				var chartId = ev.currentTarget.id;

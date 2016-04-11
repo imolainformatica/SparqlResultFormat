@@ -12,23 +12,11 @@ spqlib.barchart = (function () {
 	}
 	
 	my.toggleFullScreen = function(graphId){
-		//$("#"+graphId).toggleClass("ii-sparql-chart-full-screen");
-		var className = "ii-sparql-chart-full-screen";
-		var graphDivBox = $("#"+graphId+"-box");
-		var graphDiv = $("#"+graphId);
-		if (!graphDivBox.hasClass(className)){
-			graphDivBox.addClass(className);
-			this.isFullScreen = true;
-			this.originalHeight = graphDiv.css("height");
-			graphDiv.css('height',800+'px !important');
-		} else {
-			graphDivBox.removeClass(className);
-			this.isFullScreen = false;
-			graphDiv.css('height',this.originalHeight+'px !important');
-		}
-		
-		//$("#"+graphId+"-box").toggleClass("ii-sparql-chart-full-screen");
-		//graphDiv.css('height',700+'px !important');
+		var graphDiv = $("#"+graphId+"-container");
+		var cssClass= this.config.divCssClass ;
+		var cssClassFullScreen = this.config.divCssClassFullScreen;
+		graphDiv.toggleClass(cssClass);
+		graphDiv.toggleClass(cssClassFullScreen);
 		this.replot(this.options);
 	}
 	

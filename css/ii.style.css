@@ -28,8 +28,17 @@
     height: 100% !important;
     z-index: 999999999;
     background-color: white !important;
-position: fixed !important;
-
-top: 0px;
+    position: fixed !important;
+    top: 0px;
     left: 0px;
+    margin:0px !important;
+}
+
+
+.ii-sparql-chart-full-screen td {
+    height:10% !important;
+}
+
+.ii-sparql-chart-full-screen td {
+    height:90% !important;
 }

@@ -11,7 +11,12 @@ spqlib.treemap = (function () {
 	}
 	
 	my.toggleFullScreen = function(graphId){
-
+		var graphDiv = $("#"+graphId+"-container");
+		var cssClass= this.config.divCssClass ;
+		var cssClassFullScreen = this.config.divCssClassFullScreen;
+		graphDiv.toggleClass(cssClass);
+		graphDiv.toggleClass(cssClassFullScreen);
+		this.resize(this.res,this.config);
 	}
 	
 	my.preQuery = function(configuration){
@@ -64,7 +69,8 @@ spqlib.treemap = (function () {
 		var chart = {
 			res:res,
 			config:config,
-			resize:spqlib.treemap.chartImpl().drawTreemap
+			resize:spqlib.treemap.chartImpl().drawTreemap,
+			toggleFullScreen: spqlib.treemap.toggleFullScreen
 		}
 		spqlib.treemap.chartImpl().drawTreemap(res,config);
 		spqlib.addToRegistry(chartId,chart); 
