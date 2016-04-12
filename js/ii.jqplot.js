@@ -355,7 +355,7 @@
 			  }
 			  $("#"+graphId).bind('jqplotDataClick', config.bubbleChartDataHighlightCallback || defaultBubbleChartDataHighlight);
 			  //$("#"+graphId).bind('jqplotDataUnhighlight', config.bubbleChartDataUnhighlightCallback || defaultBubbleChartDataUnhighlight);
-			  // $("#"+config.divId).bind('mousewheel DOMMouseScroll',plot,onMouseWheel ); 
+			  // $("#"+config.divId).bind('wheel DOMMouseScroll',plot,onMouseWheel ); 
 			  return plot;
 		}
 		
@@ -404,7 +404,7 @@
 			yValue = yValuePattern ? spqlib.util.formatString(yValuePattern,yValue,"{%d}") : yValue;
 			rValue = rValuePattern ? spqlib.util.formatString(rValuePattern,rValue,"{%d}") : rValue;
 			
-			$('#tooltip1b').css({left:chart_left+x+5, top:chart_top+y});
+			$('#tooltip1b').css({left:chart_left+x+5, top:chart_top+y,'z-index':9999999999999});
 			var oldAssetName = $('#tooltip1b').attr("label");
 			$('#tooltip1b').attr("label",assetName);
 			$('#tooltip1b').html('<span class="close" onclick="javascript:$(this).parent().hide();">x</span><span class="instance-name">' + 

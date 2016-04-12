@@ -16,6 +16,7 @@ spqlib.bubblechart = (function () {
 		var cssClassFullScreen = this.config.divCssClassFullScreen;
 		graphDiv.toggleClass(cssClass);
 		graphDiv.toggleClass(cssClassFullScreen);
+		$('#tooltip1b').hide();
 		this.replot(this.options);
 	}
 	

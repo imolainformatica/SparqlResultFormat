@@ -7,12 +7,13 @@
 	spqlib.d3 = (function(){
 		
 		var defaultMousemove = function(d) {
-		  var xPosition = d3.event.pageX + 5;
-		  var yPosition = d3.event.pageY + 5;
+		  var xPosition = d3.event.clientX + 5;
+		  var yPosition = d3.event.clientY + 5;
 
 		  d3.select("#tooltip-treemap")
 			.style("left", xPosition + "px")
-			.style("top", yPosition + "px");
+			.style("top", yPosition + "px")
+			.style("position", "fixed");
 		  d3.select("#tooltip-text")
 			.html("<span class='treemap-tooltip-instance-name'>"+d["name"]+"</span> </br>Value: "+d["value"]);
 		  d3.select("#tooltip-treemap").classed("hidden", false);
