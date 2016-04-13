@@ -38,26 +38,9 @@ var spqlib = ( function ( $, undefined ) {
 			if (queries.length>0){
 				spqlib.util.doQuery(config.endpoint, queries[0], spqlib.graph.render, config,spqlib.graph.preQuery,spqlib.graph.failQuery);
 			}
-			/*$( "#"+config.divId).on( "done", function() {
-			  
-			});
-			for (var i=0;i<queries.length;i++){
-				if (i==0){
-					this.util.doQuery(config.endpoint, queries[i], spqlib.graph.render, config,spqlib.graph.preQuery,spqlib.graph.failQuery);
-				} else {
-					this.util.doQuery(config.endpoint, queries[i], spqlib.graph.addNodes, config,spqlib.graph.preQuery,spqlib.graph.failQuery);
-				}
-			}*/
 		} else {
 			spqlib.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.graph.render, config,spqlib.graph.preQuery,spqlib.graph.failQuery);
 		}
-		
-		/*var parser = new sparqljs.Parser();
-		var generator = new sparqljs.Generator();
-		var query = parser.parse(config.sparqlWithPrefixes);
-		query.where[0].patterns[2] = null;
-		var queryText = generator.stringify(query);*/
-
 	}
 	
 	function sparql2BarChart(config){
