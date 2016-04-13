@@ -16,6 +16,9 @@
 <script type="text/javascript" src="../js/ii.sparql.util.js"></script>
 <script type="text/javascript" src="../js/ii.sparql.format.graph.js"></script>
 <script type="text/javascript" src="../js/ii.cytoscape.js"></script>
+<script type="text/javascript" src="../js/libs/sparqljs/sparqljs-browser.js"></script>
+
+
 
 
 <!-- Latest compiled and minified CSS -->
@@ -90,6 +93,7 @@
 
 
 	<script type="text/javascript">
+
  var smwQueryPrefixes = window.smwQueryPrefixes = [];
  smwQueryPrefixes.push({
  	pre : 'ii-app-m',
@@ -151,7 +155,7 @@
  	ns : 'http://www.imolinfo.it/ontologie/ea/v1/ii-infrastructure-model#'
  });
     $(document).ready(function() {
-        var config={};
+        /*var config={};
         config.divId="mynetwork"
         config.divStyle="width:100%;height:530px;"
         config.endpoint= "https://ubiss-test.imolinfo.it/fuseki/dsread/query"
@@ -177,7 +181,7 @@
         config.nodeStyle = {};
         config.edgeStyle = {};
         config.basicAuthBase64String="YWRtaW46YmNlMjYz";
-        spqlib.sparql2Graph(config);
+        spqlib.sparql2Graph(config);*/
         
 
     });
@@ -197,7 +201,7 @@
     
 
     $(document).ready(function() {
-    	var config3={};
+    	/*var config3={};
     	config3.divId="mynetwork-taxonomy"
     	config3.divStyle="width:100%;height:530px;"
     	config3.endpoint= "https://ubiss-test.imolinfo.it/fuseki/dsread/query"
@@ -222,10 +226,43 @@
     		config3.nodeStyle = {shape:'roundrectangle', width:120, height:80,'text-valign': 'center','text-halign': 'center','border-color' : '#000','border-width' : 1};
     		config3.edgeStyle = {'target-arrow-shape':''};
 			config3.basicAuthBase64String="YWRtaW46YmNlMjYz";
-            //window.btoa(unescape(encodeURIComponent("<<username>>" + ':' + "<<password>>")))
 
-        spqlib.sparql2Graph(config3);
+        spqlib.sparql2Graph(config3);*/
     });
+
+
+
+    $(document).ready(function() {
+        var config4={};
+        config4.divId="mynetwork-host"
+        config4.divStyle="width:100%;height:530px;"
+        config4.endpoint= "https://ubiss-test.imolinfo.it/fuseki/dsread/query"
+        config4.sparql = $("#"+config4.divId).attr("sparql-query")
+	 config4.queryPrefixes=smwQueryPrefixes;
+        //config4.sparqlWithPrefixes=addPrefixes(config.sparql)
+        config4.nodeConfiguration=[{ category:"Business Process",nodeColor:"#000000",image:"https://ubiss-test.imolinfo.it/eap/images/d/db/Business-process.png"},{ category:"Informatic Resource",nodeColor:"#000000", image:"https://ubiss-test.imolinfo.it/eap/images/0/02/Governance_icon.png"},{ category:"Application",nodeColor:"#00FF00", image:"https://ubiss-test.imolinfo.it/eap/images/c/c1/Application_icon.png"},{ category:"Application Component",nodeColor:"#FFF700", image:"https://ubiss-test.imolinfo.it/eap/images/f/f0/Software_component_icon.png"},{ category:"Virtual Host",nodeColor:"#0400FF", image:"https://ubiss-test.imolinfo.it/eap/images/c/c1/Virtual_Host_icon.png"},{ category:"Physical Host",nodeColor:"#FF0000",image:"https://ubiss-test.imolinfo.it/eap/images/7/7a/Physical_host.png"},{ category:"Cluster",nodeColor:"#FF00EB",image:"https://ubiss-test.imolinfo.it/eap/images/7/7d/Cluster.png"}]
+        config4.edgeConfiguration={}
+        config4.rootElement="As400";
+        config4.rootElementImage="https://ubiss-test.imolinfo.it/eap/images/0/09/Target.png"
+        config4.showLegend="true";
+        config4.defaultNodeColor="#CCC";
+        config4.defaultEdgeColor="#CCC";
+        config4.minZoom=0.2
+        config4.maxZoom=1.2
+        config4.linkBasePath="https://ubiss-test.imolinfo.it/eap/index.php/";
+        config4.layout="dagre";
+        config4.spinnerImagePath=config4.linkBasePath+"../resources/src/jquery/images/spinner-large.gif";
+config4.basicAuthBase64String="YWRtaW46YmNlMjYz";
+
+        var layoutOptions = "{rankSep:150}";
+                if (layoutOptions=="non presente"){
+                    config4.layoutOptions={};
+                } else {
+                    config4.layoutOptions=JSON.parse(JSON.stringify({rankSep:150}));
+                }
+                                spqlib.sparql2Graph(config4);
+    });
+
     
 </script>
 	<!-- <div id="mynetwork-container" class="cytoscape-graph-container">
@@ -351,5 +388,295 @@ GRAPH <http://www.ubibanca.com/ontologie/ea-wiki/ubi-wiki-instances-graph> {
 }
  } }"></div>
 
+
+<div id="mynetwork-host" class="cytoscape-graph" style="width:100%;height:530px;" sparql-query="SELECT distinct
+?parent_uri ?parent_name ?child_uri ?child_name ?parent_type_uri ?parent_type  ?child_type_uri ?child_type ?relation_uri ?relation_name
+WHERE
+{
+  {
+    #dai componenti agli host
+    VALUES ?root_name {&quot;As400&quot;}
+    ?comp rdf:type ii-app-m:ApplicationComponent.
+    ?comp rdf:type ?comp_type.
+    ?comp_type rdfs:label ?parent_type.
+    ?comp ii-overall-m:runsOnHost ?host.
+    ?comp ?relation ?host.
+    ?comp rdfs:label ?comp_label.
+    ?host rdfs:label ?host_label.
+    ?host rdfs:label ?root_name.
+    ?host rdf:type ?host_type.
+    ?host_type rdfs:label ?child_type.
+    ?relation rdfs:label ?relation_name.
+     BIND (?relation  AS ?relation_uri ).
+    BIND (?comp AS ?parent_uri).
+    BIND (?host AS ?child_uri).
+    BIND (?comp_type AS ?parent_type_uri).
+    BIND (?host_type AS ?child_type_uri).
+    BIND (concat(?comp_label) AS ?parent_name).
+    BIND (concat(?host_label) AS ?child_name).
+    VALUES ?company_filter {&quot;Tutti&quot;}
+    ?comp ubi-overall-m:companyFilter ?company_filter.
+    ?host ubi-overall-m:companyFilter ?company_filter.
+
+} UNION 
+{
+    #dagli host virtuali agli host fisici ospitanti
+    VALUES ?root_name {&quot;As400&quot;}
+    ?host ii-inf-m:hostedOnPhysicalHost ?host2.
+    ?host ?relation ?host2.
+    ?host2 rdfs:label ?host2_label.
+    ?host rdfs:label ?host_label.
+    ?host rdfs:label ?root_name.
+    ?host rdf:type ?host_type.
+    ?host_type rdfs:label ?parent_type.
+    ?host2 rdf:type ?host2_type.
+    ?host2_type rdfs:label ?child_type.
+    ?relation rdfs:label ?relation_name.
+    BIND (concat(?host_label) AS ?parent_name).
+    BIND (concat(?host2_label) AS ?child_name).
+    VALUES ?company_filter {&quot;Tutti&quot;}
+    ?host2 ubi-overall-m:companyFilter ?company_filter.
+    ?host ubi-overall-m:companyFilter ?company_filter.
+
+} 
+UNION 
+  { 
+    #dalle applicazioni ai componenti
+    VALUES ?root_name {&quot;As400&quot;}
+    ?app rdf:type ii-app-m:Application.
+    ?app rdf:type ?app_type.
+    ?app_type rdfs:label ?app_type_label.
+    ?app ii-app-m:isComposedByComponent ?comp.
+    ?app ?relation ?comp.
+    ?relation rdfs:label ?relation_name.
+    ?comp rdfs:label ?comp_label.
+    ?comp rdf:type [rdfs:label ?comp_type_label].
+    ?app rdfs:label ?app_label.
+    ?comp ii-overall-m:runsOnHost ?host.
+    ?host rdfs:label ?host_label.
+    ?host rdfs:label ?root_name.
+    BIND (?relation  AS ?relation_uri ).
+    BIND (?app AS ?parent_uri).
+    BIND (?comp AS ?child_uri).
+    BIND (?app_type AS ?parent_type_uri).
+    BIND (?comp_type AS ?child_type_uri).
+    BIND (concat(?app_type_label) AS ?parent_type).
+    BIND (concat(?comp_type_label) AS ?child_type).
+    BIND (concat(?app_label) AS ?parent_name).
+    BIND (concat(?comp_label) AS ?child_name).
+    VALUES ?company_filter {&quot;Tutti&quot;}
+    ?comp ubi-overall-m:companyFilter ?company_filter.
+    ?app ubi-overall-m:companyFilter ?company_filter.
+  }
+UNION
+  {
+ #dalle risorse informatiche alle applicazioni
+ ?ir rdf:type ubi-overall-m:InformaticResource.
+    ?ir rdf:type ?ir_type.
+    ?ir_type rdfs:label ?ir_type_label.
+    VALUES ?root_name {&quot;As400&quot;}
+    ?ir ubi-overall-m:containsApplication ?app.
+    ?app rdf:type ?app_type.
+    ?app_type rdfs:label ?app_type_label.
+    ?ir ?relation ?app.
+    ?relation rdfs:label ?relation_name.
+    ?ir rdfs:label ?ir_label.
+    ?app rdfs:label ?app_label.
+    ?ir ubi-overall-m:containsApplication ?app.
+    ?app ii-app-m:isComposedByComponent ?comp.
+    ?comp ii-overall-m:runsOnHost ?host.
+    ?host rdfs:label ?host_label.
+    ?host rdfs:label ?root_name.
+    
+    BIND (?relation  AS ?relation_uri ).
+    BIND (?ir AS ?parent_uri).
+    BIND (?app AS ?child_uri).
+    BIND (?ir_type AS ?parent_type_uri).
+    BIND (?app_type AS ?child_type_uri).
+
+    BIND (concat(?ir_type_label) AS ?parent_type).
+    BIND (concat(?app_type_label) AS ?child_type).
+    BIND (concat(?ir_label) AS ?parent_name).
+    BIND (concat(?app_label) AS ?child_name).
+    VALUES ?company_filter {&quot;Tutti&quot;}
+    ?ir ubi-overall-m:companyFilter ?company_filter.
+    ?app ubi-overall-m:companyFilter ?company_filter.
+  } UNION {
+    #dai processi alle risorse informatiche
+    ?proc rdfs:label ?proc_label.
+    ?proc rdf:type ?proc_type.
+    ?proc_type rdfs:label ?proc_type_label.
+    ?ir rdfs:label ?ir_label.
+    ?ir rdf:type ?ir_type.
+    ?ir_type rdfs:label ?ir_type_label.
+    ?proc ?relation ?ir.
+    ?relation rdfs:label ?relation_name.
+    ?proc ubi-overall-m:involvesInformaticResource ?ir.
+    ?ir ubi-overall-m:containsApplication ?app.
+    ?app ii-app-m:isComposedByComponent ?comp.
+    ?comp ii-overall-m:runsOnHost ?host.
+    ?host rdfs:label ?host_label.
+    ?host rdfs:label ?root_name.
+    VALUES ?root_name {&quot;As400&quot;}
+
+    BIND (?relation  AS ?relation_uri ).
+    BIND (?proc AS ?parent_uri).
+    BIND (?ir AS ?child_uri).
+    BIND (?proc_type AS ?parent_type_uri).
+    BIND (?ir_type AS ?child_type_uri).
+
+    BIND (concat(?proc_type_label) AS ?parent_type).
+    BIND (concat(?ir_type_label) AS ?child_type).
+    BIND (concat(?proc_label) AS ?parent_name).
+    BIND (concat(?ir_label) AS ?child_name).
+    VALUES ?company_filter {&quot;Tutti&quot;}
+    ?proc ubi-overall-m:companyFilter ?company_filter.
+    ?ir ubi-overall-m:companyFilter ?company_filter.
+}
+UNION
+  
+    {
+    #dai componenti ai cluster di questo host
+    VALUES ?root_name {&quot;As400&quot;}
+    ?comp rdf:type ii-app-m:ApplicationComponent.
+    ?comp rdf:type [rdfs:label ?comp_type_label].
+    ?comp ii-overall-m:runsOnCluster ?clust.
+    ?clust ii-inf-m:isComposedOfHost ?host.
+    ?clust rdfs:label ?clust_label.
+    ?clust rdf:type [rdfs:label ?clust_type_label].
+    ?comp ?relation ?clust.
+    ?comp rdfs:label ?comp_label.
+    ?host rdfs:label ?host_label.
+    ?host rdfs:label ?root_name.
+    ?host rdf:type [rdfs:label ?host_type_label].
+    ?relation rdfs:label ?relation_name.
+    BIND (concat(?comp_type_label) AS ?parent_type).
+    BIND (concat(?clust_type_label) AS ?child_type).
+    BIND (concat(?comp_label) AS ?parent_name).
+    BIND (concat(?clust_label) AS ?child_name).
+    VALUES ?company_filter {&quot;Tutti&quot;}
+    ?comp ubi-overall-m:companyFilter ?company_filter.
+    ?clust ubi-overall-m:companyFilter ?company_filter.
+    } UNION
+      {
+    #dalle applicazioni ai componenti che girano sui cluster di questo host
+    VALUES ?root_name {&quot;As400&quot;}
+    ?app rdf:type ii-app-m:Application.
+    ?app rdf:type ?app_type.
+    ?app rdfs:label ?app_label.
+    ?app_type rdfs:label ?app_type_label.
+    ?app ii-app-m:isComposedByComponent ?comp.
+    ?app ?relation ?comp.
+    ?comp rdf:type ii-app-m:ApplicationComponent.
+    ?comp rdf:type [rdfs:label ?comp_type_label].
+    ?comp ii-overall-m:runsOnCluster ?clust.
+    ?clust ii-inf-m:isComposedOfHost ?host.
+    ?clust rdfs:label ?clust_label.
+    ?clust rdf:type [rdfs:label ?clust_type_label].
+    ?comp rdfs:label ?comp_label.
+    ?host rdfs:label ?host_label.
+    ?host rdfs:label ?root_name.
+    ?host rdf:type [rdfs:label ?host_type_label].
+    ?relation rdfs:label ?relation_name.
+    BIND (concat(?app_type_label) AS ?parent_type).
+    BIND (concat(?comp_type_label) AS ?child_type).
+    BIND (concat(?app_label) AS ?parent_name).
+    BIND (concat(?comp_label) AS ?child_name).
+    VALUES ?company_filter {&quot;Tutti&quot;}
+    ?comp ubi-overall-m:companyFilter ?company_filter.
+    ?app ubi-overall-m:companyFilter ?company_filter.
+    }
+  UNION
+      {
+   #dalle risorse alle applicazioni che girano sui cluster di questo host
+    VALUES ?root_name {&quot;As400&quot;}
+     ?ir rdf:type ubi-overall-m:InformaticResource.
+    ?ir rdfs:label ?ir_label.
+    ?ir rdf:type [rdfs:label ?ir_type_label].
+    ?ir ubi-overall-m:containsApplication ?app.
+    ?app rdf:type ii-app-m:Application.
+    ?app rdf:type ?app_type.
+    ?app rdfs:label ?app_label.
+    ?app_type rdfs:label ?app_type_label.
+    ?app ii-app-m:isComposedByComponent ?comp.
+    ?ir ?relation ?app.
+    ?comp rdf:type ii-app-m:ApplicationComponent.
+    ?comp rdf:type [rdfs:label ?comp_type_label].
+    ?comp ii-overall-m:runsOnCluster ?clust.
+    ?clust ii-inf-m:isComposedOfHost ?host.
+    ?clust rdfs:label ?clust_label.
+    ?clust rdf:type [rdfs:label ?clust_type_label].
+    ?comp rdfs:label ?comp_label.
+    ?host rdfs:label ?host_label.
+    ?host rdfs:label ?root_name.
+    ?host rdf:type [rdfs:label ?host_type_label].
+    ?relation rdfs:label ?relation_name.
+    BIND (concat(?ir_type_label) AS ?parent_type).
+    BIND (concat(?app_type_label) AS ?child_type).
+    BIND (concat(?ir_label) AS ?parent_name).
+    BIND (concat(?app_label) AS ?child_name).
+    VALUES ?company_filter {&quot;Tutti&quot;}
+    ?ir ubi-overall-m:companyFilter ?company_filter.
+    ?app ubi-overall-m:companyFilter ?company_filter.
+    }
+UNION {
+#dai processi alle risorse informatiche che girano sui cluster di questo host
+VALUES ?root_name {&quot;As400&quot;}
+        ?proc rdfs:label ?proc_label.
+    ?proc rdf:type ii-bus-m:BusinessProcess.
+    ?proc rdf:type [rdfs:label ?proc_type_label].
+     ?ir rdf:type ubi-overall-m:InformaticResource.
+    ?ir rdfs:label ?ir_label.
+    ?ir rdf:type [rdfs:label ?ir_type_label].
+    ?ir ubi-overall-m:containsApplication ?app.
+    ?app rdf:type ii-app-m:Application.
+    ?app rdf:type ?app_type.
+    ?app rdfs:label ?app_label.
+    ?app_type rdfs:label ?app_type_label.
+    ?app ii-app-m:isComposedByComponent ?comp.
+    ?proc ?relation ?ir.
+    ?comp rdf:type ii-app-m:ApplicationComponent.
+    ?comp rdf:type [rdfs:label ?comp_type_label].
+    ?comp ii-overall-m:runsOnCluster ?clust.
+    ?clust ii-inf-m:isComposedOfHost ?host.
+    ?clust rdfs:label ?clust_label.
+    ?clust rdf:type [rdfs:label ?clust_type_label].
+    ?comp rdfs:label ?comp_label.
+    ?host rdfs:label ?host_label.
+    ?host rdfs:label ?root_name.
+    ?host rdf:type [rdfs:label ?host_type_label].
+    ?relation rdfs:label ?relation_name.
+    BIND (concat(?proc_type_label) AS ?parent_type).
+    BIND (concat(?ir_type_label) AS ?child_type).
+    BIND (concat(?proc_label) AS ?parent_name).
+    BIND (concat(?ir_label) AS ?child_name).
+    VALUES ?company_filter {&quot;Tutti&quot;}
+    ?proc ubi-overall-m:companyFilter ?company_filter.
+    ?ir ubi-overall-m:companyFilter ?company_filter.
+} UNION {
+    #dai cluster agli host
+      VALUES ?root_name {&quot;As400&quot;}
+    ?comp rdf:type ii-app-m:ApplicationComponent.
+    ?comp rdf:type [rdfs:label ?comp_type_label].
+    ?comp ii-overall-m:runsOnCluster ?clust.
+    ?clust ii-inf-m:isComposedOfHost ?host.
+    ?clust ii-inf-m:isComposedOfHost ?host2.
+    ?clust rdfs:label ?clust_label.
+    ?clust rdf:type [rdfs:label ?clust_type_label].
+    ?clust ?relation ?host.
+    ?comp rdfs:label ?comp_label.
+    ?host rdfs:label ?host_label.
+    ?host2 rdfs:label ?root_name.
+    ?host rdf:type [rdfs:label ?host_type_label].
+    ?relation rdfs:label ?relation_name.
+    BIND (concat(?clust_type_label) AS ?parent_type).
+    BIND (concat(?host_type_label) AS ?child_type).
+    BIND (concat(?clust_label) AS ?parent_name).
+    BIND (concat(?host_label) AS ?child_name).
+    VALUES ?company_filter {&quot;Tutti&quot;}
+    ?clust ubi-overall-m:companyFilter ?company_filter.
+    ?host ubi-overall-m:companyFilter ?company_filter.
+  }
+}"></div>
 </body>
 </html>

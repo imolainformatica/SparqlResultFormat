@@ -136,7 +136,7 @@ spqlib.graph = (function () {
 		var distinctNodes = [];
 		var nodeIds = 1;
 
-		var colorConf = [];
+		/*var colorConf = [];
 		var nodeConfiguration = config.nodeConfiguration;
 		for (var i = 0; i < nodeConfiguration.length; i++) {
 			var cat = nodeConfiguration[i];
@@ -146,7 +146,8 @@ spqlib.graph = (function () {
 		for (var i = 0; i < edgeConfiguration.length; i++) {
 			var rel = edgeConfiguration[i];
 			colorConf[rel.relation] = rel.edgeColor;
-		}
+		}*/
+		var colorConf = config.colorConf = createColorConf(config);
 		if (data.length == 0 && config.rootElement) {
 			nodes.push({
 				data : {
@@ -200,6 +201,134 @@ spqlib.graph = (function () {
 			});
 		}
 		drawGraph(nodes, edges, config);
+	}
+	
+	my.addNodes = function(json, config) {
+
+		var head = json.head.vars;
+		var data = json.results.bindings;
+		var edges = [];
+		var nodes = [];
+		var colorConf = config.colorConf || createColorConf(config);
+		for (var i = 0; i < data.length; i++) {
+			var parent = getSparqlFieldValue(data[i]["parent_name"]); // data[i]["parent_name"].value;
+			var parentURI = getSparqlFieldValue(data[i]["parent_uri"]);
+			var parentType = getSparqlFieldValue(data[i]["parent_type"]);
+			var parentTypeURI = getSparqlFieldValue(data[i]["parent_type_uri"]);
+			var child = getSparqlFieldValue(data[i]["child_name"]); //data[i]["child_name"].value;
+			var childURI = getSparqlFieldValue(data[i]["child_uri"]);
+			var childType = getSparqlFieldValue(data[i]["child_type"]);
+			var childTypeURI = getSparqlFieldValue(data[i]["child_type_uri"]);
+			var property = getSparqlFieldValue(data[i]["relation_name"]);
+			var propertyURI = getSparqlFieldValue(data[i]["relation_uri"]);
+			
+			var childColor = mapTypeToColor(childType, colorConf,
+				config.defaultNodeColor);
+			var childNode = createNode(childURI,child,childType,childTypeURI, childColor, config.maxLabelLength, config.maxWordLength);
+			var parentColor = mapTypeToColor(parentType, colorConf,
+				config.defaultNodeColor);
+			var parentNode = createNode(parentURI,parent,parentType,parentTypeURI, parentColor, config.maxLabelLength, config.maxWordLength);
+			/*var node = new Object();
+			node.type = type;
+			node.id = label;
+			node.label = spqlib.util.cutLongLabel(label, config.maxLabelLength,
+					config.maxWordLength);
+			node.color = mapTypeToColor(type, config.colorConf,
+					config.defaultNodeColor);*/
+			nodes.push({
+				data : childNode,
+				classes : "background"
+			});
+			nodes.push({
+				data : parentNode,
+				classes : "background"
+			});
+			// per ogni nodo creo anche il relativo arco ma solo se non
+			// esiste già
+			var edge = new Object();
+			edge.source = parentURI; //config.expandNodeInfo.source;
+			edge.target = childURI;
+			edge.property = property;
+			edge.propertyURI = propertyURI;
+			edge.color = mapTypeToColor(edge.property, colorConf,
+					config.defaultEdgeColor);
+			//if (!existEdge(config.divId,edge.source,edge.target)){
+			edges.push({
+				data : edge
+			});
+		}
+		if (data.length > 0) {
+			addNodesToGraph(config.divId, nodes);
+			addEdgesToGraph(config.divId, edges);
+			var layout = getSelectedLayout(config);
+			setLayoutToGraph(config.divId, layout);
+			enableTooltipOnNodes(config.divId);
+			enableTooltipOnEdges(config.divId);
+			assignBgImageToNodes(config);
+		}
+
+	}
+	
+	
+	
+	my.addNodesOut = function(json, config) {
+
+		var head = json.head.vars;
+		var data = json.results.bindings;
+		var edges = [];
+		var nodes = [];
+		var colorConf = config.colorConf || createColorConf(config);
+		for (var i = 0; i < data.length; i++) {
+			var uri = getSparqlFieldValue(data[i]["child"]);
+			var label = getSparqlFieldValue(data[i]["child_label"]);
+			var type = getSparqlFieldValue(data[i]["child_type_label"]);
+			var typeURI = getSparqlFieldValue(data[i]["child_type_uri"]);
+			var relation = getSparqlFieldValue(data[i]["relation_label"]);
+			var relationURI = getSparqlFieldValue(data[i]["relation_uri"]);
+			var color = mapTypeToColor(type, colorConf,
+					config.defaultNodeColor);
+			var node = createNode(uri,label,type,typeURI, color, config.maxLabelLength, config.maxWordLength);
+			/*var node = new Object();
+			node.type = type;
+			node.id = label;
+			node.label = spqlib.util.cutLongLabel(label, config.maxLabelLength,
+					config.maxWordLength);
+			node.color = mapTypeToColor(type, config.colorConf,
+					config.defaultNodeColor);*/
+			nodes.push({
+				data : node,
+				classes : "background"
+			});
+			// per ogni nodo creo anche il relativo arco ma solo se non
+			// esiste già
+			var edge = new Object();
+			edge.source = config.expandNodeInfo.source;
+			edge.target = node.id;
+			edge.property = relation;
+			edge.propertyURI = config.expandNodeInfo.property;
+			edge.color = mapTypeToColor(edge.property, colorConf,
+					config.defaultEdgeColor);
+			if (!existEdge(config.divId,edge.source,edge.target)){
+				edges.push({
+					data : edge
+				});
+			}
+		}
+		if (data.length > 0) {
+			addNodesToGraph(config.divId, nodes);
+			addEdgesToGraph(config.divId, edges);
+			var layout = getSelectedLayout(config);
+			setLayoutToGraph(config.divId, layout);
+			enableTooltipOnNodes(config.divId);
+			enableTooltipOnEdges(config.divId);
+			assignBgImageToNodes(config);
+			centerGraphToNode(config.divId, config.expandNodeInfo.source);
+			setNodeExpandedForRelation(config.divId,
+					config.expandNodeInfo.source,
+					config.expandNodeInfo.property,
+					config.expandNodeInfo.direction, true);
+		}
+
 	}
 	
 	
@@ -345,7 +474,7 @@ spqlib.graph = (function () {
 				style[1].style[key] = value;
 			}
 		}
-		spqlib.graph.graphImpl().drawGraph(config,nodes,edges,style,layout)
+		var graph = spqlib.graph.graphImpl().drawGraph(config,nodes,edges,style,layout)
 
 		if (config.showLegend == "true" || config.rootElement) {
 			spqlib.graph.drawLegend(config);
@@ -354,6 +483,8 @@ spqlib.graph = (function () {
 		}
 		enableTooltipOnNodes(divId);
 		enableTooltipOnEdges(divId);
+		spqlib.addToRegistry(config.divId,graph);
+		$( "#"+config.divId ).trigger( "done" );
 	}
 	
 	function getGraphConfig(graphId){
@@ -386,7 +517,7 @@ spqlib.graph = (function () {
 		} else {
 			var q = generateExpandNodeQueryOut(label, property, "");
 			var qWithPrefixes = spqlib.util.addPrefixes(q,smwQueryPrefixes);
-			spqlib.util.doQuery(conf.endpoint, qWithPrefixes, addNodesOut, conf,false);
+			spqlib.util.doQuery(conf.endpoint, qWithPrefixes, spqlib.graph.addNodesOut, conf,false);
 		}
 	}
 	
@@ -734,6 +865,23 @@ spqlib.graph = (function () {
 		}
 		return "Category: " + out + "</br>";
 	}
+	
+	function createColorConf(config){
+		var colorConf = new Object();
+		var nodeConfiguration = config.nodeConfiguration;
+		for (var i = 0; i < nodeConfiguration.length; i++) {
+			var cat = nodeConfiguration[i];
+			colorConf[cat.category] = cat.nodeColor;
+		}
+		var edgeConfiguration = config.edgeConfiguration;
+		for (var i = 0; i < edgeConfiguration.length; i++) {
+			var rel = edgeConfiguration[i];
+			colorConf[rel.relation] = rel.edgeColor;
+		}
+		return colorConf;
+		
+	}
+	
 	
 	/**
 	 * nasconde il div container della legenda

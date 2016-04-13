@@ -356,7 +356,7 @@
 
 									});
 					
-					
+					return g[divId];
 				}
 		}
 

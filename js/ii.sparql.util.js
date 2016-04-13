@@ -177,13 +177,30 @@ spqlib.util = (function () {
 			var key = prop.substring(0,index);
 			var val = prop.substring(index+1);
 			res[key]=val;
-			//var keyval = prop.slice(  );
-			//var keyval = prop.split(keyValueSep || ":");
-			/*if (keyval.length==2){
-				res[keyval[0]]=keyval[1];
-			}*/
 		}
 		return res;
+	}
+	
+	//splitta le query con N union in N query con una sola clausola in where
+	my.splitQueryByUnion = function(sparql){
+		var parser = new sparqljs.Parser();
+		var generator = new sparqljs.Generator();
+		var query = parser.parse(sparql);
+		var where = query.where[0];
+		var results = [];
+		if (where){
+			if (where.type=="union" ){
+				var size = where.patterns.length;
+				for (var i=0;i<size;i++){
+					query.where[0].patterns = [query.where[0].patterns[i]];
+					var queryText = generator.stringify(query);
+					results.push(queryText);
+					query = parser.parse(sparql);
+				}
+				return results;
+			}
+		}
+		return [sparql];
 	}
 
 	

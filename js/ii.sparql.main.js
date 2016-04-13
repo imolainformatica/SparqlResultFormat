@@ -27,7 +27,37 @@ var spqlib = ( function ( $, undefined ) {
 		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
-		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.graph.render, config,spqlib.graph.preQuery,spqlib.graph.failQuery);
+		var splitQueryByUnion = config.splitQueryByUnion || true;
+		if (splitQueryByUnion) {
+			var queries = spqlib.util.splitQueryByUnion(config.sparqlWithPrefixes);
+			$( "#"+config.divId).on( "done", function() {
+			     for (var i=1;i<queries.length;i++){
+					 spqlib.util.doQuery(config.endpoint, queries[i], spqlib.graph.addNodes, config,null,spqlib.graph.failQuery);
+				 }
+			});
+			if (queries.length>0){
+				spqlib.util.doQuery(config.endpoint, queries[0], spqlib.graph.render, config,spqlib.graph.preQuery,spqlib.graph.failQuery);
+			}
+			/*$( "#"+config.divId).on( "done", function() {
+			  
+			});
+			for (var i=0;i<queries.length;i++){
+				if (i==0){
+					this.util.doQuery(config.endpoint, queries[i], spqlib.graph.render, config,spqlib.graph.preQuery,spqlib.graph.failQuery);
+				} else {
+					this.util.doQuery(config.endpoint, queries[i], spqlib.graph.addNodes, config,spqlib.graph.preQuery,spqlib.graph.failQuery);
+				}
+			}*/
+		} else {
+			spqlib.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.graph.render, config,spqlib.graph.preQuery,spqlib.graph.failQuery);
+		}
+		
+		/*var parser = new sparqljs.Parser();
+		var generator = new sparqljs.Generator();
+		var query = parser.parse(config.sparqlWithPrefixes);
+		query.where[0].patterns[2] = null;
+		var queryText = generator.stringify(query);*/
+
 	}
 	
 	function sparql2BarChart(config){
