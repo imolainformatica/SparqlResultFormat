@@ -42,3 +42,14 @@
 .ii-sparql-chart-full-screen td {
     height:90% !important;
 }
+
+
+.ii-container-graph-full-screen{
+   position:fixed;
+   left:0px;
+   top:0px;
+   width:100% !important;
+   height:100% !important;
+   background:#F8F9FA;
+   z-index:10000;
+}

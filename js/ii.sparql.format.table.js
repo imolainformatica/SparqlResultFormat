@@ -1,6 +1,20 @@
 spqlib.table = (function () {
 	var my = { };
 	
+	my.preQuery = function(configuration){
+		if (configuration.spinnerImagePath){
+			$("#"+configuration.divId).html("<img src='"+configuration.spinnerImagePath+"' style='vertical-align:middle;'>");
+		} else {
+			$("#"+configuration.divId).html("Loading...");
+		}
+	}
+	
+	my.failQuery = function(configuration,jqXHR,textStatus){
+		$("#"+configuration.divId).html("");
+		$("#"+configuration.divId).html(generateErrorBox(textStatus));
+		throw new Error("Error invoking sparql endpoint "+textStatus+" "+JSON.stringify(jqXHR));
+	}
+	
 	 /**
 	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql. effettua il mapping dell'output e setta le impostazioni del grafo 
 	 */

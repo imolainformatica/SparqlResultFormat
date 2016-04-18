@@ -9,7 +9,7 @@ var spqlib = ( function ( $, undefined ) {
 		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
-		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.table.renderTable, config);
+		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.table.renderTable, config,spqlib.table.preQuery,spqlib.table.failQuery);
 	}
 	
 	function sparql2GraphExplorer(config){
@@ -30,6 +30,9 @@ var spqlib = ( function ( $, undefined ) {
 		var splitQueryByUnion = config.splitQueryByUnion || true;
 		if (splitQueryByUnion) {
 			var queries = spqlib.util.splitQueryByUnion(config.sparqlWithPrefixes);
+			var step = 100/queries.length;
+			var progress = 0 + step;
+			$( "#"+config.divId).append("<div class='progress-bar'>"+step+"%</div>");
 			$( "#"+config.divId).on( "done", function() {
 			     for (var i=1;i<queries.length;i++){
 					 spqlib.util.doQuery(config.endpoint, queries[i], spqlib.graph.addNodes, config,null,spqlib.graph.failQuery);

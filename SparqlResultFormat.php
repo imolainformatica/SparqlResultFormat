@@ -47,13 +47,15 @@ $wgResourceModules['ext.SparqlResultFormat.all'] = array(
 $wgResourceModules['ext.SparqlResultFormat.main'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
-	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js'),
+	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js','js/libs/sparqljs/sparqljs-browser.js'),
 );
 
 
 $wgResourceModules['ext.SparqlResultFormat.graph'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
+	'styles' => array(
+		'css/ii.style.css' => array('media' => 'screen')),		
  	'dependencies' => array('ext.SparqlResultFormat.formats.graph')
 );
 

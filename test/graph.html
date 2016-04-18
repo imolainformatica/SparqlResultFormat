@@ -388,8 +388,8 @@ GRAPH <http://www.ubibanca.com/ontologie/ea-wiki/ubi-wiki-instances-graph> {
 }
  } }"></div>
 
-
-<div id="mynetwork-host" class="cytoscape-graph" style="width:100%;height:530px;" sparql-query="SELECT distinct
+<div id="mynetwork-host-container" style="width:100%;height:530px;">
+<div id="mynetwork-host" class="cytoscape-graph"  sparql-query="SELECT distinct
 ?parent_uri ?parent_name ?child_uri ?child_name ?parent_type_uri ?parent_type  ?child_type_uri ?child_type ?relation_uri ?relation_name
 WHERE
 {
@@ -677,6 +677,6 @@ VALUES ?root_name {&quot;As400&quot;}
     ?clust ubi-overall-m:companyFilter ?company_filter.
     ?host ubi-overall-m:companyFilter ?company_filter.
   }
-}"></div>
+}"></div></div>
 </body>
 </html>

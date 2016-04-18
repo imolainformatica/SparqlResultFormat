@@ -16,47 +16,12 @@ spqlib.graph = (function () {
 	}
 	
 	my.toggleFullScreen = function(graphId){
-		var isFullScreen = spqlib.graph.graphImpl().isFullScreen(graphId);
-		if (isFullScreen==null) {
-			spqlib.graph.graphImpl().setFullScreen(graphId,false);
-		}
-		
 		var containerSelector = "#" + graphId + "-container";
-		var graphSelector = "#" + graphId + "";
 		var legendSelector = "#" + graphId + "-legend-container";
-		if (isFullScreen == true) {
-			$(containerSelector).toggleClass(
-					'container-graph-full-screen');
-			$(legendSelector).toggleClass('legend-graph-full-screen');
-			$(graphSelector).toggleClass('graph-full-screen');
-			$(graphSelector).css("height", spqlib.graph.graphImpl().getGraph(graphId).normalGraphHeight);
-			$(legendSelector).find(".fullscreen-label").text(
-					"Go fullscreen");
-			$(legendSelector).find("i.glyphicon-resize-small").removeClass(
-					"glyphicon-resize-small").addClass(
-					"glyphicon-fullscreen");
-			$(".ii-graph-container").show();
-			$(window).scrollTop($("#" + graphId).offset().top);
-			spqlib.graph.graphImpl().setFullScreen(graphId,false);
-		} else {
-			$(".ii-graph-container").hide();
-			$(containerSelector).show();
-			$(containerSelector).toggleClass(
-					'container-graph-full-screen');
-			$(legendSelector).toggleClass('legend-graph-full-screen');
-			$(graphSelector).toggleClass('graph-full-screen');
-			spqlib.graph.graphImpl().getGraph(graphId).normalGraphHeight = $(graphSelector).css("height");
-			$(graphSelector).css("height", "100%");
-			$(legendSelector).find(".fullscreen-label").text(
-					"Exit fullscreen");
-			$(legendSelector).find("i.glyphicon-fullscreen").addClass(
-					"glyphicon-resize-small").removeClass(
-					"glyphicon-fullscreen");
-			spqlib.graph.graphImpl().setFullScreen(graphId,true);
-		}
+		$(containerSelector).toggleClass('ii-container-graph-full-screen');
+		$(legendSelector).find("i").toggleClass("glyphicon-resize-small");
 		spqlib.graph.graphImpl().resize(graphId);
 		centerGraphToNode(graphId, spqlib.graph.graphImpl().getGraph(graphId).config.rootElement);
-		
 	}
 	
 	my.preQuery = function(configuration){
@@ -91,16 +56,17 @@ spqlib.graph = (function () {
 	my.initHtml = function(config){
 		var idContainer = config.divId+"-container";
 		var idLegendContainer = config.divId+"-legend-container";
+		var idLegendContainerLabel = config.divId+"-legend-container-label";
 		var idLegendHeader = config.divId+"-legend-header";
 		var idLegend = config.divId+"-legend";
 		var idLegendActionList = config.divId+"-legend-actions-list";
 		var actionFullScreen = "<a href='#' onclick=\"javascript:spqlib.graph.toggleFullScreen('"+config.divId+"');\"><i class='glyphicon glyphicon-fullscreen'></i><spac class='fullscreen-label' style='padding-left:10px;'>Go fullscreen</span></a>"
-		$( "#"+config.divId ).wrap( "<div id='"+idContainer+"' class='ii-graph-container'></div>" );
-		$( "#"+idContainer).prepend("<div id='"+idLegendContainer+"' class='ii-graph-legend-container'></div>");
+		$( "#"+idContainer).prepend("<div id='"+idLegendContainer+"' class='ii-graph-legend-container cytoscape-legend-container'></div>");
+		$( "#"+idContainer).prepend("<div id='"+idLegendContainerLabel+"' class='ii-graph-legend-container cytoscape-legend-container-label'>Show legend</div>");
 		$( "#"+idLegendContainer).append("<div id='"+idLegendHeader+"' class='ii-graph-legend-header'>"+createLegendHeader(config)+"</div> ");
 		$( "#"+idLegendContainer).append("<div id='"+idLegend+"' class='ii-graph-legend'></div> ");
-		$( "#"+idLegendContainer).append("<div id='"+idLegendActionList+"' class='ii-graph-legend-actions-list'></div> ");
-		$( "#"+idLegendActionList).append("<div class='ii-graph-legend-action'>"+actionFullScreen+"</div>");
+		$( "#"+idLegendContainer).append("<div id='"+idLegendActionList+"' class='ii-graph-legend-actions-list cytoscape-actions-list'></div> ");
+		$( "#"+idLegendActionList).append("<div class='ii-graph-legend-action cytoscape-action'>"+actionFullScreen+"</div>");
 	}
 	
 		
@@ -475,7 +441,29 @@ spqlib.graph = (function () {
 			}
 		}
 		var graph = spqlib.graph.graphImpl().drawGraph(config,nodes,edges,style,layout)
-
+		$("#headertabs ul li a").on(
+				'click',
+				function(event, ui) {
+					var tabDivId = $(this).attr("href");
+					var t = $(tabDivId).find(
+							".cytoscape-graph");
+					t.each(function(){
+						var id = $(this).attr("id");
+						var graph = spqlib.getById(id);
+						if (graph){
+							graph.resize();
+							graph.center();
+						}
+						//$(".cytoscape-graph-container").show();
+						//centerGraphToNode(id,g[id].config.rootElement);
+					});					
+					/*.attr("id");
+					if (t) {
+						g[t].resize();
+						$(".cytoscape-graph-container").show();
+						centerGraphToNode(t,g[t].config.rootElement);
+					}*/
+		});
 		if (config.showLegend == "true" || config.rootElement) {
 			spqlib.graph.drawLegend(config);
 		} else {
@@ -722,9 +710,9 @@ spqlib.graph = (function () {
 	
 	my.createEdgeTooltip = function(obj){
 		html = "" + obj.data("property") + "";
-		if (obj.data("uri")){
+		/*if (obj.data("uri")){
 			html+=" ("+obj.data("uri")+")";
-		}
+		}*/
 		return html;
 	}
 	
@@ -740,11 +728,12 @@ spqlib.graph = (function () {
 				conf.linkBasePath
 						+ obj.data("fullLabel")).attr(
 				"target", "_blank");
-		if (obj.data("uri")){
+		var uriLink ="";
+		/*if (obj.data("uri")){
 			var uriLink = "URI: <a href='" + obj.data("uri")
 			+ "' target='" + target + "'>"
 			+ obj.data("uri") + "</a></br>"
-		}
+		}*/
 		var pageCategory = $("<span>").addClass(
 				"cytoscape-qtip-category");
 		var linkHref = conf.linkBasePath
@@ -942,6 +931,34 @@ spqlib.graph = (function () {
 		} else {
 			hideLegend(divId);
 		}
+			//Aggiungo eventi per show e hide della legenda
+		var divLegendContainer = divId+"-container";
+		var divLegendLabel= divId+"-container-label";
+
+		//Aggiungo gli eventi
+		$("#" + divLegendLabel).on("click", function(){
+			var value = $("#" + divLegendLabel).text();
+			if (value == "Show legend"){
+				//$("#" + divLegendContainer).show();
+				$("#" + divLegendContainer).slideDown("slow");
+				$("#" + divLegendLabel).text("Hide legend");
+			} else if (value == "Hide legend") {
+				$("#" + divLegendContainer).slideUp("slow");
+				//$("#" + divLegendContainer).hide();
+				$("#" + divLegendLabel).text("Show legend");
+			}
+		});
+
+		$("#" + divLegendContainer).on("mouseenter ", function(){
+			$("#" + divLegendContainer).show();
+			$("#" + divLegendLabel).text("Hide legend");
+		});
+
+		$("#" + divLegendContainer).on("mouseleave", function(){
+			//$("#" + divLegendContainer).hide();
+			$("#" + divLegendContainer).slideUp("slow");
+			$("#" + divLegendLabel).text("Show legend");
+		});
 	}
 	
 	function getSparqlFieldValue(field){
