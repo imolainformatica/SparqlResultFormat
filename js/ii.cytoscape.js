@@ -148,10 +148,13 @@
 		}*/
 
 
-		function enableTooltipOnNodes(divId) {
-
+		function enableTooltipOnNodes(divId,nodes) {
+			var collection = g[divId].elements().nodes();
+			if (nodes){
+				collection = g[divId].collection(nodes);
+			}
 			// just use the regular qtip api but on cy elements
-			g[divId].elements().nodes().qtip(
+			collection.qtip(
 							{
 								content : function() {
 									 return spqlib.graph.createNodeTooltip(this);
@@ -169,9 +172,13 @@
 								}
 							});
 		}
-		function enableTooltipOnEdges(divId) {
+		function enableTooltipOnEdges(divId,edges) {
+			var collection = g[divId].elements().edges();
+			if (edges){
+				collection = g[divId].collection(edges);
+			}
 			// just use the regular qtip api but on cy elements
-			  g[divId].elements().edges().qtip({
+			  collection.qtip({
 				content : function() {
 					return spqlib.graph.createEdgeTooltip(this);
 				},
@@ -239,10 +246,10 @@
 			    },		
 			    
 			    addNodesToGraph:function(graphId,nodes){
-			    	g[graphId].add(nodes);
+			    	return g[graphId].add(nodes);
 			    },
 			    addEdgesToGraph:function(graphId,edges){
-			    	g[graphId].add(edges);
+			    	return g[graphId].add(edges);
 			    },
 			    enableTooltipOnNodes:enableTooltipOnNodes,
 			    enableTooltipOnEdges:enableTooltipOnEdges,

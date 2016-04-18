@@ -68,7 +68,7 @@ spqlib.graph = (function () {
 		$( "#"+idLegendContainer).append("<div id='"+idLegendActionList+"' class='ii-graph-legend-actions-list cytoscape-actions-list'></div> ");
 		$( "#"+idLegendActionList).append("<div class='ii-graph-legend-action cytoscape-action'>"+actionFullScreen+"</div>");
 		
-		$( "#"+idContainer).after("<div class='progress'><div class='progress-bar' role='progressbar' aria-valuenow='70' aria-valuemin='0' aria-valuemax='100' style='width:70%'>70%</div></div>");
+		$( "#"+idContainer).after("<div class='progress'><div class='progress-bar' role='progressbar' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100' style='width:0%'>0%</div></div>");
 	}
 	
 		
@@ -226,14 +226,25 @@ spqlib.graph = (function () {
 			});
 		}
 		if (data.length > 0) {
-			addNodesToGraph(config.divId, nodes);
-			addEdgesToGraph(config.divId, edges);
+			var n = addNodesToGraph(config.divId, nodes);
+			var e = addEdgesToGraph(config.divId, edges);
 			var layout = getSelectedLayout(config);
 			setLayoutToGraph(config.divId, layout);
-			enableTooltipOnNodes(config.divId);
-			enableTooltipOnEdges(config.divId);
+			enableTooltipOnNodes(config.divId,n);
+			enableTooltipOnEdges(config.divId,e);
 			assignBgImageToNodes(config);
 		}
+		var idContainer = config.divId+"-container";
+		var progressBar = $( "#"+idContainer).next().find(".progress-bar");
+		var currentProgress = parseInt(progressBar.attr("aria-valuenow"));
+		var newProgress = currentProgress + parseInt(config.step);
+		if (100 - newProgress < config.step){
+			newProgress = 100;
+		}
+		progressBar.attr("aria-valuenow",newProgress);
+		var perc = newProgress+"%";
+		progressBar.css("width",perc);
+		progressBar.text(perc);
 
 	}
 	
@@ -678,11 +689,19 @@ spqlib.graph = (function () {
 	}
 	
 	
-	function enableTooltipOnNodes(graphId){
-		spqlib.graph.graphImpl().enableTooltipOnNodes(graphId);
+	function enableTooltipOnNodes(graphId, nodes){
+		if (!nodes){
+			spqlib.graph.graphImpl().enableTooltipOnNodes(graphId);
+		} else {
+			spqlib.graph.graphImpl().enableTooltipOnNodes(graphId,nodes);
+		}
 	}
-	function enableTooltipOnEdges(graphId){
-		spqlib.graph.graphImpl().enableTooltipOnEdges(graphId);
+	function enableTooltipOnEdges(graphId,edges){
+		if (!edges){
+			spqlib.graph.graphImpl().enableTooltipOnEdges(graphId);
+		} else {
+			spqlib.graph.graphImpl().enableTooltipOnEdges(graphId,edges);
+		}
 	}
 	
 	function getSelectedLayout(config){
@@ -694,11 +713,11 @@ spqlib.graph = (function () {
 	}
 	
 	function addNodesToGraph(graphId, nodes) {
-		spqlib.graph.graphImpl().addNodesToGraph(graphId,nodes); 
+		return spqlib.graph.graphImpl().addNodesToGraph(graphId,nodes); 
 	}
 
 	function addEdgesToGraph(graphId, edges) {
-		spqlib.graph.graphImpl().addEdgesToGraph(graphId,edges); 
+		return spqlib.graph.graphImpl().addEdgesToGraph(graphId,edges); 
 	}
 	
 	function existEdge(graphId,from,to){

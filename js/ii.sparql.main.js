@@ -30,7 +30,8 @@ var spqlib = ( function ( $, undefined ) {
 		var splitQueryByUnion = config.splitQueryByUnion || true;
 		if (splitQueryByUnion) {
 			var queries = spqlib.util.splitQueryByUnion(config.sparqlWithPrefixes);
-			var step = 100/queries.length;
+			var step = 100/(queries.length-1);
+			config.step = step;
 			var progress = 0 + step;
 			$( "#"+config.divId).append("<div class='progress-bar'>"+step+"%</div>");
 			$( "#"+config.divId).on( "done", function() {
