@@ -77,7 +77,7 @@
 			rdylgn:{3:["rgb(252,141,89)","rgb(255,255,191)","rgb(145,207,96)"],4:["rgb(215,25,28)","rgb(253,174,97)","rgb(166,217,106)","rgb(26,150,65)"],5:["rgb(215,25,28)","rgb(253,174,97)","rgb(255,255,191)","rgb(166,217,106)","rgb(26,150,65)"],6:["rgb(215,48,39)","rgb(252,141,89)","rgb(254,224,139)","rgb(217,239,139)","rgb(145,207,96)","rgb(26,152,80)"],7:["rgb(215,48,39)","rgb(252,141,89)","rgb(254,224,139)","rgb(255,255,191)","rgb(217,239,139)","rgb(145,207,96)","rgb(26,152,80)"],8:["rgb(215,48,39)","rgb(244,109,67)","rgb(253,174,97)","rgb(254,224,139)","rgb(217,239,139)","rgb(166,217,106)","rgb(102,189,99)","rgb(26,152,80)"],9:["rgb(215,48,39)","rgb(244,109,67)","rgb(253,174,97)","rgb(254,224,139)","rgb(255,255,191)","rgb(217,239,139)","rgb(166,217,106)","rgb(102,189,99)","rgb(26,152,80)"],10:["rgb(165,0,38)","rgb(215,48,39)","rgb(244,109,67)","rgb(253,174,97)","rgb(254,224,139)","rgb(217,239,139)","rgb(166,217,106)","rgb(102,189,99)","rgb(26,152,80)","rgb(0,104,55)"],11:["rgb(165,0,38)","rgb(215,48,39)","rgb(244,109,67)","rgb(253,174,97)","rgb(254,224,139)","rgb(255,255,191)","rgb(217,239,139)","rgb(166,217,106)","rgb(102,189,99)","rgb(26,152,80)","rgb(0,104,55)"]}
 		};
 
-	     var defaultBarChartOptions = {
+	     var defaultBarChartVerticalOptions = {
 				// Only animate if we're not using excanvas (not in IE 7 or IE 8)..
 				title: {text:'',show:true},
 				animate: true,
@@ -109,6 +109,54 @@
 						  }
 					},
 					yaxis:{
+						tickOptions: {
+						  fontSize: '10pt'
+						},
+						 labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+						 labelOptions: {
+							fontSize: '14pt'
+						  }
+					}
+				},
+				legend: {
+					show: true,
+					location: 'ne',
+					placement: 'inside'
+				}      
+			}
+			
+			 var defaultBarChartHorizontalOptions = {
+				// Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+				title: {text:'',show:true},
+				animate: true,
+				seriesDefaults:{
+					renderer:$.jqplot.BarRenderer,
+					rendererOptions: {
+						barDirection: 'horizontal',
+						showDataLabels: true,
+					},
+					pointLabels: { show: false }
+				},
+				seriesColor:colorscheme['rdgy'][9],
+				axesDefaults: {
+					tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+				},
+				axes: {
+					yaxis: {
+						renderer: $.jqplot.CategoryAxisRenderer,
+						tickOptions: {
+						  angle: -30,
+						  fontSize: '10pt',
+						  formatter:function(format,value){ 
+								return spqlib.jqplot().defaultCutLongLabelFormatter(format,value); 
+							}
+						},
+						 labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+						 labelOptions: {
+							fontSize: '14pt'
+						  }
+					},
+					xaxis:{
 						tickOptions: {
 						  fontSize: '10pt'
 						},
@@ -233,19 +281,20 @@
 		 *  series - array di array
 		 **/
 	    function drawBarChart(label,series,config){
-			var s = createBarchartSeries(label,series);		
+			var direction = config.extraOptions[PROP_CHART_DIRECTION] || "vertical";
+			var s = {};
+			if (direction=="horizontal"){
+				s = createHorizontalBarchartSeries(label,series);
+			} else {
+				s = createBarchartSeries(label,series);	
+			}				
 		    var options= getBarChartOptions(config);	
 			options.seriesDefaults.renderer=$.jqplot.BarRenderer;
 			var plot = $.jqplot(config.divId, s,options );
 			plot.config = config;
 			c[config.divId]=config.plot=plot;
-			/*$("#"+config.divId).bind('jqplotClick',function(ev){
-				var chartId = ev.currentTarget.id;
-				var tooltip = $("#"+chartId+" .jqplot-highlighter-tooltip");
-				tooltip.hide();
-			});*/
-			$("#"+config.divId).bind('jqplotDataClick',
-				function (ev, seriesIndex, pointIndex, data) { 
+			$("#"+config.divId).bind('jqplotDataClick',{config:config},defaultBarChartDataClick
+				/*function (ev, seriesIndex, pointIndex, data) { 
 					var chartId = ev.currentTarget.id;
 					var chart = $("#"+chartId)[0];
 					var tooltip = $("#"+chartId+" .jqplot-highlighter-tooltip");		
@@ -269,14 +318,11 @@
 						tooltip.toggle();
 					}
 					tooltip.html(html);
-					//ev.stopImmediatePropagation();//per evitare di triggere il jqplotClick
-				}
+				}*/
 			);		
-
-
-			
 			return plot;				
 		}
+		
 		
 		 /**
 		 *  label - array di stringhe
@@ -370,6 +416,34 @@
 			  });
 		}
 		
+		function defaultBarChartDataClick(ev, seriesIndex, pointIndex, data){
+			var chartId = ev.currentTarget.id;
+			var chart = $("#"+chartId)[0];
+			var plot = c[chartId];
+			var tooltip = $("#"+chartId+" .jqplot-highlighter-tooltip");		
+			var offsetLeft = chart.offsetLeft;	
+			var offsetTop = chart.offsetTop;	
+			var x = ev.pageX - offsetLeft;
+			var y = ev.pageY - offsetTop;
+			var oldPointIndex = parseInt(tooltip.attr("pointIndex"));
+			tooltip.attr("pointIndex",pointIndex);
+			tooltip.css("position","absolute");
+			tooltip.css("left",x+"px");
+			tooltip.css("top",y+"px");
+			tooltip.css("z-index","999");
+			var dataObject = plot.data[seriesIndex][pointIndex];
+			var isHorizontal = plot.config.extraOptions[PROP_CHART_DIRECTION]=="horizontal";
+			var label = isHorizontal ? dataObject[1] : dataObject[0];
+			var value = isHorizontal ? dataObject[0] :dataObject[1];
+			var html = ev.data.config.barChartTooltipContent ? ev.data.config.barChartTooltipContent.call(label,value,config) : spqlib.barchart.defaultBarChartTooltipContent(label,value,ev.data.config,seriesIndex);
+			if (oldPointIndex!=pointIndex){
+				tooltip.show();
+			} else {
+				tooltip.toggle();
+			}
+			tooltip.html(html);
+		}
+		
 		function defaultBubbleChartDataHighlight(ev, seriesIndex, pointIndex, data, radius){
 			var graphId = $(ev.target).attr("id");
 			var legendIdSelector = "#"+graphId+"-legend";
@@ -415,8 +489,6 @@
 			} else {
 				$('#tooltip1b').toggle();
 			}
-			//$(legendIdSelector+' tr td').css('background-color', '#ffffff !important');
-			//$(legendIdSelector+' tr td').eq(pointIndex+1).css('background-color', color);
 		}
 		
 		function defaultBubbleChartDataUnhighlight(ev, seriesIndex, pointIndex, data) {
@@ -446,6 +518,32 @@
 				}
 				for (var i=0;i<series.length;i++){
 					s.push(series[i]);
+				}
+			}
+			return s;
+		}
+		
+		function createHorizontalBarchartSeries(label,series){
+			var s = [];
+			if (series.length==1){
+				for (var i=series[0].length-1;i>=0;i--){
+					var lab = label[i];
+					var value = series[0][i];
+					s.push([value,lab]);
+				}
+				s=[s];
+			} else {
+				var out = [];
+				for (var i=0;i<series.length;i++){
+					out[i] = [];
+					var lung = series[i].length;
+					for (var j=lung-1;j>=0;j--){
+						var value = series[i][j];
+						out[i][lung-1-j]=[value,label[j]];
+					}
+				}
+				for (var i=0;i<out.length;i++){
+					s.push(out[i]);
 				}
 			}
 			return s;
@@ -487,7 +585,13 @@
 		
 			
 		function getBarChartOptions(config){
-			var options = spqlib.util.cloneObject(defaultBarChartOptions);
+			var options = {};
+			var direction = config.extraOptions[PROP_CHART_DIRECTION] || "vertical";
+			if (direction=="horizontal"){	
+					options = spqlib.util.cloneObject(defaultBarChartHorizontalOptions);
+				} else {
+					options = spqlib.util.cloneObject(defaultBarChartVerticalOptions);
+				}
 			if (config.seriesConfiguration){
 				var sc = config.seriesConfiguration;
 				for (var i=0;i<sc.length;i++){
@@ -501,14 +605,6 @@
 					options.series[i].color = color;
 				}				
 			}	
-			var title = config.extraOptions[PROP_CHART_TITLE];
-			if (title){
-				options.title.text=title;
-			}
-			var direction = config.extraOptions[PROP_CHART_DIRECTION];
-			if (direction && direction!=null && direction!=""){
-				options.seriesDefaults.rendererOptions.barDirection=config.direction;
-			}
 			var xAxisLabel = config.extraOptions[PROP_CHART_AXIS_X_LABEL];
 			if (xAxisLabel){
 				options.axes.xaxis.label=xAxisLabel;
@@ -562,6 +658,12 @@
 			if (barPadding){
 				options.seriesDefaults.rendererOptions.barPadding = parseInt(barPadding);
 			}
+			var title = config.extraOptions[PROP_CHART_TITLE];
+			if (title){
+				options.title.text=title;
+			}
+			var direction = config.extraOptions[PROP_CHART_DIRECTION];
+
 			return options;
 		}
 		
