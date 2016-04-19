@@ -53,3 +53,9 @@
    background:#F8F9FA;
    z-index:10000;
 }
+
+.export-table-csv {
+float: right;
+    font-size: 16pt;
+    margin-right: 10px;
+}

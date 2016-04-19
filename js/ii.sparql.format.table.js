@@ -87,7 +87,7 @@ spqlib.table = (function () {
 		var table = "<table class='"+config.tableClass+"'>"+thead+tbody+"</table>";
 		$("#"+config.divId).html(table);
 		var csvExport = config.csvExport || false;
-		if (window.exportTableToCSV && csvExport){
+		if (spqlib.util.exportTableToCSV && csvExport){
 			//aggiungo il link per l'export csv delle pagine
 			var filename = config.csvFileName || 'export.csv';
 			var label = config.csvLinkLabel || 'Export as CSV';
@@ -96,8 +96,22 @@ spqlib.table = (function () {
 				throw ("csvFormAction vuota -> l'export pdf non funzionerà");
 			}
 			var tableContainer = $("#"+config.divId).find("table");
-			tableContainer.after("<span class='export-table-csv'><a class='export'>"+label+"</a><form action='"+csvFormAction+"' method ='post' ><input type='hidden' id='csv_text' name='csv_text' /><input type='hidden' id='csv_file_name' name='csv_file_name' value='"+filename+"'/></form></span>");
-			window.exportTableToCSVClickHandler();
+			var exporter = $("<span class='export-table-csv' table-container-id='"+config.divId+"'> </span>")
+				.html("<a class='export'>"+label+"</a> \
+					<form action='"+csvFormAction+"' method ='post' > \
+					<input type='hidden' id='csv_text' name='csv_text' /> \
+					<input type='hidden' id='csv_file_name' name='csv_file_name' value='"+filename+"'/> \
+					</form>");
+			exporter.insertAfter(tableContainer);
+			exporter.on("click",function(event){
+				var divId = $(event.currentTarget).attr("table-container-id");
+				var table = $("#"+divId).find("table");
+				var csv = spqlib.util.exportTableToCSV(table);
+				var form = table.next().find("form");
+				form.find("input[id='csv_text']").val(csv);
+				form.submit();
+				
+			});
 		}	
         $( "#"+config.divId ).trigger( "done" );		
 	}
