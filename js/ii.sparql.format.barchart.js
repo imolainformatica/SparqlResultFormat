@@ -3,6 +3,10 @@ spqlib.barchart = (function () {
 	/**
 	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql. effettua il mapping dell'output e setta le impostazioni del grafo 
 	 */
+	 
+	 my.DEFAULT_AXIS_LABEL_MAX_LENGTH = 15;
+	 
+	 
 	my.chartImpl = function () {
 		return spqlib.jqplot();
 	}

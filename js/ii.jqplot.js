@@ -8,6 +8,7 @@
 		/*COMUNI*/
 		var PROP_CHART_TITLE = "chart.title";
 		/*BARCHART*/
+		var PROP_CHART_HEIGHT_AUTOMATIC = "chart.height.automatic";
 		var PROP_CHART_BAR_WIDTH = "chart.bar.width";
 		var PROP_CHART_BAR_MARGIN = "chart.bar.margin";
 		var PROP_CHART_BAR_PADDING = "chart.bar.padding";
@@ -22,6 +23,7 @@
 		var PROP_CHART_LEGEND_LOCATION = "chart.legend.location";
 		var PROP_CHART_AXIS_X_ANGLE = "chart.axis.x.angle";
 		var PROP_CHART_AXIS_Y_ANGLE = "chart.axis.y.angle";
+		var PROP_CHART_AXIS_LABEL_MAX_LENGTH = "chart.axis.label.max.length";
 		/*BUBBLE CHART*/
 		var PROP_CHART_LEGEND_COLUMN_ASSET = "chart.legend.column.asset";
 		var PROP_CHART_LEGEND_COLUMN_RADIUS = "chart.legend.column.radius";
@@ -174,7 +176,7 @@
 			}
 			
 			var defaultCutLongLabelFormatter = function(format,value){
-				  var maxLength = 15;
+				  var maxLength = spqlib.barchart.DEFAULT_AXIS_LABEL_MAX_LENGTH;
 				  if (value.length>maxLength){
 					  value = value.substr(0,maxLength)+"...";
 				  }
@@ -281,6 +283,7 @@
 		 *  series - array di array
 		 **/
 	    function drawBarChart(label,series,config){
+			var chartId = config.divId;
 			var direction = config.extraOptions[PROP_CHART_DIRECTION] || "vertical";
 			var s = {};
 			if (direction=="horizontal"){
@@ -290,36 +293,16 @@
 			}				
 		    var options= getBarChartOptions(config);	
 			options.seriesDefaults.renderer=$.jqplot.BarRenderer;
-			var plot = $.jqplot(config.divId, s,options );
+			//gestione altezza automatica del grafico solo per gli horizontal barchart
+			if (config.extraOptions[PROP_CHART_HEIGHT_AUTOMATIC] == "true" && direction=="horizontal"){
+				var height = Math.max(s[0].length*(35)+50,250);//calcolato empiricamente
+				$("#"+chartId+"-container").css("height",height+"px");				
+			}
+			var plot = $.jqplot(chartId, s,options );
 			plot.config = config;
-			c[config.divId]=config.plot=plot;
-			$("#"+config.divId).bind('jqplotDataClick',{config:config},defaultBarChartDataClick
-				/*function (ev, seriesIndex, pointIndex, data) { 
-					var chartId = ev.currentTarget.id;
-					var chart = $("#"+chartId)[0];
-					var tooltip = $("#"+chartId+" .jqplot-highlighter-tooltip");		
-					var offsetLeft = chart.offsetLeft;	
-					var offsetTop = chart.offsetTop;	
-					var x = ev.pageX - offsetLeft;
-					var y = ev.pageY - offsetTop;
-					var oldPointIndex = tooltip.attr("pointIndex");
-					tooltip.attr("pointIndex",pointIndex+"-"+seriesIndex);
-					tooltip.css("position","absolute");
-					tooltip.css("left",x+"px");
-					tooltip.css("top",y+"px");
-					tooltip.css("z-index","999");
-					var plot = config.plot;
-					var label = plot.data[seriesIndex][pointIndex][0];
-					var value = plot.data[seriesIndex][pointIndex][1];
-					var html = config.barChartTooltipContent ? config.barChartTooltipContent.call(label,value,config,seriesIndex) : spqlib.barchart.defaultBarChartTooltipContent(label,value,config,seriesIndex);
-					if (oldPointIndex!=pointIndex+"-"+seriesIndex){
-						tooltip.show();
-					} else {
-						tooltip.toggle();
-					}
-					tooltip.html(html);
-				}*/
-			);		
+			c[chartId]=config.plot=plot;
+			$("#"+chartId).bind('jqplotDataClick',{config:config},defaultBarChartDataClick);	
+			
 			return plot;				
 		}
 		
@@ -662,7 +645,10 @@
 			if (title){
 				options.title.text=title;
 			}
-			var direction = config.extraOptions[PROP_CHART_DIRECTION];
+			var axisLabelMaxLength = config.extraOptions[PROP_CHART_AXIS_LABEL_MAX_LENGTH];
+			if (axisLabelMaxLength){
+				spqlib.barchart.DEFAULT_AXIS_LABEL_MAX_LENGTH = axisLabelMaxLength;
+			}
 
 			return options;
 		}
