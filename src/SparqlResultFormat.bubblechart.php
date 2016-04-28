@@ -9,35 +9,35 @@ class SparqlResultFormatBubbleChart extends SparqlResultFormatBase implements Sp
        $this->params = array(
 			"divId" => array(
 					"mandatory" => true,
-					"description" => ""
+					"description" => wfMessage("sprf.param.divId")
 				),
 			"sparqlEndpoint" => array(
 					"mandatory" => true,
-					"description" => ""
+					"description" => wfMessage("sprf.param.sparqlEndpoint")
 				),
 			"sparqlEscapedQuery" => array(
 					"mandatory" => true,
-					"description" => ""
+					"description" => wfMessage("sprf.param.sparqlEscapedQuery")
 				),
 			"divStyle" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.divStyle")
 				),
 			"spinnerImagePath" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.spinnerImagePath")
 				),
 			"divCssClass" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.divCssClass")
 				),
 			"divCssClassFullScreen" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.divCssClassFullScreen")
 				),
 			"extraOption" => array(
 				"mandatory" => false,
-				"description" => ""
+				"description" => wfMessage("sprf.param.extraOption")
 			),
 	   );
 	   
@@ -143,6 +143,7 @@ class SparqlResultFormatBubbleChart extends SparqlResultFormatBase implements Sp
 					"example" => "|extraOption="
 				)
 	   );
+	   $this->queryStructure = wfMessage("sprf.format.bubblechart.query.structure");
 	   
 	}
 	

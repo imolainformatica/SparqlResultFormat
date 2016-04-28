@@ -49,6 +49,7 @@ class SparqlResultFormatDonutChart extends SparqlResultFormatBase implements Spa
 				)
 	   
 	   );
+	   $this->queryStructure = wfMessage("sprf.format.donutchart.query.structure");
     }
 	
 	

@@ -132,10 +132,9 @@ class SparqlResultFormatBarChart extends SparqlResultFormatBase implements Sparq
 					"description" => wfMessage("sprf.options.chart.height.automatic"),
 					"default" => "15",
 					"example" => "|extraOption=chart.axis.label.max.length:30"
-				),
-				
-	   
+				)
 	   );
+	   $this->queryStructure = wfMessage("sprf.format.barchart.query.structure");
     }
 	
 	
