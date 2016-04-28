@@ -17,7 +17,7 @@
 		var PROP_CHART_AXIS_X_LABEL_FONT_SIZE = "chart.axis.x.label.font.size";
 		var PROP_CHART_AXIS_Y_LABEL_FONT_SIZE = "chart.axis.x.label.font.size";
 		var PROP_CHART_AXIS_X_FONT_SIZE = "chart.axis.x.font.size";
-		var PROP_CHART_AXIS_Y_FONT_SIZE = "chart.axis.x.font.size";
+		var PROP_CHART_AXIS_Y_FONT_SIZE = "chart.axis.y.font.size";
 		var PROP_CHART_DIRECTION = "chart.direction";
 		var PROP_CHART_LEGEND_SHOW = "chart.legend.show";
 		var PROP_CHART_LEGEND_LOCATION = "chart.legend.location";
@@ -147,7 +147,7 @@
 					yaxis: {
 						renderer: $.jqplot.CategoryAxisRenderer,
 						tickOptions: {
-						  angle: -30,
+						  angle: 0,
 						  fontSize: '10pt',
 						  formatter:function(format,value){ 
 								return spqlib.jqplot().defaultCutLongLabelFormatter(format,value); 
@@ -219,8 +219,14 @@
 				var value = plot.data[seriesIndex][pointIndex][1];
 				var html = spqlib.piechart.defaultPieChartTooltipContent(label,value);
 				return html;
+			}	
 
-			}			
+			function defaultDonutchartTooltipContentEditor(str, seriesIndex, pointIndex, plot) {
+				var label =  plot.data[seriesIndex][pointIndex][0];
+				var value = plot.data[seriesIndex][pointIndex][1];
+				var html = spqlib.donutchart.defaultDonutChartTooltipContent(label,value,config);
+				return html;
+			}				
 				
 			var defaultDonutChartOptions = {
 				animate: true,
@@ -239,12 +245,12 @@
 					// You can show the data 'value' or data 'label' instead.
 				  }
 				},
-				highlighter: { 
+				/*highlighter: { 
 					show: true,tooltipLocation:'n',
 					useAxesFormatters: false,
 					formatString:'%s, %P',
-					tooltipContentEditor:defaultPiechartTooltipContentEditor 					
-					},
+					tooltipContentEditor:defaultDonutchartTooltipContentEditor 					
+					},*/
 				legend: { show:true, location: 'e' }
 			  }
 			  
@@ -296,6 +302,7 @@
 			//gestione altezza automatica del grafico solo per gli horizontal barchart
 			if (config.extraOptions[PROP_CHART_HEIGHT_AUTOMATIC] == "true" && direction=="horizontal"){
 				var height = Math.max(s[0].length*(35)+50,250);//calcolato empiricamente
+				height = Math.min(8000,height); //sopra gli 8000 px in ie11 non renderizza bene
 				$("#"+chartId+"-container").css("height",height+"px");				
 			}
 			var plot = $.jqplot(chartId, s,options );
@@ -360,7 +367,10 @@
 				   data = [data];			  	
 			  }
 			  var plot1 = jQuery.jqplot (config.divId, data, options);
+			  plot1.config = config;
 			  c[config.divId]=plot1;
+			  
+			  $("#"+config.divId).bind('jqplotDataClick', config.donutChartDataHighlightCallback || defaultDonutChartDataHighlight);
 			  return plot1;
 		}
 		
@@ -472,6 +482,30 @@
 			} else {
 				$('#tooltip1b').toggle();
 			}
+		}
+		
+		function defaultDonutChartDataHighlight(ev, seriesIndex, pointIndex, data) { 			
+			var chartId = ev.currentTarget.id;
+			var config = spqlib.getById(chartId).config;
+			var chart = $("#"+chartId)[0];
+			var tooltip = $("#"+chartId+" .jqplot-highlighter-tooltip");		
+			var offsetLeft = chart.offsetLeft;	
+			var offsetTop = chart.offsetTop;	
+			var x = ev.pageX - offsetLeft;
+			var y = ev.pageY - offsetTop;
+			var oldPointIndex = tooltip.attr("pointIndex");
+			tooltip.attr("pointIndex",pointIndex);
+			tooltip.css("position","absolute");
+			tooltip.css("left",x+"px");
+			tooltip.css("top",y+"px");
+			tooltip.css("z-index","999");
+			var html = config.donutChartTooltipContent ? config.donutChartTooltipContent.call(data[0],data[1],config) : spqlib.donutchart.defaultDonutChartTooltipContent(data[0],data[1],config);
+			if (oldPointIndex!=pointIndex){
+				tooltip.show();
+			} else {
+				tooltip.toggle();
+			}
+			tooltip.html(html);
 		}
 		
 		function defaultBubbleChartDataUnhighlight(ev, seriesIndex, pointIndex, data) {
@@ -670,8 +704,9 @@
 		
 		function getDonutChartOptions(config){
 			var options = spqlib.util.cloneObject(defaultDonutChartOptions);
-			if (config.chartTitle){
-				options.title.text=config.chartTitle;
+			var title = config.extraOptions[PROP_CHART_TITLE];
+			if (title){
+				options.title.text=title;
 			}
 			return options;
 		}

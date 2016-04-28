@@ -1,0 +1,129 @@
+{
+	"name": "SparqlResultFormat",
+	"version": "1.0.0",
+	"author": [
+		"Gabriele Cornacchia",
+		"Matteo Busanelli"
+	],
+	"url": "",
+	"description": "Permette di effettuare query sparql a endpoint e di visualizzarle in diversi formati",
+	"type": "parserhook",
+	"config": {
+		"SparqlEndpointDefinition" : {}
+	},
+	"ExtensionMessagesFiles": {
+		"SparqlResultFormatMagic": "SparqlResultFormat.i18n.magic.php"
+	},
+	"MessagesDirs": {
+		"SparqlResultFormat": [
+			"i18n"
+		]
+	},
+	"Hooks": {
+		"ParserFirstCallInit": [
+			"SparqlResultFormatHooks::onParserFirstCallInit"
+		],
+		"ParserAfterTidy": [
+			"SparqlResultFormatHooks::outputHtml"
+		]
+	},
+	"ResourceModules": {
+		"ext.SparqlResultFormat.main": {
+			"scripts": [
+				"js/ii.sparql.main.js",
+				"js/ii.sparql.util.js",
+				"js/libs/sparqljs/sparqljs-browser.js"
+			],
+			"dependencies": ["ext.jquery.qtip"],
+			"styles":["css/ii.style.treemap.css"]
+		},
+		"ext.SparqlResultFormat.graph": {
+			"scripts":[],
+			"dependencies":["ext.SparqlResultFormat.formats.graph"],
+			"styles":["css/ii.style.css"]
+		},
+		"ext.SparqlResultFormat.table": {
+			"scripts":["js/ii.sparql.format.table.js","js/ii.sparql.format.csv.js"],
+			"dependencies":[],
+			"styles":["css/ii.style.css"]
+		},
+		"ext.SparqlResultFormat.jqplot": {
+			"scripts":["js/ii.jqplot.js",
+				"js/libs/jqplot/jquery.jqplot.min.js",
+				"js/libs/jqplot/jqplot.pieRenderer.js",
+				"js/libs/jqplot/jqplot.donutRenderer.js",
+				"js/libs/jqplot/jqplot.barRenderer.js",
+				"js/libs/jqplot/jqplot.bubbleRenderer.js",
+				"js/libs/jqplot/jqplot.highlighter.js",
+				"js/libs/jqplot/jqplot.categoryAxisRenderer.js",
+				"js/libs/jqplot/jqplot.canvasTextRenderer.js",
+				"js/libs/jqplot/jqplot.canvasAxisTickRenderer.js",
+				"js/libs/jqplot/jqplot.canvasAxisLabelRenderer.js"
+			],
+			"dependencies":[],
+			"styles":["css/jquery.jqplot.min.css"]
+		},
+		"ext.SparqlResultFormat.barchart": {
+			"scripts":["js/ii.sparql.format.barchart.js"],
+			"dependencies":["ext.SparqlResultFormat.jqplot"],
+			"styles":["css/jquery.jqplot.min.css","css/ii.style.css"]
+		},
+		"ext.SparqlResultFormat.piechart": {
+			"scripts":["js/ii.sparql.format.piechart.js"],
+			"dependencies":["ext.SparqlResultFormat.jqplot"],
+			"styles":["css/ii.style.css"]
+		},
+		"ext.SparqlResultFormat.donutchart": {
+			"scripts":["js/ii.sparql.format.donutchart.js"],
+			"dependencies":["ext.SparqlResultFormat.jqplot"],
+			"styles":["css/ii.style.css"]
+		},
+		"ext.SparqlResultFormat.bubblechart": {
+			"scripts":["js/ii.sparql.format.bubblechart.js"],
+			"dependencies":["ext.SparqlResultFormat.jqplot"],
+			"styles":["css/ii.style.css"]
+		},
+		"ext.SparqlResultFormat.csv": {
+			"scripts":["js/ii.sparql.format.csv.js"],
+			"dependencies":[],
+			"styles":[]
+		},
+		"ext.SparqlResultFormat.treemap": {
+			"scripts":["js/ii.sparql.format.treemap.js","js/ii.d3.js","js/libs/d3.v3.min.js"],
+			"dependencies":[],
+			"styles":[]
+		},
+		"ext.SparqlResultFormat.formats.graph": {
+			"scripts":["js/ii.sparql.format.graph.js",
+				"js/ii.cytoscape.js",
+				"js/libs/cytoscape.js",
+				"js/libs/dagre.min.js",
+				"js/libs/cytoscape-dagre.js",
+				"js/libs/cytoscape-qtip.js"],
+			"dependencies":[],
+			"styles":["css/ii.style.css","css/ii.style.graph.css"]
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "",
+		"remoteExtPath": "SparqlResultFormat"
+	},
+	"SpecialPages": {
+		"SparqlResultFormat": "SpecialSparqlResultFormat"
+	},
+	"AutoloadClasses": {
+		"ExtSparqlResultFormat": "SparqlResultFormat_body.php",
+		"SparqlResultFormatHooks": "SparqlResultFormat.hooks.php",
+		"SparqlFormat": "src/SparqlResultFormat.interface.php",
+		"SparqlResultFormatTable": "src/SparqlResultFormat.table.php",
+		"SparqlResultFormatBarChart": "src/SparqlResultFormat.barchart.php",
+		"SparqlResultFormatBubbleChart": "src/SparqlResultFormat.bubblechart.php",
+		"SparqlResultFormatTreemap": "src/SparqlResultFormat.treemap.php",
+		"SparqlResultFormatCSV": "src/SparqlResultFormat.csv.php",
+		"SparqlResultFormatBase": "src/SparqlResultFormat.base.php",
+		"SparqlResultFormatPieChart": "src/SparqlResultFormat.piechart.php",
+		"SparqlResultFormatDonutChart": "src/SparqlResultFormat.donutchart.php",
+		"SparqlResultFormatGraph": "src/SparqlResultFormat.graph.php",
+		"SpecialSparqlResultFormat":"src/SpecialSparqlResultFormat.php"
+	}
+}

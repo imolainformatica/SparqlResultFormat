@@ -1,0 +1,18 @@
+{
+	"name" : "CSV",
+	"description" : "",
+	"parameter": {
+		"divId" : { 
+			"description": "",
+			"mandatory": true,
+			"default" : "",
+			"example" : "|divId=chart1"
+		},
+		"sparqlEndpoint" : { 
+			"description": "define the name of the endpoint defined in localsettings to use",
+			"mandatory": true,
+			"default" : "",
+			"example" : "|sparqlEndpoint=endpoint1"
+		}
+	}
+}

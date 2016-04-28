@@ -27,17 +27,41 @@ var spqlib = ( function ( $, undefined ) {
 		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
-		var splitQueryByUnion = config.splitQueryByUnion || true;
+		var splitQueryByUnion = config.splitQueryByUnion || false;
 		if (splitQueryByUnion) {
 			var queries = spqlib.util.splitQueryByUnion(config.sparqlWithPrefixes);
-			var step = 100/(queries.length-1);
+			var step = 100/(queries.length);
 			config.step = step;
-			var progress = 0 + step;
-			$( "#"+config.divId).append("<div class='progress-bar'>"+step+"%</div>");
+			
 			$( "#"+config.divId).on( "done", function() {
-			     for (var i=1;i<queries.length;i++){
-					 spqlib.util.doQuery(config.endpoint, queries[i], spqlib.graph.addNodes, config,null,spqlib.graph.failQuery);
-				 }
+				var progress = 0 + step;
+				var idContainer = config.divId+"-container";
+				var progressBar = $( "#"+idContainer).next().find(".progress-bar");
+				var currentProgress = parseInt(progressBar.attr("aria-valuenow"));
+				var newProgress = currentProgress + parseInt(config.step);
+				if (100 - newProgress < config.step){
+					newProgress = 100;
+				}
+				progressBar.attr("aria-valuenow",newProgress);
+				var perc = newProgress+"%";
+				progressBar.css("width",perc);
+				progressBar.text(perc);
+				var i=1; 
+				if (queries[i]){
+					spqlib.util.doQuery(config.endpoint, queries[i], spqlib.graph.addNodes, config,null,spqlib.graph.failQuery);
+				} else {
+					$( "#"+ config.divId+"-container").next().hide();
+				}
+				//serializzo le chiamate 
+				$( "#"+config.divId).on( "singleQueryDone", function() {
+					i++;
+					if (queries[i]){
+						spqlib.util.doQuery(config.endpoint, queries[i], spqlib.graph.addNodes, config,null,spqlib.graph.failQuery);
+					} else {
+						//nascondo la progress bar
+						$( "#"+ config.divId+"-container").next().hide();
+					}
+				});
 			});
 			if (queries.length>0){
 				spqlib.util.doQuery(config.endpoint, queries[0], spqlib.graph.render, config,spqlib.graph.preQuery,spqlib.graph.failQuery);
@@ -68,6 +92,7 @@ var spqlib = ( function ( $, undefined ) {
 		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
+		parseExtraOptions(config);
 		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.donutchart.render, config);
 	}
 	

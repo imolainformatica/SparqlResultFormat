@@ -1,0 +1,110 @@
+text {
+  pointer-events: none;
+}
+
+.grandparent {
+   min-height:40px;
+  font-weight: bold;
+  cursor:pointer;
+}
+
+rect {
+  fill: none;
+  stroke: #fff;
+}
+
+rect.parent,
+.grandparent rect {
+  stroke-width: 2px;
+}
+
+.grandparent {
+  background-color: orange;
+}
+
+.grandparent:hover rect {
+  fill: #ee9700;
+}
+
+.children rect.parent,
+.grandparent rect {
+  cursor: pointer;
+}
+
+.children rect.parent {
+  fill: #bbb;
+  fill-opacity: .5;
+}
+
+.leaves rect.parent {
+  fill: #eee;
+  fill-opacity: .5;
+}
+.leaves{
+  cursor:pointer;
+}
+
+.leaves.selected rect.parent {
+  fill: #bbb;
+  fill-opacity: .5;
+}
+
+.children:hover rect.child {
+  fill: #bbb;
+}
+
+g.children.accesso rect{
+ fill:#ca4441;
+}
+g.children.supporto rect{
+ fill:#a4b85c;
+}
+
+g.children.servizi-applicativi-comuni rect{
+ fill:#788bca;
+}
+
+g.children.operations rect{
+ fill:#78c9b2;
+}
+
+g.children.applicazioni-infrastrutturali rect{
+ fill:#9c7ed7;
+}
+
+.treemap-info-box-selected-item{
+   display:block;
+}
+
+.treemap-info-box-content{
+   margin-left:10px;
+   margin-top:10px;
+}
+
+#tooltip-treemap {
+  position: absolute;
+  height: auto;
+  padding: 10px;
+  background-color: white;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+#tooltip-treemap.hidden {
+  display: none;
+}
+
+#tooltip-treemap p {
+  margin: 0;
+  font-family: "Trebuchet MS",Arial,Helvetica,sans-serif;
+  font-size: .75em;
+}
+
+.treemap-tooltip-instance-name{
+   font-weight:bold;
+}

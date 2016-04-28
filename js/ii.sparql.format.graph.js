@@ -10,40 +10,48 @@ spqlib.graph = (function () {
 	my.exportAsImage = function(){
 		spqlib.graph.graphImpl().exportAsImage();
 	}
-	
-	my.toggleLegendExpansion = function(graphId){
-		alert('ciao');
-	}
+
 	
 	my.toggleFullScreen = function(graphId){
 		var containerSelector = "#" + graphId + "-container";
 		var legendSelector = "#" + graphId + "-legend-container";
 		$(containerSelector).toggleClass('ii-container-graph-full-screen');
-		$(legendSelector).find("i").toggleClass("glyphicon-resize-small");
+		var icon = $(legendSelector).find("i");
+		icon.toggleClass("glyphicon-resize-small");
+		icon.toggleClass("glyphicon-fullscreen");
+		if (icon.hasClass("glyphicon-fullscreen")){
+			$(legendSelector).find(".action-fullscreen").find("span").text("Go fullscreen");
+		} else {
+			$(legendSelector).find(".action-fullscreen").find("span").text("Exit fullscreen");
+		}
+		
+		
 		spqlib.graph.graphImpl().resize(graphId);
 		centerGraphToNode(graphId, spqlib.graph.graphImpl().getGraph(graphId).config.rootElement);
 	}
 	
 	my.preQuery = function(configuration){
-		if (!configuration.divStyle){
-        	    configuration.divStyle="";
-        }
+		//if (!configuration.divStyle){
+        	//    configuration.divStyle="";
+        //}
 		//if (!loading){
-			$("#"+configuration.divId+"-container").find(".ii-graph-legend-actions-list").hide();
-			$("#"+configuration.divId+"-legend-container").attr("style",configuration.divStyle+" display:block; width:100%; border:none !important;");
-			$("#"+configuration.divId+"-legend").attr("style",configuration.divStyle+" width:100% !important; text-align: center;");
+			//$("#"+configuration.divId+"-container").find(".ii-graph-legend-actions-list").hide();
+			//$("#"+configuration.divId+"-legend-container").attr("style",configuration.divStyle+" display:block; width:100%; border:none !important;");
+			//$("#"+configuration.divId+"-legend").attr("style",configuration.divStyle+" width:100% !important; text-align: center;");
 			
 			if (configuration.spinnerImagePath){
-				$("#"+configuration.divId+"-legend").html("<img src='"+configuration.spinnerImagePath+"' style='vertical-align:middle;'>");
+				$("#"+configuration.divId+"-loader").html("<img src='"+configuration.spinnerImagePath+"' style='vertical-align:middle;'>");
 			} else {
-				$("#"+configuration.divId+"-legend").html("Loading...");
+				$("#"+configuration.divId+"-loader").html("Loading...");
 			}
 		//}
 	}
 	
 	my.failQuery = function(configuration,jqXHR,textStatus){
-		$("#"+configuration.divId+"-legend").html("");
-		$("#"+configuration.divId+"-legend").html(generateErrorBox(textStatus));
+		$("#"+configuration.divId+"-loader").html("");
+		$("#"+configuration.divId+"-loader").show();
+		$("#"+configuration.divId+"-legend-box").html("");
+		$("#"+configuration.divId+"-loader").html(generateErrorBox(textStatus));
 		throw new Error("Error invoking sparql endpoint "+textStatus+" "+JSON.stringify(jqXHR));
 	}
 	
@@ -55,20 +63,26 @@ spqlib.graph = (function () {
 	
 	my.initHtml = function(config){
 		var idContainer = config.divId+"-container";
+		var idLoader = config.divId+"-loader";
+		var idLegendBox = config.divId+"-legend-box";
 		var idLegendContainer = config.divId+"-legend-container";
 		var idLegendContainerLabel = config.divId+"-legend-container-label";
 		var idLegendHeader = config.divId+"-legend-header";
 		var idLegend = config.divId+"-legend";
 		var idLegendActionList = config.divId+"-legend-actions-list";
-		var actionFullScreen = "<a href='#' onclick=\"javascript:spqlib.graph.toggleFullScreen('"+config.divId+"');\"><i class='glyphicon glyphicon-fullscreen'></i><spac class='fullscreen-label' style='padding-left:10px;'>Go fullscreen</span></a>"
-		$( "#"+idContainer).prepend("<div id='"+idLegendContainer+"' class='ii-graph-legend-container cytoscape-legend-container'></div>");
-		$( "#"+idContainer).prepend("<div id='"+idLegendContainerLabel+"' class='ii-graph-legend-container cytoscape-legend-container-label'>Show legend</div>");
+		var actionFullScreen = "<a href='#' onclick=\"javascript:spqlib.graph.toggleFullScreen('"+config.divId+"');\" class='action-fullscreen'><i class='glyphicon glyphicon-fullscreen'> \
+		</i><span class='fullscreen-label' style='padding-left:10px;'>Go fullscreen</span></a>";
+		$( "#"+idContainer).before("<div id='"+idLoader+"' class='ii-graph-loader-box'></div>");
+		$( "#"+idContainer).prepend("<div id='"+idLegendBox+"' class='ii-graph-legend-box'></div>");
+		$( "#"+idLegendBox).prepend("<div id='"+idLegendContainer+"' class='ii-graph-legend-container cytoscape-legend-container'></div>");
+		$( "#"+idLegendBox).prepend("<div id='"+idLegendContainerLabel+"' class='ii-graph-legend-container cytoscape-legend-container-label'>Show legend</div>");
 		$( "#"+idLegendContainer).append("<div id='"+idLegendHeader+"' class='ii-graph-legend-header'>"+createLegendHeader(config)+"</div> ");
 		$( "#"+idLegendContainer).append("<div id='"+idLegend+"' class='ii-graph-legend'></div> ");
 		$( "#"+idLegendContainer).append("<div id='"+idLegendActionList+"' class='ii-graph-legend-actions-list cytoscape-actions-list'></div> ");
 		$( "#"+idLegendActionList).append("<div class='ii-graph-legend-action cytoscape-action'>"+actionFullScreen+"</div>");
-		
-		$( "#"+idContainer).after("<div class='progress'><div class='progress-bar ' role='progressbar' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100' style='width:0%'>0%</div></div>");
+		if (config.splitQueryByUnion && config.splitQueryByUnion=="true"){
+			$( "#"+idContainer).after("<div class='progress'><div class='progress-bar ' role='progressbar' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100' style='width:0%'>0%</div></div>");
+		}
 	}
 	
 		
@@ -93,8 +107,7 @@ spqlib.graph = (function () {
 	
 	my.render = function (json, config) {
 		
-		$("#"+config.divId+"-legend").html("");
-		$("#"+config.divId+"-legend").attr("style","");
+		$("#"+config.divId+"-loader").hide();
 		$("#"+config.divId+"-container").find(".ii-graph-legend-actions-list").show();
 		$("#"+config.divId+"-legend-container").attr("style","");
 		var head = json.head.vars;
@@ -103,18 +116,6 @@ spqlib.graph = (function () {
 		var nodes = [];
 		var distinctNodes = [];
 		var nodeIds = 1;
-
-		/*var colorConf = [];
-		var nodeConfiguration = config.nodeConfiguration;
-		for (var i = 0; i < nodeConfiguration.length; i++) {
-			var cat = nodeConfiguration[i];
-			colorConf[cat.category] = cat.nodeColor;
-		}
-		var edgeConfiguration = config.edgeConfiguration;
-		for (var i = 0; i < edgeConfiguration.length; i++) {
-			var rel = edgeConfiguration[i];
-			colorConf[rel.relation] = rel.edgeColor;
-		}*/
 		var colorConf = config.colorConf = createColorConf(config);
 		if (data.length == 0 && config.rootElement) {
 			nodes.push({
@@ -138,23 +139,26 @@ spqlib.graph = (function () {
 			var childTypeURI = getSparqlFieldValue(data[i]["child_type_uri"]);
 			var property = getSparqlFieldValue(data[i]["relation_name"]);
 			var propertyURI = getSparqlFieldValue(data[i]["relation_uri"]);
-			if (!distinctNodes[parentURI]) {
+			
+			var parentID = parentURI || parent;
+			var childID = childURI || child;
+			if (!distinctNodes[parentID]) {
 				var color = mapTypeToColor(parentType, colorConf,
 						config.defaultNodeColor);
-				var node = createNode(parentURI,parent,parentType,parentTypeURI, color, config.maxLabelLength, config.maxWordLength); 
-				distinctNodes[parentURI] = parentURI;
+				var node = createNode(parentID,parent,parentType,parentTypeURI, color, config.maxLabelLength, config.maxWordLength); 
+				distinctNodes[parentID] = parentID;
 				nodeIds++;
 				nodes.push({
 					data : node,
 					classes : "background"
 				});
 			}
-			if (!distinctNodes[childURI]) {
+			if (!distinctNodes[childID]) {
 				var color = mapTypeToColor(childType, colorConf,
 						config.defaultNodeColor);
-				var node = createNode(childURI,child,childType,childTypeURI, color, config.maxLabelLength, config.maxWordLength); 
+				var node = createNode(childID,child,childType,childTypeURI, color, config.maxLabelLength, config.maxWordLength); 
 				
-				distinctNodes[childURI] = childURI;
+				distinctNodes[childID] = childID;
 				nodeIds++;
 				nodes.push({
 					data : node,
@@ -163,7 +167,7 @@ spqlib.graph = (function () {
 			}
 			var edgeColor = mapTypeToColor(property, colorConf,
 					config.defaultEdgeColor);
-			var edge = createEdge(distinctNodes[parentURI], distinctNodes[childURI],property,propertyURI,edgeColor);
+			var edge = createEdge(distinctNodes[parentID], distinctNodes[childID],property,propertyURI,edgeColor);
 			edges.push({
 				data : edge
 			});
@@ -190,19 +194,15 @@ spqlib.graph = (function () {
 			var property = getSparqlFieldValue(data[i]["relation_name"]);
 			var propertyURI = getSparqlFieldValue(data[i]["relation_uri"]);
 			
+			var parentID = parentURI || parent;
+			var childID = childURI || child;
+			
 			var childColor = mapTypeToColor(childType, colorConf,
 				config.defaultNodeColor);
-			var childNode = createNode(childURI,child,childType,childTypeURI, childColor, config.maxLabelLength, config.maxWordLength);
+			var childNode = createNode(childID,child,childType,childTypeURI, childColor, config.maxLabelLength, config.maxWordLength);
 			var parentColor = mapTypeToColor(parentType, colorConf,
 				config.defaultNodeColor);
-			var parentNode = createNode(parentURI,parent,parentType,parentTypeURI, parentColor, config.maxLabelLength, config.maxWordLength);
-			/*var node = new Object();
-			node.type = type;
-			node.id = label;
-			node.label = spqlib.util.cutLongLabel(label, config.maxLabelLength,
-					config.maxWordLength);
-			node.color = mapTypeToColor(type, config.colorConf,
-					config.defaultNodeColor);*/
+			var parentNode = createNode(parentID,parent,parentType,parentTypeURI, parentColor, config.maxLabelLength, config.maxWordLength);
 			nodes.push({
 				data : childNode,
 				classes : "background"
@@ -214,16 +214,17 @@ spqlib.graph = (function () {
 			// per ogni nodo creo anche il relativo arco ma solo se non
 			// esiste già
 			var edge = new Object();
-			edge.source = parentURI; //config.expandNodeInfo.source;
-			edge.target = childURI;
+			edge.source = parentID; //config.expandNodeInfo.source;
+			edge.target = childID;
 			edge.property = property;
 			edge.propertyURI = propertyURI;
 			edge.color = mapTypeToColor(edge.property, colorConf,
 					config.defaultEdgeColor);
-			//if (!existEdge(config.divId,edge.source,edge.target)){
-			edges.push({
-				data : edge
-			});
+			if (!existEdge(config.divId,edge.source,edge.target)){
+				edges.push({
+					data : edge
+				});
+			}
 		}
 		if (data.length > 0) {
 			var n = addNodesToGraph(config.divId, nodes);
@@ -245,6 +246,7 @@ spqlib.graph = (function () {
 		var perc = newProgress+"%";
 		progressBar.css("width",perc);
 		progressBar.text(perc);
+		$( "#"+config.divId ).trigger( "singleQueryDone" );
 
 	}
 	
@@ -744,30 +746,26 @@ spqlib.graph = (function () {
 		if (conf.tipLinkTarget) {
 			target = conf.tipLinkTarget;
 		}
-		var pageLink = $("<a>").attr(
-				"href",
-				conf.linkBasePath
-						+ obj.data("fullLabel")).attr(
+		var labelLinkPattern = conf.labelLinkPattern;
+		var linkLabel = spqlib.util.formatString(labelLinkPattern,obj.data("fullLabel"));
+		var pageLink = $("<a>").attr("href",linkLabel).attr(
 				"target", "_blank");
 		var uriLink ="";
 		/*if (obj.data("uri")){
 			var uriLink = "URI: <a href='" + obj.data("uri")
 			+ "' target='" + target + "'>"
 			+ obj.data("uri") + "</a></br>"
-		}*/
+		}
 		var pageCategory = $("<span>").addClass(
-				"cytoscape-qtip-category");
-		var linkHref = conf.linkBasePath
-				+ ""
-				+ spqlib.util.htmlEncode(obj.data("fullLabel"))
-						.replace(/'/g, "&apos;");
+				"cytoscape-qtip-category");*/
+		var linkHref = linkLabel.replace(/'/g, "&apos;");
 		var tip = "<a href='" + linkHref
 				+ "' target='" + target + "'>"
 				+ obj.data("fullLabel") + "</a></br>";
 		if (uriLink){
 			tip+=uriLink;
 		}
-		tip += renderCategoryLink(obj.data("type"));
+		tip += renderCategoryLink(obj.data("type"),conf);
 		if (conf.globalConfiguration) {
 			if (conf.globalConfiguration[obj
 					.data("type")]) {
@@ -856,22 +854,23 @@ spqlib.graph = (function () {
 		return aLink + linkLabel;
 	}
 
-	function renderSingleCategoryLink(type) {
-		return "<a href='./EAP:PageList?category=" + type
-				+ "' target='_blank'>" + type + "</a>";
+	function renderSingleCategoryLink(type,conf) {
+		var pattern = conf.categoryLinkPattern;
+		var link = spqlib.util.formatString(pattern,type);
+		return "<a href='"+link+"' target='_blank'>" + type + "</a>";
 	}
 
-	function renderCategoryLink(types) {
+	function renderCategoryLink(types,conf) {
 		var out = "";
 		if (types instanceof Array) {
 			for (var i = 0; i < types.length; i++) {
-				out += renderSingleCategoryLink(types[i]);
+				out += renderSingleCategoryLink(types[i],conf);
 				if (i < types.length - 1) {
 					out += ",";
 				}
 			}
 		} else {
-			out = renderSingleCategoryLink(types);
+			out = renderSingleCategoryLink(types,conf);
 		}
 		return "Category: " + out + "</br>";
 	}

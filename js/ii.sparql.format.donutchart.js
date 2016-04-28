@@ -15,6 +15,15 @@ spqlib.donutchart = (function () {
 
 	}
 	
+	my.PROP = {
+		PROP_CHART_SERIE_LABEL : "chart.serie.label",
+		PROP_CHART_TOOLTIP_SHOW_LINK : "chart.tooltip.label.link.show",
+		PROP_CHART_TOOLTIP_LABEL_LINK_PATTERN : "chart.tooltip.label.link.pattern",
+		PROP_CHART_TOOLTIP_LABEL_PATTERN : "chart.tooltip.label.pattern",
+		PROP_CHART_TOOLTIP_VALUE_PATTERN : "chart.tooltip.value.pattern",
+		PROP_CHART_SERIES_COLOR : "chart.series.color"
+	}
+	
 	
 	my.render = function (json, config) {
 		var head = json.head.vars;
@@ -38,6 +47,37 @@ spqlib.donutchart = (function () {
 		var chartId = config.divId;
 		var chart = spqlib.donutchart.chartImpl().drawDonutChart(labels,series,config);
 		spqlib.addToRegistry(chartId,chart);
+	}
+	
+	my.defaultDonutChartTooltipContent = function(label,value,config){
+		var op = config.extraOptions;
+		var spanLabel = "";
+		var textLabel = "";
+		var labelPattern = op[this.PROP.PROP_CHART_TOOLTIP_LABEL_PATTERN];
+		if (labelPattern){
+			textLabel = spqlib.util.formatString(labelPattern,label);
+		} else {
+			textLabel = label;
+		}
+		if (op[this.PROP.PROP_CHART_TOOLTIP_SHOW_LINK]=="true"){
+			var linkPattern = op[this.PROP.PROP_CHART_TOOLTIP_LABEL_LINK_PATTERN];
+			var url = "#";
+			if (linkPattern){
+				url = spqlib.util.formatString(linkPattern,label);
+			}
+			spanLabel = "<a href='"+url+"'>"+textLabel+"</a>";
+		} else {
+			spanLabel = textLabel;
+		}
+		var seriesLabel = op[this.PROP.PROP_CHART_SERIE_LABEL] || "";
+		var valuePattern =op[this.PROP.PROP_CHART_TOOLTIP_VALUE_PATTERN]; 
+		if (valuePattern){
+			value = spqlib.util.formatString(valuePattern,value,"{%d}");
+		}
+		var html = "<span class='close' onclick='javascript:$(this).parent().hide();'>x</span><span class=\"jqplot-tooltip-label\">"+spanLabel+"</span></br>";
+		html+="<span class=\"jqplot-tooltip-serie-label\">"+seriesLabel+"</span>";
+		html+="<span class=\"jqplot-tooltip-value\">"+value+"</span>";
+		return html;
 	}
 
 	return my;

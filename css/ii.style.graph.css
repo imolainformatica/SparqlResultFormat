@@ -1,0 +1,60 @@
+.legend-circle-node{
+	width: 30px;
+	height: 30px;
+	-moz-border-radius: 50px;
+	-webkit-border-radius: 50px;
+	border-radius: 50px;
+}
+
+.legend-arrow-line {
+	width: 30px;
+	height: 8px;
+}
+
+.cytoscape-legend-container{
+     background:white;
+     float:left;
+     z-index:999;
+     position:relative;
+     border:1px solid #CCC;
+}
+.cytoscape-legend{
+     width:300px;
+}
+
+.cytoscape-actions-list{
+   margin-top:30px;
+
+}
+.cytoscape-action i{
+   font-size:30px; 
+   padding-left:20px;
+}
+
+.container-cytoscape-full-screen{
+   position:fixed;
+   left:0px;
+   top:90px;
+   width:100%;
+   height:100%;
+   background:#F8F9FA;
+   z-index:50;
+}
+
+.legend-cytoscape-full-screen{
+    //position:fixed;
+    //bottom:0px;
+   //margin:10px;
+  margin: 0 0 0 1%;
+}
+
+.legend-cytoscape-full-screen-IE{
+    //position:fixed;
+    //bottom:0px;
+   //margin:10px;
+  margin: 18% 0 0 1%;
+}
+
+.graph-cytoscape-full-screen{
+     height:100%;
+}

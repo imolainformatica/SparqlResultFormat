@@ -122,7 +122,7 @@ spqlib.table = (function () {
 		if (columnConfiguration.cellLinkPattern){
 			link = formatString(columnConfiguration.cellLinkPattern,cellValue);
 		} else {
-			link = config.linkBasePath+cellValue;
+			link = cellValue;
 		}
 		var formattedCellValue = getCellValue(cellValue,columnConfiguration);
 		return "<a href='"+spqlib.util.htmlEncode(link).replace(/'/g, "&apos;")+"'>"+formattedCellValue+"</a>";

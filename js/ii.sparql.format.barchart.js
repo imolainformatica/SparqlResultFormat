@@ -64,6 +64,7 @@ spqlib.barchart = (function () {
 		var chart =  spqlib.barchart.chartImpl().drawBarChart(labels,series,config);
 		chart.toggleFullScreen = my.toggleFullScreen;
 		spqlib.addToRegistry(chartId,chart);
+		$( "#"+chartId ).trigger( "done" );
 	}
 	
 	my.defaultBarChartTooltipContent = function(label,value,config,seriesIndex){

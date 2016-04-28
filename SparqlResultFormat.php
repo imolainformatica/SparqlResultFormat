@@ -48,6 +48,7 @@ $wgResourceModules['ext.SparqlResultFormat.main'] = array(
 	'localBasePath' => $dir,
 	'remoteExtPath' => 'SparqlResultFormat',
 	'scripts' => array('js/ii.sparql.main.js','js/ii.sparql.util.js','js/libs/sparqljs/sparqljs-browser.js'),
+	'dependencies' => array('ext.jquery.qtip')
 );
 
 
