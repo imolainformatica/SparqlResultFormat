@@ -22,6 +22,6 @@ class SparqlResultFormatHooks {
 	}
 	
 	public static function outputHtml(&$out, &$text){
-		return ExtSparqlResultFormat::outputHtml(&$out, &$text);
+		return ExtSparqlResultFormat::outputHtml($out, $text);
 	}
 }

@@ -53,8 +53,28 @@ class SparqlResultFormatBase {
 		}
 	}
 	
+	protected function getSparqlEndpointByName($endpointName){
+		global $wgSparqlEndpointDefinition;
+		if (isset($wgSparqlEndpointDefinition[$endpointName])){
+			return $wgSparqlEndpointDefinition[$endpointName];
+		} else {
+			throw new Exception("No endpoint '$endpointName' found in LocalSettings.php");
+		}
+	}
+	
+	protected function getSparqlEndpointBasicAuthString($endpointData){
+		$fieldName = 'basicAuth';
+		if (isset($endpointData[$fieldName])){
+			$basic = $endpointData[$fieldName];
+			$username = isset($basic['user']) ? $basic['user'] : '';
+			$password = isset($basic['password']) ? $basic['password'] : '';
+			return base64_encode("$username:$password");
+		} else {
+			return '';
+		}
+	}
+	
 	protected function checkExtraOptions($extra){
-		
 		if (is_array($extra)){
 			foreach ($extra as $value) {
 				$this->checkExtraOptionName($value);
@@ -73,8 +93,6 @@ class SparqlResultFormatBase {
 			}
 		}
 	}
-	
-	
-	
+
 }
 ?>

@@ -56,13 +56,28 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 				"mandatory" => false,
 				"description" => wfMessage("sprf.param.noResultMessage")
 			),
+			"csvExport" => array(
+				"mandatory" => false,
+				"description" => wfMessage("sprf.param.csvExport"),
+				"default" =>"false"
+			),
+			"csvFileName" => array(
+				"mandatory" => false,
+				"description" => wfMessage("sprf.param.csvFileName"),
+				"default" =>"export.csv"
+			),
+			"csvLinkLabel" => array(
+				"mandatory" => false,
+				"description" => wfMessage("sprf.param.csvLinkLabel")
+			),
 			"linkBasePath" => array(
 				"mandatory" => false,
 				"description" => wfMessage("sprf.param.linkBasePath"),
 				"deprecated" => true
-			)		 	
-	   );    
-    }        
+			)	
+	   );   
+		$this->queryStructure =	wfMessage("sprf.format.table.query.structure");
+    }               
 	
 	function generateHtmlContainerCode($options){
 		$divId = $this->getParameterValue($options,'divId','');
@@ -101,15 +116,13 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 		 return $launchScript.$sortableTable;
 	}
 	
-	
 	function generateConfig($options){
-		global $wgSparqlEndpointDefinition;
 		global $wgServer;
 		global $wgScriptPath;
 		$endpointIndex = $this->getParameterValue($options,'sparqlEndpoint','');
-		$endpointData = $wgSparqlEndpointDefinition[$endpointIndex];
+		$endpointData = $this->getSparqlEndpointByName($endpointIndex);
 		$endpoint = $endpointData['url'];
-		$basicAuthBase64String = empty($endpointData['basicAuthString']) ? '' : $endpointData['basicAuthString'] ;	
+		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString($endpointData);	
 
 		
 		$divId = $this->getParameterValue($options,'divId','');
@@ -124,6 +137,10 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 		$noResultMessage = $this->getParameterValue($options,'noResultMessage',''); 
 		$linkBasePath = $this->getParameterValue($options,'linkBasePath',"$wgServer$wgScriptPath/index.php/");
 		$spinnerImagePath = $this->getParameterValue($options,'spinnerImagePath',"$wgScriptPath/extensions/SparqlResultFormat/img/spinner.gif");
+		$csvExport = $this->getParameterValue($options,'csvExport','false'); 
+		$csvFileName = $this->getParameterValue($options,'csvFileName','export.csv'); 
+		$csvLinkLabel = $this->getParameterValue($options,'csvLinkLabel','Export as CSV');
+		$csvDownloadAction = "$wgScriptPath/extensions/SparqlResultFormat/getCSV.php";		
 		
 		$config = "var config = {};
 			config.divId = '$divId';
@@ -139,7 +156,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 			config.queryPrefixes=prefixes;
 			config.basicAuthBase64String='$basicAuthBase64String';
 			config.linkBasePath='$linkBasePath';
-			config.spinnerImagePath='../extensions/SparqlResultFormat/img/spinner.gif';";
+			config.spinnerImagePath='$spinnerImagePath';";
 		return $config;
 	}
 	

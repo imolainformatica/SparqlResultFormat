@@ -28,7 +28,7 @@ var spqlib = ( function ( $, undefined ) {
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
 		var splitQueryByUnion = config.splitQueryByUnion || false;
-		if (splitQueryByUnion) {
+		if (splitQueryByUnion==true || splitQueryByUnion.toLowerCase()=="true") {
 			var queries = spqlib.util.splitQueryByUnion(config.sparqlWithPrefixes);
 			var step = 100/(queries.length);
 			config.step = step;

@@ -8,112 +8,124 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
        $this->params = array(
 			"divId" => array(
 					"mandatory" => true,
-					"description" => ""
+					"description" => wfMessage("sprf.param.divId")
 				),
 			"sparqlEndpoint" => array(
 					"mandatory" => true,
-					"description" => ""
+					"description" => wfMessage("sprf.param.sparqlEndpoint")
 				),
 			"sparqlEscapedQuery" => array(
 					"mandatory" => true,
-					"description" => ""
+					"description" => wfMessage("sprf.param.sparqlEscapedQuery")
 				),
 			"divStyle" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.divStyle")
 				),
 			"spinnerImagePath" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.spinnerImagePath")
 				),
 			"divCssClass" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.divCssClass")
 				),
-				"nodeConfiguration" => array(
+			"nodeConfiguration" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.nodeConfiguration1").wfMessage("sprf.param.nodeConfiguration2"),
+					"example" => "|nodeConfiguration=[{ category:\"Application\",nodeColor:\"#000000\", image:\"{{filepath:Application_icon.png}}\"},{ category:\"Application Component\",nodeColor:\"#00FF00\", image:\"{{filepath:Component_icon.png}}\"}]"
 				),
 			"edgeConfiguration" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.edgeConfiguration1").wfMessage("sprf.param.edgeConfiguration2"),
+					"example" => "|edgeConfiguration=[{ relation:\"Belongs to application\",edgeColor:\"#00FF00\"}]"
 				),
 				"rootElement" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.rootElement"),
+					"example" => ""
 				),
 				"rootElementColor" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.rootElementColor"),
+					"example" => ""
 				),
 				"rootElementImage" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.rootElementImage"),
+					"example" => ""
 				),
 				"showLegend" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.showLegend"),
+					"example" => ""
 				),
 				"defaultNodeColor" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.defaultNodeColor"),
+					"example" => "|defaultNodeColor=#CCC"
 				),
 				"defaultEdgeColor" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.defaultEdgeColor"),
+					"example" => "|defaultEdgeColor=#CCC"
 				),
 				"splitQueryByUnion" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.splitQueryByUnion")
 				),
 				"minZoom" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.minZoom"),
+					"example" => ""
 				),
 				"maxZoom" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.maxZoom"),
+					"example" => ""
 				),
 				"layout" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.layout"),
+					"default" => "dagre",
+					"example" => ""
 				),"layoutOptions" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.layoutOptions"),
+					"example" => "|layoutOptions={rankSep:200}"
 				),
 				"maxWordLength" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.maxWordLength"),
+					"example" => ""
 				),"maxLabelLength" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.maxLabelLength"),
+					"example" => ""
 				),
 				"nodeStyle" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.nodeStyle"),
+					"example" => "|nodeStyle={shape:'roundrectangle', width:120, height:80,'text-valign': 'center','text-halign': 'center','font-size':'12','border-color' : '#000','border-width' : 1,'text-max-width':120}"
 				),
 				"edgeStyle" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.edgeStyle"),
+					"example" => "|edgeStyle={'target-arrow-shape':''}",
+					"example" => ""
 				),
 				"labelLinkPattern" => array(
 					"mandatory" => false,
-					"description" => ""
+					"description" => wfMessage("sprf.param.labelLinkPattern"),
+					"example" => ""
 				),
 				"categoryLinkPattern" => array(
 					"mandatory" => false,
-					"description" => ""
-				)
-	   );       
-	             
-	   $extraOpts = array(
-			"chart.title" => array(
-					"description" => "",
-					"default" => "",
+					"description" => wfMessage("sprf.param.categoryLinkPattern"),
 					"example" => ""
 				)
-	   
-	   );
+	   ); 
+		$this->queryStructure = wfMessage("sprf.format.graph.query.structure").wfMessage("sprf.format.graph.query.structure.example");	   
     }
 	
 	
@@ -150,13 +162,12 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 	
 	
 	function generateConfig($options){
-		global $wgSparqlEndpointDefinition;
 		global $wgScriptPath;
 		global $wgServer;
-		$endpointName = $this->getParameterValue($options,'sparqlEndpoint','');
-		$endpointData = $wgSparqlEndpointDefinition[$endpointName ];
+		$endpointIndex = $this->getParameterValue($options,'sparqlEndpoint','');
+		$endpointData = $this->getSparqlEndpointByName($endpointIndex);
 		$endpoint = $endpointData['url'];
-		$basicAuthBase64String = empty($endpointData['basicAuthString']) ? '' : $endpointData['basicAuthString'] ;		
+		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString($endpointData);			
 		$divId = $this->getParameterValue($options,'divId','');
 		$divStyle = $this->getParameterValue($options,'divStyle','');
 		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery','');
@@ -212,7 +223,7 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 			config.maxZoom=$maxZoom;
 			config.layout='$layout';
 			config.maxWordLength=$maxWordLength;
-			config.maxLabelLength=$maxWordLength;
+			config.maxLabelLength=$maxLabelLength;
 			config.layoutOptions=$layoutOptions;
 			config.nodeStyle=$nodeStyle;
 			config.edgeStyle=$edgeStyle;

@@ -60,7 +60,7 @@ class SparqlResultFormatBarChart extends SparqlResultFormatBase implements Sparq
 				),
 				"chart.bar.width" => array(
 					"description" => wfMessage("sprf.options.chart.bar.width"),
-					"default" => "",
+					"default" => "auto",
 					"example" => "|extraOption=chart.bar.width:10"
 				),
 				"chart.bar.margin" => array(
@@ -84,7 +84,7 @@ class SparqlResultFormatBarChart extends SparqlResultFormatBase implements Sparq
 					"example" => ""
 				),
 				"chart.axis.x.label.font.size" => array(
-					"description" => wfMessage("sprf.options.chart.axis.x.label"),
+					"description" => wfMessage("sprf.options.chart.axis.x.label.font.size"),
 					"default" => "14pt",
 					"example" => "|extraOption=chart.axis.x.label.font.size:20pt"
 				),
@@ -129,12 +129,13 @@ class SparqlResultFormatBarChart extends SparqlResultFormatBase implements Sparq
 					"example" => "|extraOption=chart.height.automatic:true"
 				),
 				"chart.axis.label.max.length" => array(
-					"description" => wfMessage("sprf.options.chart.height.automatic"),
+					"description" => wfMessage("sprf.options.chart.axis.label.max.length"),
 					"default" => "15",
 					"example" => "|extraOption=chart.axis.label.max.length:30"
 				)
 	   );
-	   $this->queryStructure = wfMessage("sprf.format.barchart.query.structure");
+	   	   $this->queryStructure = wfMessage("sprf.format.barchart.query.structure").wfMessage("sprf.format.barchart.query.structure.example");
+	   
     }
 	
 	
@@ -171,12 +172,11 @@ class SparqlResultFormatBarChart extends SparqlResultFormatBase implements Sparq
 	
 	
 	function generateConfig($options){
-		global $wgSparqlEndpointDefinition;
 		global $wgScriptPath;
-		$endpointName = $this->getParameterValue($options,'sparqlEndpoint','');
-		$endpointData = $wgSparqlEndpointDefinition[$endpointName ];
+		$endpointIndex = $this->getParameterValue($options,'sparqlEndpoint','');
+		$endpointData = $this->getSparqlEndpointByName($endpointIndex);
 		$endpoint = $endpointData['url'];
-		$basicAuthBase64String = empty($endpointData['basicAuthString']) ? '' : $endpointData['basicAuthString'] ;		
+		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString($endpointData);	
 		$divId = $this->getParameterValue($options,'divId','');
 		$divStyle = $this->getParameterValue($options,'divStyle','');
 		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery','');
@@ -189,7 +189,7 @@ class SparqlResultFormatBarChart extends SparqlResultFormatBase implements Sparq
 		
 		$extraOption = $this->getParameterValue($options,'extraOption','');
 		$this->checkExtraOptions($extraOption);
-		$extraOptionString = implode("||", $extraOption);		
+		$extraOptionString = implode("||", $extraOption);	
 		
 		$config = "var config = {};
 			config.divId = '$divId';
@@ -201,7 +201,7 @@ class SparqlResultFormatBarChart extends SparqlResultFormatBase implements Sparq
 			config.divCssClass='$divCssClass';
 			config.divCssClassFullScreen='$divCssClassFullScreen';
 			config.seriesConfiguration=$seriesConfiguration;	
-			config.extraOptionsString='$extraOptionString';";	
+			config.extraOptionsString=\"$extraOptionString\";";	
 			
 		return $config;
 	}	

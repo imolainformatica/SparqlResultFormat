@@ -58,22 +58,22 @@ class SparqlResultFormatPieChart extends SparqlResultFormatBase implements Sparq
 					"example" => "|extraOption=chart.serie.label:series label"
 				),
 				"chart.tooltip.label.link.show" => array(
-					"description" => wfMessage("chart.tooltip.label.link.show"),
+					"description" => wfMessage("sprf.options.chart.tooltip.label.link.show"),
 					"default" => "",
 					"example" => "|extraOption=chart.tooltip.label.link.show:false"
 				),
 				"chart.tooltip.label.link.pattern" => array(
-					"description" => wfMessage("chart.tooltip.label.link.pattern"),
+					"description" => wfMessage("sprf.options.chart.tooltip.label.link.pattern"),
 					"default" => "",
 					"example" => "|extraOption=chart.tooltip.label.link.pattern:http://www.google.it?q={%s}"
 				),
 				"chart.tooltip.label.pattern" => array(
-					"description" => wfMessage("chart.tooltip.label.pattern"),
+					"description" => wfMessage("sprf.options.chart.tooltip.label.pattern"),
 					"default" => "{%s}",
 					"example" => "|extraOption=chart.tooltip.label.pattern:Category {%s}"
 				),
 				"chart.tooltip.value.pattern" => array(
-					"description" => wfMessage("chart.tooltip.value.pattern"),
+					"description" => wfMessage("sprf.options.chart.tooltip.value.pattern"),
 					"default" => "{%d}",
 					"example" => "|extraOption=chart.tooltip.value.pattern:{%d} €"
 				)
@@ -116,12 +116,11 @@ class SparqlResultFormatPieChart extends SparqlResultFormatBase implements Sparq
 	
 	
 	function generateConfig($options){
-		global $wgSparqlEndpointDefinition;
 		global $wgScriptPath;
-		$endpointName = $this->getParameterValue($options,'sparqlEndpoint','');
-		$endpointData = $wgSparqlEndpointDefinition[$endpointName ];
+		$endpointIndex = $this->getParameterValue($options,'sparqlEndpoint','');
+		$endpointData = $this->getSparqlEndpointByName($endpointIndex);
 		$endpoint = $endpointData['url'];
-		$basicAuthBase64String = empty($endpointData['basicAuthString']) ? '' : $endpointData['basicAuthString'] ;		
+		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString($endpointData);		
 		$divId = $this->getParameterValue($options,'divId','');
 		$divStyle = $this->getParameterValue($options,'divStyle','');
 		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery','');

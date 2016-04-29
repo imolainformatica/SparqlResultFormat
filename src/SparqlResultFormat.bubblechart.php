@@ -143,16 +143,17 @@ class SparqlResultFormatBubbleChart extends SparqlResultFormatBase implements Sp
 					"example" => "|extraOption="
 				)
 	   );
-	   $this->queryStructure = wfMessage("sprf.format.bubblechart.query.structure");
+	   $this->queryStructure = wfMessage("sprf.format.bubblechart.query.structure").wfMessage("sprf.format.bubblechart.query.structure.example");
+
 	   
 	}
 	
 	
 	function generateHtmlContainerCode($options){
-		$divId = $this->getParameterValue($options,'divId',''); //$options['divId'];
-		$divStyle = $this->getParameterValue($options,'divStyle',''); //isset($options['divStyle']) ? $options['divStyle'] : '';
+		$divId = $this->getParameterValue($options,'divId','');
+		$divStyle = $this->getParameterValue($options,'divStyle',''); 
 		$divCssClass = $this->getParameterValue($options,'divCssClass','');
-		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery',''); //$options['sparqlEscapedQuery'];
+		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery','');
 		$htmlContainer = "
 		<div style='position: absolute; z-index: 99; left: 0px; top: 0px; display: none;' id='tooltip1b' class='jqplot-highlighter-tooltip'></div>
 		<div id='$divId-container' style='$divStyle' class='$divCssClass'>
@@ -184,12 +185,11 @@ class SparqlResultFormatBubbleChart extends SparqlResultFormatBase implements Sp
 	
 	
 	function generateConfig($options){
-		global $wgSparqlEndpointDefinition;
 		global $wgScriptPath; 
-		$endpointName = $this->getParameterValue($options,'sparqlEndpoint','');
-		$endpointData = $wgSparqlEndpointDefinition[$endpointName];
+		$endpointIndex = $this->getParameterValue($options,'sparqlEndpoint','');
+		$endpointData = $this->getSparqlEndpointByName($endpointIndex);
 		$endpoint = $endpointData['url'];
-		$basicAuthBase64String = empty($endpointData['basicAuthString']) ? '' : $endpointData['basicAuthString'] ;		
+		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString($endpointData);			
 		$divId = $this->getParameterValue($options,'divId','');
 		$divStyle = $this->getParameterValue($options,'divStyle','');
 		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery',''); //$options['sparqlEscapedQuery'];

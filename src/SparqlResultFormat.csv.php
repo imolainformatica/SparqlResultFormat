@@ -60,16 +60,17 @@ class SparqlResultFormatCSV extends SparqlResultFormatBase implements SparqlForm
 					"default" => self::DEFAULT_LABEL
 				)
 	   );
+	   
+	   $this->queryStructure =	wfMessage("sprf.format.csv.query.structure");
     }
 	
 	
 	function generateJavascriptCode($options,$prefixes){
-		global $wgSparqlEndpointDefinition;
 		global $wgScriptPath;
-		
-		$endpointData = $wgSparqlEndpointDefinition[$options['sparqlEndpoint']];
+		$endpointIndex = $this->getParameterValue($options,'sparqlEndpoint','');
+		$endpointData = $this->getSparqlEndpointByName($endpointIndex);
 		$endpoint = $endpointData['url'];
-		$basicAuthBase64String = empty($endpointData['basicAuthString']) ? '' : $endpointData['basicAuthString'] ;		
+		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString($endpointData);	
 		$divId = $options['divId'];
 		$divStyle = $this->getParameterValue($options,'divStyle','');
 		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery',''); 		

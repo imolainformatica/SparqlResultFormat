@@ -36,7 +36,7 @@ class SparqlResultFormatTreemap extends SparqlResultFormatBase implements Sparql
 					"description" => wfMessage("sprf.param.divCssClassFullScreen")
 				),
 				"rootElement" => array(
-					"mandatory" => false,
+					"mandatory" => true,
 					"description" => wfMessage("sprf.param.rootElement")
 				),
 				"leavesLinkPattern" => array(
@@ -48,7 +48,7 @@ class SparqlResultFormatTreemap extends SparqlResultFormatBase implements Sparql
 					"description" => wfMessage("sprf.param.openLinkOnLeaves")
 				)
 	   );
-	   $this->queryStructure = wfMessage("sprf.format.treemap.query.structure");
+	   $this->queryStructure = wfMessage("sprf.format.treemap.query.structure").wfMessage("sprf.format.treemap.query.structure.example");
 	}
 	function generateHtmlContainerCode($options){
 		$divId = $this->getParameterValue($options,'divId','');
@@ -87,19 +87,15 @@ class SparqlResultFormatTreemap extends SparqlResultFormatBase implements Sparql
 	
 	
 	function generateConfig($options){
-		global $wgSparqlEndpointDefinition;
 		global $wgScriptPath;
-		$endpointName = $options['sparqlEndpoint'];
-		$endpointData = $wgSparqlEndpointDefinition[$endpointName];
+		$endpointIndex = $this->getParameterValue($options,'sparqlEndpoint','');
+		$endpointData = $this->getSparqlEndpointByName($endpointIndex);
 		$endpoint = $endpointData['url'];
-		$basicAuthBase64String = empty($endpointData['basicAuthString']) ? '' : $endpointData['basicAuthString'] ;		
+		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString($endpointData);	
 		$divId = $this->getParameterValue($options,'divId','');
-		$divStyle = $this->getParameterValue($options,'divStyle','');
-		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery','');
 		$spinnerImagePath = $this->getParameterValue($options,'spinnerImagePath',"$wgScriptPath/extensions/SparqlResultFormat/img/spinner.gif");
-		
-		$divCssClass = $this->getParameterValue($options,'divCssClass',''); //$options['divCssClass'];
-		$divCssClassFullScreen = $this->getParameterValue($options,'divCssClassFullScreen','');  //$options['divCssClassFullScreen'];
+		$divCssClass = $this->getParameterValue($options,'divCssClass','');
+		$divCssClassFullScreen = $this->getParameterValue($options,'divCssClassFullScreen','');
 		$rootElement = $this->getParameterValue($options,'rootElement','');
 		$leavesLinkPattern = $this->getParameterValue($options,'leavesLinkPattern','');
 		$openLinkOnLeaves =  $this->getParameterValue($options,'openLinkOnLeaves','false');
@@ -110,6 +106,8 @@ class SparqlResultFormatTreemap extends SparqlResultFormatBase implements Sparql
 			config.endpoint='$endpoint';
 			config.sparql=$('#$divId').attr('sparql-query');
 			config.queryPrefixes=prefixes;
+			config.divCssClass='$divCssClass';
+			config.divCssClassFullScreen='$divCssClassFullScreen';
 			config.basicAuthBase64String='$basicAuthBase64String';
 			config.spinnerImagePath='$spinnerImagePath';
 			config.leavesLinkPattern='$leavesLinkPattern';
@@ -121,23 +119,6 @@ class SparqlResultFormatTreemap extends SparqlResultFormatBase implements Sparql
 			
 		return $config;
 	}
-	
-	/*function generateContainer($options){
-		$divId = $options['divId'];
-		$divStyle = isset($options['divStyle']) ? $options['divStyle'] : '';
-		$divCssClass = isset($options['divCssClass']) ? $options['divCssClass'] : '';
-		$escapedQuery = $options['sparqlEscapedQuery'];
-		$htmlContainer = "<div id='$divId-container' style='$divStyle' class='$divCssClass'>
-			<div id='$divId' style='width:100%; height:100%;' class='d3-treemap' sparql-query='$escapedQuery'></div>
-				<div id='toooltip-treemap' class='hidden' <p><strong id='heading'></strong></p>
-				<p><span id='tooltip-text'></span></p>
-				</div>
-			</div>";
-		return $htmlContainer;
-		
-	}*/
-	
-	
 	
 }
 ?>

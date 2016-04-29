@@ -49,7 +49,7 @@ class SparqlResultFormatDonutChart extends SparqlResultFormatBase implements Spa
 				)
 	   
 	   );
-	   $this->queryStructure = wfMessage("sprf.format.donutchart.query.structure");
+	   $this->queryStructure = wfMessage("sprf.format.donutchart.query.structure").wfMessage("sprf.format.donutchart.query.structure.example");
     }
 	
 	
@@ -86,12 +86,11 @@ class SparqlResultFormatDonutChart extends SparqlResultFormatBase implements Spa
 	
 	
 	function generateConfig($options){
-		global $wgSparqlEndpointDefinition;
 		global $wgScriptPath;
-		$endpointName = $this->getParameterValue($options,'sparqlEndpoint','');
-		$endpointData = $wgSparqlEndpointDefinition[$endpointName ];
+		$endpointIndex = $this->getParameterValue($options,'sparqlEndpoint','');
+		$endpointData = $this->getSparqlEndpointByName($endpointIndex);
 		$endpoint = $endpointData['url'];
-		$basicAuthBase64String = empty($endpointData['basicAuthString']) ? '' : $endpointData['basicAuthString'] ;		
+		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString($endpointData);		
 		$divId = $this->getParameterValue($options,'divId','');
 		$divStyle = $this->getParameterValue($options,'divStyle','');
 		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery','');
