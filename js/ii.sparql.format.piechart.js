@@ -1,8 +1,18 @@
 spqlib.piechart = (function () {
-	var my = { };
 	/**
-	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql. effettua il mapping dell'output e setta le impostazioni del grafo 
-	 */
+	* Entry point
+	*/
+	spqlib.sparql2PieChart = function(config){
+		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
+			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
+		}
+		spqlib.util.parseExtraOptions(config);
+		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.piechart.render, config);
+	}
+	
+	
+	var my = { };
+
 	my.chartImpl = function () {
 		return spqlib.jqplot();
 	}
@@ -29,7 +39,9 @@ spqlib.piechart = (function () {
 		PROP_CHART_SERIES_COLOR : "chart.series.color"
 	}
 	
-	
+	/**
+	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql. 
+	 */
 	my.render = function (json, config) {
 		var head = json.head.vars;
 		var data = json.results.bindings;

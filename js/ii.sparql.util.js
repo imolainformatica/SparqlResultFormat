@@ -123,14 +123,19 @@ spqlib.util = (function () {
         	jqxhr.always(function() {
         	});
         };
-		
+	
+	/**
+	* 
+	*/	
 	my.generateErrorBox = function(message) {
 		var html = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span><span class='sr-only'>Error:</span>"
 				+ message + "</div>";
 		return html;
 	}
 		
-	
+	/**
+	* 
+	*/
 	my.getSparqlFieldValue = function(field){
 		if (field){
 			return field.value;
@@ -139,6 +144,9 @@ spqlib.util = (function () {
 		}
 	}
 	
+	/**
+	* 
+	*/
 	my.getSparqlFieldValueToNumber = function(field){
 		if (field){
 			return Number(field.value);
@@ -147,6 +155,9 @@ spqlib.util = (function () {
 		}
 	}
 	
+	/**
+	* 
+	*/
 	my.sanitizeString = function(string) {
 		//Lower case everything
 		var res = string.toLowerCase();
@@ -160,14 +171,32 @@ spqlib.util = (function () {
 		return res;
 	}
 	
+	/**
+	* 
+	*/
 	my.formatString = function(format,param,token){
 		 if (!token){
 			 token = "{%s}";
 		 }
 		 var formatted = format.replace(token, param);
 		 return formatted;
-	}	
+	}
+
+	/**
+	* 
+	*/
+	my.parseExtraOptions = function(config){
+		if (!config.extraOptions){
+			config.extraOptions={};
+		}
+		if (config.extraOptionsString){
+			config.extraOptions = spqlib.util.splitPropertySet(config.extraOptionsString);
+		} 
+	}
 	
+	/**
+	* 
+	*/
 	my.splitPropertySet = function(str,propSep,keyValueSep){
 		var array = str.split(propSep || "||");
 		var res = {};
@@ -181,7 +210,9 @@ spqlib.util = (function () {
 		return res;
 	}
 	
-	//splitta le query con N union in N query con una sola clausola in where
+	/**
+	* splitta le query con N union in N query con una sola clausola in where
+	*/
 	my.splitQueryByUnion = function(sparql){
 		var parser = new sparqljs.Parser();
 		var generator = new sparqljs.Generator();
@@ -203,7 +234,9 @@ spqlib.util = (function () {
 		return [sparql];
 	}
 	
-	//converte il contenuto di una tabella html in formato csv
+	/*
+	*converte il contenuto di una tabella html in formato csv
+	*/
 	my.exportTableToCSV = function(table) {
 
         var $rows = table.find('tr:has(td), tr:has(th)');

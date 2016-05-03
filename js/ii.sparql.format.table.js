@@ -1,4 +1,14 @@
 spqlib.table = (function () {
+	/**
+	* Entry point
+	*/
+	spqlib.sparql2Table = function(config){
+		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
+			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
+		}
+		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.table.renderTable, config,spqlib.table.preQuery,spqlib.table.failQuery);
+	}
+	
 	var my = { };
 	
 	my.preQuery = function(configuration){
@@ -16,7 +26,7 @@ spqlib.table = (function () {
 	}
 	
 	 /**
-	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql. effettua il mapping dell'output e setta le impostazioni del grafo 
+	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql. 
 	 */
 	my.renderTable = function(json, config) {
 		var head = json.head.vars;

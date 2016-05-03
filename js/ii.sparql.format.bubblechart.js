@@ -1,8 +1,17 @@
 spqlib.bubblechart = (function () {
-	var my = { };
 	/**
-	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql.  
-	 */
+	* Entry point
+	*/
+	spqlib.sparql2BubbleChart = function(config){
+		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
+			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
+		}
+		spqlib.util.parseExtraOptions(config);
+		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.bubblechart.render, config,spqlib.bubblechart.preQuery,spqlib.bubblechart.failQuery);
+	}
+	
+	var my = { };
+
 	my.chartImpl = function () {
 		return spqlib.jqplot();
 	}
@@ -34,7 +43,10 @@ spqlib.bubblechart = (function () {
 		$("#"+configuration.divId).html(spqlib.util.generateErrorBox(textStatus));
 		throw new Error("Error invoking sparql endpoint "+textStatus+" "+JSON.stringify(jqXHR));
 	}
-	
+
+	/**
+	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql. 
+	 */
 	my.render = function (json, config) {
 		$("#"+config.divId+"-legend").show();
 		$("#"+config.divId).html("");

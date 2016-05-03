@@ -1,8 +1,17 @@
 spqlib.treemap = (function () {
-	var my = { };
+	
 	/**
-	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql.  
-	 */
+	* Entry point
+	*/
+	spqlib.sparql2Treemap = function(config){
+		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
+			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
+		}
+		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.treemap.render, config,spqlib.treemap.preQuery,spqlib.treemap.failQuery);
+	}
+	
+	var my = { };
+
 	my.chartImpl = function () {
 		return spqlib.d3();
 	}
@@ -34,6 +43,9 @@ spqlib.treemap = (function () {
 		throw new Error("Error invoking sparql endpoint "+textStatus+" "+JSON.stringify(jqXHR));
 	}
 	
+	/**
+	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql. 
+	 */
 	my.render = function (json, config) {
 		$("#"+config.divId+"-legend").show();
 		$("#"+config.divId).html("");

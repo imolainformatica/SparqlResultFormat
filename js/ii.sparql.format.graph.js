@@ -1,8 +1,58 @@
 spqlib.graph = (function () {
-	var my = { };
 	/**
-	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql. effettua il mapping dell'output e setta le impostazioni del grafo 
-	 */
+	* Entry point
+	*/
+	 spqlib.sparql2Graph = function(config){
+		spqlib.graph.initHtml(config);
+		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
+			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
+		}
+		var splitQueryByUnion = config.splitQueryByUnion || false;
+		if (splitQueryByUnion==true || splitQueryByUnion.toLowerCase()=="true") {
+			var queries = spqlib.util.splitQueryByUnion(config.sparqlWithPrefixes);
+			var step = 100/(queries.length);
+			config.step = step;
+			
+			$( "#"+config.divId).on( "done", function() {
+				var progress = 0 + step;
+				var idContainer = config.divId+"-container";
+				var progressBar = $( "#"+idContainer).next().find(".progress-bar");
+				var currentProgress = parseInt(progressBar.attr("aria-valuenow"));
+				var newProgress = currentProgress + parseInt(config.step);
+				if (100 - newProgress < config.step){
+					newProgress = 100;
+				}
+				progressBar.attr("aria-valuenow",newProgress);
+				var perc = newProgress+"%";
+				progressBar.css("width",perc);
+				progressBar.text(perc);
+				var i=1; 
+				if (queries[i]){
+					spqlib.util.doQuery(config.endpoint, queries[i], spqlib.graph.addNodes, config,null,spqlib.graph.failQuery);
+				} else {
+					$( "#"+ config.divId+"-container").next().hide();
+				}
+				//serializzo le chiamate 
+				$( "#"+config.divId).on( "singleQueryDone", function() {
+					i++;
+					if (queries[i]){
+						spqlib.util.doQuery(config.endpoint, queries[i], spqlib.graph.addNodes, config,null,spqlib.graph.failQuery);
+					} else {
+						//nascondo la progress bar
+						$( "#"+ config.divId+"-container").next().hide();
+					}
+				});
+			});
+			if (queries.length>0){
+				spqlib.util.doQuery(config.endpoint, queries[0], spqlib.graph.render, config,spqlib.graph.preQuery,spqlib.graph.failQuery);
+			}
+		} else {
+			spqlib.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.graph.render, config,spqlib.graph.preQuery,spqlib.graph.failQuery);
+		}
+	}
+	 
+	 var my = { };
+	 
 	my.graphImpl = function () {
 		return spqlib.cytoscape();
 	}
@@ -31,20 +81,11 @@ spqlib.graph = (function () {
 	}
 	
 	my.preQuery = function(configuration){
-		//if (!configuration.divStyle){
-        	//    configuration.divStyle="";
-        //}
-		//if (!loading){
-			//$("#"+configuration.divId+"-container").find(".ii-graph-legend-actions-list").hide();
-			//$("#"+configuration.divId+"-legend-container").attr("style",configuration.divStyle+" display:block; width:100%; border:none !important;");
-			//$("#"+configuration.divId+"-legend").attr("style",configuration.divStyle+" width:100% !important; text-align: center;");
-			
-			if (configuration.spinnerImagePath){
-				$("#"+configuration.divId+"-loader").html("<img src='"+configuration.spinnerImagePath+"' style='vertical-align:middle;'>");
-			} else {
-				$("#"+configuration.divId+"-loader").html("Loading...");
-			}
-		//}
+		if (configuration.spinnerImagePath){
+			$("#"+configuration.divId+"-loader").html("<img src='"+configuration.spinnerImagePath+"' style='vertical-align:middle;'>");
+		} else {
+			$("#"+configuration.divId+"-loader").html("Loading...");
+		}
 	}
 	
 	my.failQuery = function(configuration,jqXHR,textStatus){
@@ -95,11 +136,6 @@ spqlib.graph = (function () {
 			} else {
 				
 			}
-			if (conf.expanded="true"){
-				
-			} else {
-				
-			}
 		}
 		return html;
 	}
@@ -117,6 +153,7 @@ spqlib.graph = (function () {
 		var distinctNodes = [];
 		var nodeIds = 1;
 		var colorConf = config.colorConf = createColorConf(config);
+		config.globalConfiguration=spqlib.graph.createGlobalCategoryConfiguration(config.nodeConfiguration,config.edgeConfiguration);
 		if (data.length == 0 && config.rootElement) {
 			nodes.push({
 				data : {
@@ -129,11 +166,11 @@ spqlib.graph = (function () {
 		}
 
 		for (var i = 0; i < data.length; i++) {
-			var parent = getSparqlFieldValue(data[i]["parent_name"]); // data[i]["parent_name"].value;
+			var parent = getSparqlFieldValue(data[i]["parent_name"]);
 			var parentURI = getSparqlFieldValue(data[i]["parent_uri"]);
 			var parentType = getSparqlFieldValue(data[i]["parent_type"]);
 			var parentTypeURI = getSparqlFieldValue(data[i]["parent_type_uri"]);
-			var child = getSparqlFieldValue(data[i]["child_name"]); //data[i]["child_name"].value;
+			var child = getSparqlFieldValue(data[i]["child_name"]); 
 			var childURI = getSparqlFieldValue(data[i]["child_uri"]);
 			var childType = getSparqlFieldValue(data[i]["child_type"]);
 			var childTypeURI = getSparqlFieldValue(data[i]["child_type_uri"]);
@@ -751,37 +788,62 @@ spqlib.graph = (function () {
 		var pageLink = $("<a>").attr("href",linkLabel).attr(
 				"target", "_blank");
 		var uriLink ="";
-		/*if (obj.data("uri")){
-			var uriLink = "URI: <a href='" + obj.data("uri")
-			+ "' target='" + target + "'>"
-			+ obj.data("uri") + "</a></br>"
-		}
+		/*
 		var pageCategory = $("<span>").addClass(
 				"cytoscape-qtip-category");*/
 		var linkHref = linkLabel.replace(/'/g, "&apos;");
-		var tip = "<a href='" + linkHref
-				+ "' target='" + target + "'>"
-				+ obj.data("fullLabel") + "</a></br>";
-		if (uriLink){
-			tip+=uriLink;
+		var tip = "";
+		if (obj.data("fullLabel")){
+			var tip = "<a href='" + linkHref
+					+ "' target='" + target + "'>"
+					+ obj.data("fullLabel") + "</a></br>";
+		} else {
+			if (obj.data("uri")){
+				var uriLink = "URI: "+ obj.data("uri") + "</br>";
+				tip+=uriLink;
+			}	
 		}
-		tip += renderCategoryLink(obj.data("type"),conf);
+		var type = obj.data("type");
+		tip += renderCategoryLink(type,conf);
 		if (conf.globalConfiguration) {
-			if (conf.globalConfiguration[obj
-					.data("type")]) {
-				if (conf.globalConfiguration[obj
-						.data("type")].explore) {
-					extra = conf.globalConfiguration[obj
-							.data("type")].explore;
+			if (conf.globalConfiguration[type]) {
+				if (conf.globalConfiguration[type].explore) {
+					extra = conf.globalConfiguration[type].explore;
 					tip += renderExploreSection(
 							extra, obj.data('id'),
 									obj.cy().config.divId);
 				}
 			}
 		}
+		if (!obj.data("dataTypeProperties")){
+			//if (
+			//devo recuperare le data type properties e settarle in questo oggetto
+			loadExtraDataTypeProperties(conf,obj.data("id"),type);
+		} else {
+			tip+=renderExtraDataTypeProperties(obj.data("dataTypeProperties"));
+		}
+		
 		return tip;
+	}
+	
+	function loadExtraDataTypeProperties(conf,nodeId, categoryName){
+		if (conf.globalConfiguration) {
+			if (conf.globalConfiguration[categoryName]) {
+				if (conf.globalConfiguration[categoryName].dataTypeProps) {
+					if (conf.globalConfiguration[categoryName].dataTypeProps.length>0){
+						//devo recupeare le informazioni e metterle dentro al nodo in modo che siano visualizzate
+						
+					}
+				}
+			}
+		}
 		
 	}
+	
+	function renderExtraDataTypeProperties(properties){
+		return "";
+	}
+	
 	function renderExploreSection(props, nodeLabel, divId) {
 		var incomingHeader = "<div class='qtip-section'><b>Incoming connections</b></div>";
 		var outgoingHeader = "<div class='qtip-section'><b>Outgoing connections</b></div>";
@@ -862,6 +924,9 @@ spqlib.graph = (function () {
 
 	function renderCategoryLink(types,conf) {
 		var out = "";
+		if (types==""){
+			return "";
+		}			
 		if (types instanceof Array) {
 			for (var i = 0; i < types.length; i++) {
 				out += renderSingleCategoryLink(types[i],conf);
@@ -872,7 +937,11 @@ spqlib.graph = (function () {
 		} else {
 			out = renderSingleCategoryLink(types,conf);
 		}
-		return "Category: " + out + "</br>";
+		if (out!=""){
+			return "Category: " + out + "</br>";
+		} else {
+			return "";
+		}
 	}
 	
 	function createColorConf(config){
@@ -980,6 +1049,34 @@ spqlib.graph = (function () {
 			$("#" + divLegendLabel).text("Show legend");
 		});
 	}
+	
+	my.createGlobalCategoryConfiguration = function(nodeConfiguration, edgeConfiguration) {
+
+		var categoryConf = [];
+		for (var i = 0; i < nodeConfiguration.length; i++) {
+			var cat = nodeConfiguration[i];
+			var categoryName = cat.category;
+			categoryConf[categoryName] = {
+				name : categoryName,
+				group : 'node',
+				color : cat.nodeColor,
+				dataTypeProps : cat.dataTypeProps
+			};
+			if (cat.explore) {
+				categoryConf[categoryName].explore = cat.explore;
+			}
+		}
+		for (var i = 0; i < edgeConfiguration.length; i++) {
+			var rel = edgeConfiguration[i];
+			categoryConf[rel.relation] = {
+				name : rel.relation,
+				group : 'edge',
+				color : rel.edgeColor
+			};
+		}
+		return categoryConf;
+	}
+	
 	
 	function getSparqlFieldValue(field){
 		if (field){

@@ -309,60 +309,56 @@
 					g[divId].on('select', 'node', function(e) {
 					});
 
-					g[divId]
-							.on(
-									'ready',
-									function(e) {
-										var conf = e.cy.config;
-										var divIdentifier = conf.divId;
+					g[divId].on('ready',
+						function(e) {
+							var conf = e.cy.config;
+							var divIdentifier = conf.divId;
 
-										spqlib.graph.assignBgImageToNodes(conf);
-										if (conf.rootElement) {
-											if (conf.rootElementColor) {
-												var el = e.cy
-														.getElementById(conf.rootElement);
-												el.style('background-color',
-														conf.rootElementColor);
-											}
-											if (conf.rootElementImage) {
-												var el = e.cy
-														.getElementById(conf.rootElement);
-												if (el.length > 0) {
-													el.style('background-color',
-															"white");
-													el.style('background-image',
-															conf.rootElementImage);
+							spqlib.graph.assignBgImageToNodes(conf);
+							if (conf.rootElement) {
+								if (conf.rootElementColor) {
+									var el = e.cy
+											.getElementById(conf.rootElement);
+									el.style('background-color',
+											conf.rootElementColor);
+								}
+								if (conf.rootElementImage) {
+									var el = e.cy.getElementById(conf.rootElement);
+									if (el.length > 0) {
+										el.style('background-color',
+												"white");
+										el.style('background-image',
+												conf.rootElementImage);
+									}
+
+								}
+
+							}
+
+							centerGraphToNode(divIdentifier,
+									conf.rootElement);
+							$("#headertabs ul li a")
+									.on(
+											'click',
+											function(event, ui) {
+												var tabDivId = $(this)
+														.attr("href");
+												var t = $(tabDivId)
+														.find(
+																".ii-graph-container div.ii-graph")
+														.attr("id");
+												if (t) {
+													g[t].resize();
+													$(
+															".ii-graph-container")
+															.show();
+													centerGraphToNode(
+															t,
+															g[t].config.rootElement);
 												}
+											});
 
-											}
-
-										}
-
-										centerGraphToNode(divIdentifier,
-												conf.rootElement);
-										$("#headertabs ul li a")
-												.on(
-														'click',
-														function(event, ui) {
-															var tabDivId = $(this)
-																	.attr("href");
-															var t = $(tabDivId)
-																	.find(
-																			".ii-graph-container div.ii-graph")
-																	.attr("id");
-															if (t) {
-																g[t].resize();
-																$(
-																		".ii-graph-container")
-																		.show();
-																centerGraphToNode(
-																		t,
-																		g[t].config.rootElement);
-															}
-														});
-
-									});
-					
+						});
 					return g[divId];
 				}
 		}

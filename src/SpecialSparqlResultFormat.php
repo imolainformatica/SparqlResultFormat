@@ -27,6 +27,9 @@ class SpecialSparqlResultFormat extends SpecialPage {
 			h2 {
 				font-weight:bold;
 			}
+			.indent {
+				padding-left:50px;
+			}
 		</style>");
 		
 		$formats = array(
@@ -40,6 +43,33 @@ class SpecialSparqlResultFormat extends SpecialPage {
 			"graph" => new SparqlResultFormatGraph
 		);
 		//tab
+		$output->addHTML("<h1>".wfMessage("sprf.common.step1")."</h1>");
+		$localSettingsExample = " ".'$wgSparqlEndpointDefinition'."['<b>&lt;endpoint name&gt;</b>'] = array(
+			<div class='indent'>'url' =>'<b>&lt;endpoint url&gt;</b>',
+			<div>'basicAuth' => array( /*optional*/</div>
+			<div class='indent'>	'user' => '<b>&lt;basic auth user&gt;</b>',</div>
+			<div class='indent'>	'password' => '<b>&lt;basic auth password&gt;</b>'</div>
+			<div>),</div>
+			<div></div>
+			<div>'prefixes' => array( /*optional*/</div>
+					<div class='indent'>'skos' => 'http://www.w3.org/2004/02/skos/core#',</div>
+					<div class='indent'>'foaf' => 'http://xmlns.com/foaf/0.1/',</div>
+					<div class='indent'>'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',</div>
+					<div class='indent'>'rdfs' => 'http://www.w3.org/2000/01/rdf-schema#',</div>
+					<div class='indent'>'owl' => 'http://www.w3.org/2002/07/owl#',</div>
+					<div class='indent'>'<b>&lt;prefix&gt;</b>' => '<b>&lt;namespace&gt;</b>',</div>
+					<div class='indent'>...</div>
+				<div>)</div>
+				</div>
+			<div>);</div>
+			";
+	
+		
+		$output->addHTML($localSettingsExample);
+		$output->addHTML("<div>".wfMessage("sprf.common.step1.explain")."</div>");
+		
+		$output->addHTML("<h1>".wfMessage("sprf.common.step2")."</h1>");
+		
 		$output->addHTML("<div id='tabs'>");
 		$output->addHTML("<ul>");
 		foreach ($formats as $key => $value) {

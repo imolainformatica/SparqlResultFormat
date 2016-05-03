@@ -125,7 +125,9 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 					"example" => ""
 				)
 	   ); 
-		$this->queryStructure = wfMessage("sprf.format.graph.query.structure").wfMessage("sprf.format.graph.query.structure.example");	   
+		$this->queryStructure = wfMessage("sprf.format.graph.query.structure").wfMessage("sprf.format.graph.query.structure.example")
+		."<h3><b>".wfMessage("sprf.common.old.version")."</b></h3>"
+		.wfMessage("sprf.format.graph.query.structure.old").wfMessage("sprf.format.graph.query.structure.old.example");	   
     }
 	
 	

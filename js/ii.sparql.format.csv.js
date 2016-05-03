@@ -1,4 +1,14 @@
 spqlib.csv = (function () {
+	/**
+	* Entry point
+	*/
+	spqlib.sparql2CSV = function(config){
+		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
+			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
+		}
+		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.csv.render, config);
+	}
+	
 	var my = { };
 	/**
 	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql.

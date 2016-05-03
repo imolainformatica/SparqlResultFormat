@@ -1,8 +1,19 @@
 spqlib.barchart = (function () {
-	var my = { };
 	/**
-	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql. effettua il mapping dell'output e setta le impostazioni del grafo 
-	 */
+	* Entry point
+	*/
+	spqlib.sparql2BarChart = function(config){
+		var chartId = config.divId;
+		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
+			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
+		}
+		spqlib.util.parseExtraOptions(config);
+		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.barchart.render, config,spqlib.barchart.preQuery,spqlib.barchart.failQuery);
+	}
+	
+	
+	
+	var my = { };
 	 
 	 my.DEFAULT_AXIS_LABEL_MAX_LENGTH = 15;
 	 
@@ -39,7 +50,9 @@ spqlib.barchart = (function () {
 		throw new Error("Error invoking sparql endpoint "+textStatus+" "+JSON.stringify(jqXHR));
 	}
 	
-	
+	/**
+	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql. 
+	 */
 	my.render = function (json, config) {
 		$("#"+config.divId).html("");
 		var head = json.head.vars;
