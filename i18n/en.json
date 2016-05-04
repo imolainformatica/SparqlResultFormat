@@ -119,7 +119,7 @@
 	"sprf.options.chart.tooltip.x.value.pattern":"Text pattern applied to show the value of x coordinate. Refer to current value using the placeholder {%d}",
 	"sprf.options.chart.tooltip.y.value.pattern":"Text pattern applied to show the value of y coordinate. Refer to current value using the placeholder {%d}",
 	"sprf.options.chart.tooltip.r.value.pattern":"Text pattern applied to show the value of r coordinate. Refer to current value using the placeholder {%d}",
-	"sprf.param.rootElement":"The top element in the hierarchy",
+	"sprf.param.rootElement":"The top element in the hierarchy. This could be styled in different way from other nodes. If the sparql query return object uris you must specify the uri ot the root element. Otherwise you must specify the label.",
 	"sprf.param.leavesLinkPattern":"Pattern to generate url in leaves node. Refer to leaf value using {%s}",
 	"sprf.param.openLinkOnLeaves":"true/false. If specified on leaves node it will open the url specified.",
 	"sprf.param.nodeConfiguration1":"Configuration of nodes aspect based on their category (rdf:type). JSON syntax of array containing a definition for each node category.",

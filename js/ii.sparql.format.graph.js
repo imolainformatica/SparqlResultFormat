@@ -143,7 +143,7 @@ spqlib.graph = (function () {
 	
 	my.render = function (json, config) {
 		
-		$("#"+config.divId+"-loader").hide();
+		$("#"+config.divId+"-loader").html("Rendering...");
 		$("#"+config.divId+"-container").find(".ii-graph-legend-actions-list").show();
 		$("#"+config.divId+"-legend-container").attr("style","");
 		var head = json.head.vars;
@@ -506,24 +506,16 @@ spqlib.graph = (function () {
 							graph.resize();
 							graph.center();
 						}
-						//$(".cytoscape-graph-container").show();
-						//centerGraphToNode(id,g[id].config.rootElement);
 					});					
-					/*.attr("id");
-					if (t) {
-						g[t].resize();
-						$(".cytoscape-graph-container").show();
-						centerGraphToNode(t,g[t].config.rootElement);
-					}*/
 		});
+		enableTooltipOnNodes(divId);
+		enableTooltipOnEdges(divId);
+		spqlib.addToRegistry(config.divId,graph);
 		if (config.showLegend == "true" || config.rootElement) {
 			spqlib.graph.drawLegend(config);
 		} else {
 			hideLegend(config.divId + "-legend");
 		}
-		enableTooltipOnNodes(divId);
-		enableTooltipOnEdges(divId);
-		spqlib.addToRegistry(config.divId,graph);
 		$( "#"+config.divId ).trigger( "done" );
 	}
 	
@@ -538,9 +530,7 @@ spqlib.graph = (function () {
 			spqlib.graph.graphImpl().collapseIncomers(graphId,label,property);
 		}
 		setNodeExpandedForRelation(graphId, label, property, direction,
-				false);
-		//spqlib.graph.graphImpl().collapseNode(graphId, label, property, direction);
-		
+				false);		
 	}
 	
 	my.expandNode =	function (divId, label, property, direction) {
@@ -815,33 +805,79 @@ spqlib.graph = (function () {
 				}
 			}
 		}
+		tip+="<div class='ii-graph-tooltip-extra-props-container'>";
 		if (!obj.data("dataTypeProperties")){
-			//if (
-			//devo recuperare le data type properties e settarle in questo oggetto
-			loadExtraDataTypeProperties(conf,obj.data("id"),type);
+			if (conf.globalConfiguration && conf.globalConfiguration[type]){
+				var categoryConf = conf.globalConfiguration[type];
+				if (categoryConf.dataTypeProps && categoryConf.dataTypeProps.length>0){
+					tip+="<img src='"+conf.spinnerImagePath+"' style='vertical-align:middle;'>";
+					loadExtraDataTypeProperties(obj,categoryConf.dataTypeProps,conf);
+				}
+			}
+			
 		} else {
-			tip+=renderExtraDataTypeProperties(obj.data("dataTypeProperties"));
+			tip+=renderExtraDataTypeProperties(conf,type,obj.data("dataTypeProperties"));
 		}
+		tip+="</div>";
 		
 		return tip;
 	}
 	
-	function loadExtraDataTypeProperties(conf,nodeId, categoryName){
-		if (conf.globalConfiguration) {
-			if (conf.globalConfiguration[categoryName]) {
-				if (conf.globalConfiguration[categoryName].dataTypeProps) {
-					if (conf.globalConfiguration[categoryName].dataTypeProps.length>0){
-						//devo recupeare le informazioni e metterle dentro al nodo in modo che siano visualizzate
-						
-					}
-				}
-			}
-		}
-		
+	function loadExtraDataTypeProperties(obj,props,conf){
+		//devo recupeare le informazioni e metterle dentro al nodo in modo che siano visualizzate
+		var sparql = generateReadPropertyQuery(obj, props,conf.queryPrefixes);
+		spqlib.util.doQuery(conf.endpoint, sparql, spqlib.graph.addInfoToNode, conf,null,null,obj);
 	}
 	
-	function renderExtraDataTypeProperties(properties){
-		return "";
+	function generateReadPropertyQuery(obj,props,prefixes){
+		var nodeUri = obj.data("id");
+		var select = "SELECT ?node ";
+		for (var i=0;i<props.length;i++){
+			select+=" ?p"+i;
+		}
+		var where = "";
+		for (var i=0;i<props.length;i++){
+			var prop = props[i].prop;
+			where+="OPTIONAL{ <"+nodeUri+"> "+prop+" ?p"+i+".} ";
+		}
+		
+		var query = select+" WHERE { {  "+where+" BIND (<"+nodeUri+"> AS ?node) } }";
+		return spqlib.util.addPrefixes(query,prefixes);;
+	}
+	
+	my.addInfoToNode = function(json, config,caller) {
+		var id = config.divId;
+		var head = json.head.vars;
+		var data = json.results.bindings;
+		var row = data[0];
+		var nodeId = getSparqlFieldValue(data[0]["node"]);
+		var node = spqlib.getById(id).getElementById(nodeId);
+		node.data("dataTypeProperties",[]);
+		for (var i=1;i<head.length;i++){
+			var pName = head[i];
+			var val = getSparqlFieldValue(data[0][pName]);
+			node.data("dataTypeProperties").push(val);
+		}
+		//ritriggo l'evento cosi il tooltip viene ridisegnato, questa volta con le informazioni recuperate
+		caller.trigger("tap");
+	}
+	
+	
+	function renderExtraDataTypeProperties(conf,categoryName,properties){
+		var res = "";
+		if (conf.globalConfiguration && conf.globalConfiguration[categoryName]) {
+				var categoryConf = conf.globalConfiguration[categoryName];
+				if (categoryConf.dataTypeProps){
+					for (var i=0;i<properties.length;i++){
+						var val = properties[i];
+						var format = categoryConf.dataTypeProps[i].format;
+						var text = spqlib.util.formatString(format,val);
+						res+="<div class='extra-prop'>"+text+"</div>"
+					}
+				}
+		}
+		
+		return res;
 	}
 	
 	function renderExploreSection(props, nodeLabel, divId) {
@@ -987,8 +1023,9 @@ spqlib.graph = (function () {
 								"background:" + config.rootElementColor
 										+ "; background-size:100% 100%;");
 				var col1 = $("<td>").append(colorDiv);
+				var itemLabel = spqlib.getById(config.divId).getElementById(config.rootElement).data("fullLabel");
 				var col2 = $("<td>").append(
-						"Current item (" + config.rootElement + ")");
+						"Current item (" + itemLabel + ")");
 				var row = $("<tr>").append(col1).append(col2);
 				table.append(row);
 			}

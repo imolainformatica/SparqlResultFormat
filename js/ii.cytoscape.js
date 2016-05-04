@@ -308,9 +308,10 @@
 					g[divId].config = config;
 					g[divId].on('select', 'node', function(e) {
 					});
-
+					
 					g[divId].on('ready',
 						function(e) {
+							
 							var conf = e.cy.config;
 							var divIdentifier = conf.divId;
 
@@ -357,7 +358,8 @@
 															g[t].config.rootElement);
 												}
 											});
-
+							$("#"+conf.divId+"-loader").hide();
+							
 						});
 					return g[divId];
 				}

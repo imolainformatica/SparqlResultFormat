@@ -91,7 +91,7 @@ spqlib.util = (function () {
 		 * effettua la chiamata asincrona all'endpoint sparql. al termine viene
 		 * richiamata la funzione di callback passata come parametro
 		 */
-        my.doQuery = function query(endpoint, sparql, successCallback, configuration,preQueryCallback,failCallback) {
+        my.doQuery = function query(endpoint, sparql, successCallback, configuration,preQueryCallback,failCallback,caller) {
         	var mime = "application/sparql-results+json";
 			/*if (configuration.format && configuration.format=="csv"){
 				mime = "text/csv";
@@ -112,7 +112,7 @@ spqlib.util = (function () {
 					},
 					data:{query:sparql}
         	}).done(function(json) {
-				successCallback(json, configuration);
+				successCallback(json, configuration,caller);
         	}).fail(function(jqXHR, textStatus, errorThrown) {
 				if (failCallback && typeof failCallback=="function"){
 					failCallback(configuration,jqXHR,textStatus);

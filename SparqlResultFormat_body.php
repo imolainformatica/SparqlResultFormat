@@ -1,4 +1,6 @@
 <?php
+use SMW\Exporter\Escaper;
+
 class ExtSparqlResultFormat {
 	
 	// The prefix and suffix for the widget strip marker.
@@ -121,6 +123,22 @@ class ExtSparqlResultFormat {
 		//	[banana] => true
 
 		return $results;
+	}
+	
+	public static function page2uri($parser){
+		global $smwgNamespace;
+		$options_array = array_slice(func_get_args(), 1);
+		if (is_array($options_array)){
+			$pageName = $options_array[0];
+		} else {
+			return "<div class='error'>Error: you must specify the page name/div>";
+		}
+		if (class_exists("SMW\Exporter\Escaper")){
+			$esc = Escaper::encodeUri( urlencode( str_replace( ' ', '_', $pageName ) ) );
+		} else {
+			return "<div class='error'>Error: Cannot find Escaper class. Is SemanticMediaWiki extension installed?/div>";
+		}
+		return $smwgNamespace.$esc;
 	}
 	
 	public static function outputHtml(&$out, &$text){
