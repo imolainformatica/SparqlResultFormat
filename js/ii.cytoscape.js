@@ -104,50 +104,10 @@
 		}
 
 		/**
-		 * attiva/disattiva la modalità schermo intero per un determinato grafo
-		 */
-		/*window.toggleFullScreen = function(divId) {
-			if (g[divId].isfullScreen) {
-				g[divId].isFullScreen = false;
-			}
-			var containerSelector = "#" + divId + "-container";
-			var graphSelector = "#" + divId + "";
-			var legendSelector = "#" + divId + "-legend-container";
-			if (g[divId].isFullScreen == true) {
-				$(containerSelector).toggleClass(
-						'container-graph-full-screen');
-				$(legendSelector).toggleClass('legend-graph-full-screen');
-				$(graphSelector).toggleClass('graph-full-screen');
-				$(graphSelector).css("height", g[divId].normalGraphHeight);
-				g[divId].isFullScreen = false;
-				$(legendSelector).find(".fullscreen-label").text(
-						"Go fullscreen");
-				$(legendSelector).find("i.glyphicon-resize-small").removeClass(
-						"glyphicon-resize-small").addClass(
-						"glyphicon-fullscreen");
-				$(".ii-graph-container").show();
-				$(window).scrollTop($("#" + divId).offset().top);
-			} else {
-				$(".ii-graph-container").hide();
-				$(containerSelector).show();
-				$(containerSelector).toggleClass(
-						'container-graph-full-screen');
-				$(legendSelector).toggleClass('legend-graph-full-screen');
-				$(graphSelector).toggleClass('graph-full-screen');
-				g[divId].normalGraphHeight = $(graphSelector).css("height");
-				$(graphSelector).css("height", "100%");
-				$(legendSelector).find(".fullscreen-label").text(
-						"Exit fullscreen");
-				g[divId].isFullScreen = true;
-				$(legendSelector).find("i.glyphicon-fullscreen").addClass(
-						"glyphicon-resize-small").removeClass(
-						"glyphicon-fullscreen");
-			}
-			g[divId].resize();
-			centerGraphToNode(divId, g[divId].config.rootElement);
-		}*/
-
-
+		* abilita il tooltip sui nodi di un particolare grafo
+		* divId - identificativo del grafo
+		* nodes - se specificato il tooltip viene abilitato solo sulla lista di nodi in ingresso, altrimenti su tutti i nodi
+		**/
 		function enableTooltipOnNodes(divId,nodes) {
 			var collection = g[divId].elements().nodes();
 			if (nodes){
@@ -172,6 +132,12 @@
 								}
 							});
 		}
+		
+		/**
+		* abilita il tooltip sugli archi di un particolare grafo
+		* divId - identificativo del grafo
+		* edges - se specificato il tooltip viene abilitato solo sulla lista di archi in ingresso, altrimenti su tutti gli archi
+		**/
 		function enableTooltipOnEdges(divId,edges) {
 			var collection = g[divId].elements().edges();
 			if (edges){
@@ -207,9 +173,20 @@
 			return newStyle;
 		}
 		
-		function assignBackgrounImageToNodesByCategory(graphId,obj){
-			var eles = g[graphId].elements('node[type="'
-					+ obj.category + '"]');
+		/**
+		* assegna l'immagine di sfondo in base all'attributo type presente sul nodo
+		* graphId - identificativo del grafo
+		* obj - configurazione per una particolare categoria di nodi
+		* nodes - se specificato lo sfondo viene applicato solo sulla lista di nodi in ingresso, altrimenti su tutti i nodi
+		**/
+		function assignBackgrounImageToNodesByCategory(graphId,obj,nodes){
+			if (!nodes){
+				var eles = g[graphId].elements('node[type="'
+						+ obj.category + '"]');
+			} else {
+				var eles = nodes.nodes('node[type="'
+						+ obj.category + '"]');
+			}
 			for (var j = 0; j < eles.length; j++) {
 				var ele = eles[j];
 				ele.style('background-image', obj.image);
@@ -225,17 +202,7 @@
 			    	} else {
 			    		return null;
 			    	}
-			    },
-			    isFullScreen:function(graphId){
-			    	if (!g[graphId].isFullScreen){
-			    		return false;
-			    	} else {
-			    		return true;
-			    	}
-			    },
-			    setFullScreen:function(graphId,value){
-			    	g[graphId].isFullScreen = value;			    	
-			    },			    
+			    },		    
 			    resize: function(graphId){
 			    	g[graphId].resize();
 			    },
@@ -244,7 +211,6 @@
 							+ "'][target='" + target + "']");  	
 			    	
 			    },		
-			    
 			    addNodesToGraph:function(graphId,nodes){
 			    	return g[graphId].add(nodes);
 			    },
@@ -366,23 +332,27 @@
 		}
 
 
-		function collapseIncomers(graphId, label, property, direction) {
-			getGraphElementById(graphId, label).incomers(
-					"edge[propertyURI='" + property + "']").forEach(
-					function(ele) {
-						ele.source().successors().remove();
-						ele.source().remove();
-						ele.remove();
-					});
+		function collapseIncomers(graphId, nodeURI, property, direction) {
+			var node = getGraphElementById(graphId, nodeURI);
+			node.incomers("edge[propertyURI='" + property + "']").forEach(
+				function(ele) {
+					var source = ele.source();
+					if (source.degree(true)==1){
+						source.remove();
+					}
+					ele.remove();
+				});
 		}
 		
 
-		function collapseOutgoers(graphId, label, property, direction) {
-			getGraphElementById(graphId, label).outgoers(
-					"edge[propertyURI='" + property + "']").forEach(
+		function collapseOutgoers(graphId, nodeURI, property, direction) {
+			var node = getGraphElementById(graphId, nodeURI);
+			node.outgoers("edge[propertyURI='" + property + "']").forEach(
 					function(ele) {
-						ele.target().successors().remove();
-						ele.target().remove();
+						var target = ele.target();
+						if (target.degree(true)==1){
+							target.remove();
+						}
 						ele.remove();
 					});
 		}

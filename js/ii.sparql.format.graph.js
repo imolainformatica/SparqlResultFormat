@@ -51,7 +51,7 @@ spqlib.graph = (function () {
 		}
 	}
 	 
-	 var my = { };
+	var my = { };
 	 
 	my.graphImpl = function () {
 		return spqlib.cytoscape();
@@ -74,8 +74,6 @@ spqlib.graph = (function () {
 		} else {
 			$(legendSelector).find(".action-fullscreen").find("span").text("Exit fullscreen");
 		}
-		
-		
 		spqlib.graph.graphImpl().resize(graphId);
 		centerGraphToNode(graphId, spqlib.graph.graphImpl().getGraph(graphId).config.rootElement);
 	}
@@ -212,7 +210,7 @@ spqlib.graph = (function () {
 		drawGraph(nodes, edges, config);
 	}
 	
-	my.addNodes = function(json, config) {
+	my.addNodes = function(json, config,caller) {
 
 		var head = json.head.vars;
 		var data = json.results.bindings;
@@ -220,11 +218,11 @@ spqlib.graph = (function () {
 		var nodes = [];
 		var colorConf = config.colorConf || createColorConf(config);
 		for (var i = 0; i < data.length; i++) {
-			var parent = getSparqlFieldValue(data[i]["parent_name"]); // data[i]["parent_name"].value;
+			var parent = getSparqlFieldValue(data[i]["parent_name"]); 
 			var parentURI = getSparqlFieldValue(data[i]["parent_uri"]);
 			var parentType = getSparqlFieldValue(data[i]["parent_type"]);
 			var parentTypeURI = getSparqlFieldValue(data[i]["parent_type_uri"]);
-			var child = getSparqlFieldValue(data[i]["child_name"]); //data[i]["child_name"].value;
+			var child = getSparqlFieldValue(data[i]["child_name"]); 
 			var childURI = getSparqlFieldValue(data[i]["child_uri"]);
 			var childType = getSparqlFieldValue(data[i]["child_type"]);
 			var childTypeURI = getSparqlFieldValue(data[i]["child_type_uri"]);
@@ -251,7 +249,7 @@ spqlib.graph = (function () {
 			// per ogni nodo creo anche il relativo arco ma solo se non
 			// esiste già
 			var edge = new Object();
-			edge.source = parentID; //config.expandNodeInfo.source;
+			edge.source = parentID;
 			edge.target = childID;
 			edge.property = property;
 			edge.propertyURI = propertyURI;
@@ -270,8 +268,17 @@ spqlib.graph = (function () {
 			setLayoutToGraph(config.divId, layout);
 			enableTooltipOnNodes(config.divId,n);
 			enableTooltipOnEdges(config.divId,e);
-			assignBgImageToNodes(config);
+			assignBgImageToNodes(config,n);
 		}
+		if (caller){
+			if (caller.propToExpand){
+				var elementId = caller.nodeURI;
+				var direction = caller.direction;
+				var attrName = caller.propToExpand+"-"+direction
+				spqlib.graph.graphImpl().setGraphElementData(config.divId, elementId, attrName, {expanded:true, numResult:data.length});	
+			}
+		}
+		
 		var idContainer = config.divId+"-container";
 		var progressBar = $( "#"+idContainer).next().find(".progress-bar");
 		var currentProgress = parseInt(progressBar.attr("aria-valuenow"));
@@ -287,153 +294,36 @@ spqlib.graph = (function () {
 
 	}
 	
-	
-	
-	my.addNodesOut = function(json, config) {
-
-		var head = json.head.vars;
-		var data = json.results.bindings;
-		var edges = [];
-		var nodes = [];
-		var colorConf = config.colorConf || createColorConf(config);
-		for (var i = 0; i < data.length; i++) {
-			var uri = getSparqlFieldValue(data[i]["child"]);
-			var label = getSparqlFieldValue(data[i]["child_label"]);
-			var type = getSparqlFieldValue(data[i]["child_type_label"]);
-			var typeURI = getSparqlFieldValue(data[i]["child_type_uri"]);
-			var relation = getSparqlFieldValue(data[i]["relation_label"]);
-			var relationURI = getSparqlFieldValue(data[i]["relation_uri"]);
-			var color = mapTypeToColor(type, colorConf,
-					config.defaultNodeColor);
-			var node = createNode(uri,label,type,typeURI, color, config.maxLabelLength, config.maxWordLength);
-			/*var node = new Object();
-			node.type = type;
-			node.id = label;
-			node.label = spqlib.util.cutLongLabel(label, config.maxLabelLength,
-					config.maxWordLength);
-			node.color = mapTypeToColor(type, config.colorConf,
-					config.defaultNodeColor);*/
-			nodes.push({
-				data : node,
-				classes : "background"
-			});
-			// per ogni nodo creo anche il relativo arco ma solo se non
-			// esiste già
-			var edge = new Object();
-			edge.source = config.expandNodeInfo.source;
-			edge.target = node.id;
-			edge.property = relation;
-			edge.propertyURI = config.expandNodeInfo.property;
-			edge.color = mapTypeToColor(edge.property, colorConf,
-					config.defaultEdgeColor);
-			if (!existEdge(config.divId,edge.source,edge.target)){
-				edges.push({
-					data : edge
-				});
-			}
-		}
-		if (data.length > 0) {
-			addNodesToGraph(config.divId, nodes);
-			addEdgesToGraph(config.divId, edges);
-			var layout = getSelectedLayout(config);
-			setLayoutToGraph(config.divId, layout);
-			enableTooltipOnNodes(config.divId);
-			enableTooltipOnEdges(config.divId);
-			assignBgImageToNodes(config);
-			centerGraphToNode(config.divId, config.expandNodeInfo.source);
-			setNodeExpandedForRelation(config.divId,
-					config.expandNodeInfo.source,
-					config.expandNodeInfo.property,
-					config.expandNodeInfo.direction, true);
-		}
-
+	function generateExpandNodeQueryOut(nodeURI, property) {
+		return "SELECT distinct ?parent_name ?child_name ?parent_type ?child_type ?relation_name ?parent_uri ?child_uri ?parent_type_uri ?child_type_uri ?relation_uri WHERE { "
+				+ "{  <"+nodeURI+"> "+property+" ?child_uri;\
+                           	rdfs:label ?parent_name.			\
+				      OPTIONAL { ?child_uri rdfs:label ?child_name. \
+								 ?child_uri rdf:type ?child_type_uri. \
+								 ?child_type_uri rdfs:label ?child_type.\
+								 } \
+					   <"+nodeURI+"> rdf:type ?parent_type_uri. \
+					   ?parent_type_uri rdfs:label ?parent_type. \
+					   OPTIONAL { "+property+" rdfs:label ?relation_name.} \
+					   BIND (<"+nodeURI+"> AS ?parent_uri) \
+					   BIND (<"+property+"> AS ?relation_uri) \
+				  }  }";
 	}
 	
-	
-	/**
-	 * ritorna il nome dell'oggetto e il tipo del nodo iniziale
-	 */
-	my.generateInitialQuery = function (label) {
-		return "SELECT ?uri ?label ?type_uri ?type_label WHERE { { VALUES ?root_label {'"
-				+ label
-				+ "'}   ?uri rdfs:label ?label.   ?uri rdfs:label ?root_label.   ?uri rdf:type ?type_uri.   ?type_uri rdfs:label ?type_label.} }";
-	}
-	
-	function generateExpandNodeQueryIn(label, property) {
-		return "SELECT distinct ?parent_uri ?parent_label ?parent_type_uri ?parent_type_label ?relation_label WHERE { "
-				+ "{  VALUES ?root_label {'"
-				+ label
-				+ "'} "
-				+ "   ?parent_uri rdfs:label ?parent_label. "
-				+ "   ?parent_uri "
-				+ property
-				+ " ?child. "
-				+ "   ?child rdfs:label ?root_label. "
-				+ "   ?parent_uri ?relation_uri ?child. "
-				+ "   ?relation_uri rdfs:label ?relation_label. "
-				+ "   ?parent_uri rdf:type ?parent_type_uri. ?parent_type_uri rdfs:label ?parent_type_label."
-				+ "}  }";
-
-	}
-
-	function generateExpandNodeQueryOut(label, property, targetType) {
-		return "SELECT distinct ?child_uri ?child_label ?child_type_uri ?child_type_label ?relation_uri ?relation_label WHERE { "
-				+ "{  VALUES ?root_label {'"
-				+ label
-				+ "'} "
-				+ "   ?s rdfs:label ?label. "
-				+ "   ?s rdfs:label ?root_label. "
-				+ "   ?s "
-				+ property
-				+ " ?child_uri. "
-				+ "   ?s ?relation_uri ?child_uri. "
-				+ "   ?relation_uri rdfs:label ?relation_label. "
-				+ "   ?child_uri rdfs:label ?child_label. "
-				+ "   ?child_uri rdf:type ?child_type_uri."
-				+ "   ?child_type_uri rdfs:label ?child_type_label. " + "}  }";
-
-	}
-	
-	/**
-	 * funzione di callback di default dopo la chiamata ajax all'endpoint
-	 * sparql. effettua il mapping dell'output e setta le impostazioni del
-	 * grafo
-	 */
-	my.renderGraphExplorer = function renderGraphExplorer(json, config) {
-		var head = json.head.vars;
-		var data = json.results.bindings;
-		var edges = [];
-		var nodes = [];
-		var distinctNodes = [];
-		var nodeIds = 1;
-
-		var colorConf = [];
-		var nodeConfiguration = config.nodeConfiguration;
-		for (var i = 0; i < nodeConfiguration.length; i++) {
-			var cat = nodeConfiguration[i];
-			colorConf[cat.category] = cat.nodeColor;
-		}
-		var edgeConfiguration = config.edgeConfiguration;
-		for (var i = 0; i < edgeConfiguration.length; i++) {
-			var rel = edgeConfiguration[i];
-			colorConf[rel.relation] = rel.edgeColor;
-		}
-		config.colorConf = colorConf;
-
-		for (var i = 0; i < data.length; i++) {
-			var uri = getSparqlFieldValue(data[i]["uri"]);
-			var label = getSparqlFieldValue(data[i]["label"]);
-			var type = getSparqlFieldValue(data[i]["type_label"]);
-			var typeURI = getSparqlFieldValue(data[i]["type_uri"]);
-			var color = mapTypeToColor(type, colorConf,
-					config.defaultNodeColor);
-			var node = createNode(uri,label,type,typeURI, color, config.maxLabelLength, config.maxWordLength);
-			nodes.push({
-				data : node,
-				classes : "background"
-			});
-		}
-		drawGraph(nodes, edges, config);
+	function generateExpandNodeQueryIn(nodeURI, property) {
+		return "SELECT distinct ?parent_name ?child_name ?parent_type ?child_type ?relation_name ?parent_uri ?child_uri ?parent_type_uri ?child_type_uri ?relation_uri WHERE { "
+				+ "{  ?parent_uri "+property+" <"+nodeURI+"> .\
+				      OPTIONAL { ?parent_uri rdfs:label ?parent_name. \
+					  <"+nodeURI+"> rdfs:label ?child_name. \
+								 <"+nodeURI+"> rdf:type ?child_type_uri. \
+								 ?child_type_uri rdfs:label ?child_type.\
+								 } \
+					   ?parent_uri rdf:type ?parent_type_uri. \
+					   ?parent_type_uri rdfs:label ?parent_type. \
+					   OPTIONAL { "+property+" rdfs:label ?relation_name.} \
+					   BIND (<"+nodeURI+"> AS ?child_uri) \
+					   BIND (<"+property+"> AS ?relation_uri) \
+				  }  }";
 	}
 	
 	/**
@@ -460,8 +350,6 @@ spqlib.graph = (function () {
 	function createNode(uri,label,type,typeURI, color, maxLength, maxWordLength) {
 		var node = new Object();
 		node.uri = node.id = uri;
-		//node.types = [];
-		//node.types.push({type:type, typeURI:typeURI});
 		node.type=type;
 		node.typeURI=typeURI;
 		node.fullLabel = label;
@@ -523,173 +411,15 @@ spqlib.graph = (function () {
 		return spqlib.graph.graphImpl().getGraph(graphId).config;
 	}
 	
-	my.collapseNode = function(graphId, label, property, direction){
-		if (direction && direction == "IN") {
-			spqlib.graph.graphImpl().collapseIncomers(graphId,label,property);
-		} else {
-			spqlib.graph.graphImpl().collapseIncomers(graphId,label,property);
-		}
-		setNodeExpandedForRelation(graphId, label, property, direction,
-				false);		
-	}
-	
-	my.expandNode =	function (divId, label, property, direction) {
-		var conf = getGraphConfig(divId); 
-		conf.expandNodeInfo = {
-			source : label,
-			property : property,
-			direction : direction
-		};
-		if (direction && direction == "IN") {
-			var q = generateExpandNodeQueryIn(label, property);
-			var qWithPrefixes = spqlib.util.addPrefixes(q,smwQueryPrefixes);
-			spqlib.util.doQuery(conf.endpoint, qWithPrefixes, addNodesIn, conf,false);
-		} else {
-			var q = generateExpandNodeQueryOut(label, property, "");
-			var qWithPrefixes = spqlib.util.addPrefixes(q,smwQueryPrefixes);
-			spqlib.util.doQuery(conf.endpoint, qWithPrefixes, spqlib.graph.addNodesOut, conf,false);
-		}
-	}
-	
-	function addNodesIn(json, config) {
-		var head = json.head.vars;
-		var data = json.results.bindings;
-		var edges = [];
-		var nodes = [];
-		for (var i = 0; i < data.length; i++) {
-			var parentURI = getSparqlFieldValue(data[i]["parent_uri"]);
-			var label = getSparqlFieldValue(data[i]["parent_label"]);
-			var type = getSparqlFieldValue(data[i]["parent_type_label"]);
-			var typeURI = getSparqlFieldValue(data[i]["parent_type_uri"]);
-			var relation = getSparqlFieldValue(data[i]["relation_label"]);
-			var relationURI = getSparqlFieldValue(data[i]["relation_uri"]);
-			var color = mapTypeToColor(type, config.colorConf,
-					config.defaultNodeColor);
-			var node = createNode(parentURI,label,type,typeURI, color, config.maxLabelLength, config.maxWordLength);
-			nodes.push({
-				data : node,
-				classes : "background"
-			});
-			// per ogni nodo creo anche il relativo arco ma solo se non
-			// esiste già
-			var edge = new Object();
-			edge.source = node.uri;
-			edge.target = config.expandNodeInfo.source;
-			edge.property = relation;
-			edge.propertyURI = relationURI;
-			edge.color = mapTypeToColor(edge.property, config.colorConf,
-					config.defaultEdgeColor);
-
-			if (!existEdge(config.divId, edge.source, edge.target)) {
-				edges.push({
-					data : edge
-				});
-			}
-		}
-		if (data.length > 0) {
-			addNodesToGraph(config.divId, nodes);
-			addEdgesToGraph(config.divId, edges);
-			setLayoutToGraph(config.divId, getSelectedLayout(config));
-			enableTooltipOnNodes(config.divId);
-			enableTooltipOnEdges(config.divId);
-			assignBgImageToNodes(config);
-			centerGraphToNode(config.divId, config.expandNodeInfo.source);
-			setNodeExpandedForRelation(config.divId,
-					config.expandNodeInfo.source,
-					config.expandNodeInfo.property,
-					config.expandNodeInfo.direction, true);
-		}
-	}
-	
-	
-	function addNodesOut(json, config) {
-
-		var head = json.head.vars;
-		var data = json.results.bindings;
-		var edges = [];
-		var nodes = [];
-		for (var i = 0; i < data.length; i++) {
-			var uri = getSparqlFieldValue(data[i]["child"]);
-			var label = getSparqlFieldValue(data[i]["child_label"]);
-			var type = getSparqlFieldValue(data[i]["child_type_label"]);
-			var typeURI = getSparqlFieldValue(data[i]["child_type_uri"]);
-			var relation = getSparqlFieldValue(data[i]["relation_label"]);
-			var relationURI = getSparqlFieldValue(data[i]["relation_uri"]);
-			var color = mapTypeToColor(type, config.colorConf,
-					config.defaultNodeColor);
-			var node = createNode(uri,label,type,typeURI, color, config.maxLabelLength, config.maxWordLength);
-			/*var node = new Object();
-			node.type = type;
-			node.id = label;
-			node.label = spqlib.util.cutLongLabel(label, config.maxLabelLength,
-					config.maxWordLength);
-			node.color = mapTypeToColor(type, config.colorConf,
-					config.defaultNodeColor);*/
-			nodes.push({
-				data : node,
-				classes : "background"
-			});
-			// per ogni nodo creo anche il relativo arco ma solo se non
-			// esiste già
-			var edge = new Object();
-			edge.source = config.expandNodeInfo.source;
-			edge.target = node.id;
-			edge.property = relation;
-			edge.propertyURI = config.expandNodeInfo.property;
-			edge.color = mapTypeToColor(edge.property, config.colorConf,
-					config.defaultEdgeColor);
-			if (!existEdge(config.divId,edge.source,edge.target)){
-				edges.push({
-					data : edge
-				});
-			}
-		}
-		if (data.length > 0) {
-			addNodesToGraph(config.divId, nodes);
-			addEdgesToGraph(config.divId, edges);
-			var layout = getSelectedLayout(config);
-			setLayoutToGraph(config.divId, layout);
-			enableTooltipOnNodes(config.divId);
-			enableTooltipOnEdges(config.divId);
-			assignBgImageToNodes(config);
-			centerGraphToNode(config.divId, config.expandNodeInfo.source);
-			setNodeExpandedForRelation(config.divId,
-					config.expandNodeInfo.source,
-					config.expandNodeInfo.property,
-					config.expandNodeInfo.direction, true);
-		}
-
-	}
-	function setNodeExpandedForRelation(graphId, elementId, propertyURI,
-			propertyDirection, value) {
-		var exp = spqlib.graph.graphImpl().getGraphElementData(graphId, elementId, "nodeExpansion");
-		if (!exp) {
-			exp = [];
-		}
-		var prop = "";
-		if (propertyDirection) {
-			if (propertyDirection == "IN") {
-				prop = "IN-" + propertyURI;
-			} else {
-				prop = "OUT-" + propertyURI;
-			}
-		} else {
-			prop = "OUT-" + propertyURI;
-		}
-		exp[prop] = value;
-		spqlib.graph.graphImpl().setGraphElementData(graphId, elementId, "nodeExpansion", exp);	
-	}
-	
 	function centerGraphToNode(graphId,nodeId){
 		spqlib.graph.graphImpl().centerGraphToNode(graphId,nodeId);
-		
 	}
 	
-	my.assignBgImageToNodes = function(conf){
-		assignBgImageToNodes(conf);
+	my.assignBgImageToNodes = function(conf,nodes){
+		assignBgImageToNodes(conf,nodes);
 	}
 	
-	function assignBgImageToNodes(conf) {
+	function assignBgImageToNodes(conf,nodes) {
 
 		if (conf.rootElementImage) {
 			var legendDiv = $("#table-" + conf.divId
@@ -704,19 +434,17 @@ spqlib.graph = (function () {
 			// in caso di nodi con immagini devo aggiornare i nodi e la
 			// legenda settando l'immagine di sfondo
 			if (obj.image) {
-				spqlib.graph.graphImpl().assignBackgrounImageToNodesByCategory(conf.divId,obj);
+				spqlib.graph.graphImpl().assignBackgrounImageToNodesByCategory(conf.divId,obj,nodes);
 				
 				// aggiorno anche la legenda
 				var legendDiv = $("#table-" + conf.divId
 						+ "-legend div[category-name='" + obj.category
 						+ "']");
 				legendDiv.css("background-color", "white");
-				legendDiv.css("background-image", 'url("' + obj.image
-						+ '")');
+				legendDiv.css("background-image", 'url("' + obj.image + '")');
 			}
 		}
 	}
-	
 	
 	function enableTooltipOnNodes(graphId, nodes){
 		if (!nodes){
@@ -778,9 +506,6 @@ spqlib.graph = (function () {
 		var pageLink = $("<a>").attr("href",linkLabel).attr(
 				"target", "_blank");
 		var uriLink ="";
-		/*
-		var pageCategory = $("<span>").addClass(
-				"cytoscape-qtip-category");*/
 		var linkHref = linkLabel.replace(/'/g, "&apos;");
 		var tip = "";
 		if (obj.data("fullLabel")){
@@ -795,17 +520,7 @@ spqlib.graph = (function () {
 		}
 		var type = obj.data("type");
 		tip += renderCategoryLink(type,conf);
-		if (conf.globalConfiguration) {
-			if (conf.globalConfiguration[type]) {
-				if (conf.globalConfiguration[type].explore) {
-					extra = conf.globalConfiguration[type].explore;
-					tip += renderExploreSection(
-							extra, obj.data('id'),
-									obj.cy().config.divId);
-				}
-			}
-		}
-		tip+="<div class='ii-graph-tooltip-extra-props-container'>";
+		tip+="<div class='ii-graph-tooltip-extra-data-type-props-container'>";
 		if (!obj.data("dataTypeProperties")){
 			if (conf.globalConfiguration && conf.globalConfiguration[type]){
 				var categoryConf = conf.globalConfiguration[type];
@@ -819,6 +534,10 @@ spqlib.graph = (function () {
 			tip+=renderExtraDataTypeProperties(conf,type,obj.data("dataTypeProperties"));
 		}
 		tip+="</div>";
+		tip+="<div class='ii-graph-tooltip-extra-object-props-container'>";
+		tip+=renderExtraObjectProperties(conf,type,obj);
+		tip+="</div>";
+		
 		
 		return tip;
 	}
@@ -840,9 +559,8 @@ spqlib.graph = (function () {
 			var prop = props[i].prop;
 			where+="OPTIONAL{ <"+nodeUri+"> "+prop+" ?p"+i+".} ";
 		}
-		
 		var query = select+" WHERE { {  "+where+" BIND (<"+nodeUri+"> AS ?node) } }";
-		return spqlib.util.addPrefixes(query,prefixes);;
+		return spqlib.util.addPrefixes(query,prefixes);
 	}
 	
 	my.addInfoToNode = function(json, config,caller) {
@@ -862,6 +580,40 @@ spqlib.graph = (function () {
 		caller.trigger("tap");
 	}
 	
+	my.expandProperty = function(graphId,nodeURI,propToExpand,direction){
+		var graph = spqlib.getById(graphId);
+		var config = graph.config;
+		var node = graph.getElementById(nodeURI);
+		if (direction=="IN") {
+			var query = generateExpandNodeQueryIn(nodeURI,propToExpand);
+		} else if (direction=="OUT"){
+			var query = generateExpandNodeQueryOut(nodeURI,propToExpand);
+		} else {
+			throw "'"+direction+"' is invalid for direction parameter";
+		}
+		query = spqlib.util.addPrefixes(query,config.queryPrefixes);
+		spqlib.util.doQuery(config.endpoint, query, spqlib.graph.addNodes, config,null,null,{graphId:graphId,nodeURI:nodeURI,propToExpand:propToExpand,direction:direction});	
+		//nascondo il tooltip
+		node.trigger("unfocus");
+	}
+	
+	my.collapseProperty = function(graphId,nodeURI,propToExpand,direction){
+		var graph = spqlib.getById(graphId);
+		var config = graph.config;
+		var node = graph.getElementById(nodeURI);
+		node.trigger("unfocus");
+		if (direction=="OUT"){
+			spqlib.graph.graphImpl().collapseOutgoers(graphId,nodeURI,propToExpand);
+		}
+		if (direction=="IN"){
+			spqlib.graph.graphImpl().collapseIncomers(graphId,nodeURI,propToExpand);
+		}
+		var attrName = propToExpand+"-"+direction;
+		spqlib.graph.graphImpl().setGraphElementData(graphId, nodeURI, attrName, {expanded:false});
+		centerGraphToNode(graphId, nodeURI);
+		
+	}
+	
 	
 	function renderExtraDataTypeProperties(conf,categoryName,properties){
 		var res = "";
@@ -872,7 +624,7 @@ spqlib.graph = (function () {
 						var val = properties[i];
 						var format = categoryConf.dataTypeProps[i].format;
 						var text = spqlib.util.formatString(format,val);
-						res+="<div class='extra-prop'>"+text+"</div>"
+						res+="<div class='extra-prop'>"+text+"</div>";
 					}
 				}
 		}
@@ -880,7 +632,49 @@ spqlib.graph = (function () {
 		return res;
 	}
 	
-	function renderExploreSection(props, nodeLabel, divId) {
+	function renderExtraObjectProperties(conf,categoryName,obj){
+		var nodeURI = obj.data("id");
+		var res = "";
+		if (conf.globalConfiguration && conf.globalConfiguration[categoryName]) {
+				var categoryConf = conf.globalConfiguration[categoryName];
+				if (categoryConf.objectProps){
+					var properties = categoryConf.objectProps;
+					for (var i=0;i<properties.length;i++){
+						var prop = properties[i].prop;
+						var direction = properties[i].direction;
+						var label = properties[i].label;
+						var ICON_PLUS = "<span class='glyphicon glyphicon-plus-sign'></span>";
+						var ICON_MINUS = "<span class='glyphicon glyphicon-minus-sign'></span>";
+						var funcName = "";
+						var icon = "";
+						if (isNodeExpandedForProperty(obj,prop,direction)) {
+							icon = ICON_MINUS;
+							funcName = "spqlib.graph.collapseProperty";
+						} else {
+							icon = ICON_PLUS;
+							funcName = "spqlib.graph.expandProperty";
+						}
+						res+="<div class='extra-object-prop'><a href='#' onclick='"+funcName+"(\""+conf.divId+"\",\""+nodeURI+"\",\""+prop+"\",\""+direction+"\");'>"+
+						      ""+label+" "+icon+"</a></div>";
+					}
+				}
+		}
+		
+		return res;
+	}
+	
+	function isNodeExpandedForProperty(nodeData,property,direction){
+		var attrName = property+"-"+direction;
+		if (nodeData.data(attrName)){
+			var obj = nodeData.data(attrName);
+			if (obj.expanded){
+				return obj.expanded;
+			}
+		}
+		return false;
+	}
+	
+	/*function renderExploreSection(props, nodeLabel, divId) {
 		var incomingHeader = "<div class='qtip-section'><b>Incoming connections</b></div>";
 		var outgoingHeader = "<div class='qtip-section'><b>Outgoing connections</b></div>";
 		var incomingLinks = "";
@@ -902,9 +696,9 @@ spqlib.graph = (function () {
 			output += outgoingHeader + outgoingLinks;
 		}
 		return output;
-	}
+	}*/
 	
-	function isNodeExpandedForRelation(graphId, elementId, propertyURI,
+	/*function isNodeExpandedForRelation(graphId, elementId, propertyURI,
 			propertyDirection) {
 		var exp = spqlib.graph.graphImpl().getGraphElementData(graphId, elementId, "nodeExpansion");
 		var prop = "";
@@ -926,10 +720,10 @@ spqlib.graph = (function () {
 		} else {
 			return false;
 		}
-	}
+	}*/
 	
 
-	function renderExpandNodeLink(prop, nodeLabel, divId) {
+	/*function renderExpandNodeLink(prop, nodeLabel, divId) {
 		var ICON_PLUS = "<span class='glyphicon glyphicon-plus-sign' style='margin-right:5px;'></span>";
 		var ICON_MINUS = "<span class='glyphicon glyphicon-minus-sign' style='margin-right:5px;'></span>";
 		var funcName = "";
@@ -950,7 +744,7 @@ spqlib.graph = (function () {
 				+ "\",\"" + nodeLabel + "\",\"" + prop.property.uri
 				+ "\",\"" + prop.property.direction + "\")' >";
 		return aLink + linkLabel;
-	}
+	}*/
 
 	function renderSingleCategoryLink(type,conf) {
 		var pattern = conf.categoryLinkPattern;
@@ -1081,7 +875,6 @@ spqlib.graph = (function () {
 		});
 
 		$("#" + divLegendContainer).on("mouseleave", function(){
-			//$("#" + divLegendContainer).hide();
 			$("#" + divLegendContainer).slideUp("slow");
 			$("#" + divLegendLabel).text("Show legend");
 		});
@@ -1097,11 +890,9 @@ spqlib.graph = (function () {
 				name : categoryName,
 				group : 'node',
 				color : cat.nodeColor,
-				dataTypeProps : cat.dataTypeProps
+				dataTypeProps : cat.dataTypeProps,
+				objectProps : cat.objectProps
 			};
-			if (cat.explore) {
-				categoryConf[categoryName].explore = cat.explore;
-			}
 		}
 		for (var i = 0; i < edgeConfiguration.length; i++) {
 			var rel = edgeConfiguration[i];

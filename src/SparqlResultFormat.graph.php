@@ -33,7 +33,19 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 			"nodeConfiguration" => array(
 					"mandatory" => false,
 					"description" => wfMessage("sprf.param.nodeConfiguration1").wfMessage("sprf.param.nodeConfiguration2"),
-					"example" => "|nodeConfiguration=[{ category:\"Application\",nodeColor:\"#000000\", image:\"{{filepath:Application_icon.png}}\"},{ category:\"Application Component\",nodeColor:\"#00FF00\", image:\"{{filepath:Component_icon.png}}\"}]"
+					"example" => "|nodeConfiguration=[
+					{ category:\"Application\",nodeColor:\"#000000\", image:\"{{filepath:Application_icon.png}}\"},
+					{ category:\"Application Component\",nodeColor:\"#00FF00\", image:\"{{filepath:Component_icon.png}}\"},
+					{ category:\"Person\",nodeColor:\"#FF0000\",image:\"{{filepath:Person.png}}\", 
+					  dataTypeProps:[
+							 {prop:'foaf:name', format:'Name: {%s}'},
+							 {prop:'foaf:surname', format:'Surname: {%s}'}
+					   ],
+					   objectProps:[
+							 {prop:'skos:broader',direction:'OUT', label:'Has broader'}
+					   ]}
+					
+					]"
 				),
 			"edgeConfiguration" => array(
 					"mandatory" => false,
@@ -195,15 +207,7 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 		$edgeStyle = $this->getParameterValue($options,'edgeStyle','{}');
 		$labelLinkPattern = $this->getParameterValue($options,'labelLinkPattern',"$wgServer$wgScriptPath/index.php/{%s}");
 		$categoryLinkPattern = $this->getParameterValue($options,'categoryLinkPattern',"$wgServer$wgScriptPath/index.php/Category:{%s}");
-		
-		
-		/*$extraOption = $this->getParameterValue($options,'extraOption','');
-		if (is_array($extraOption)){
-			$extraOptionString = implode("||", $extraOption);	
-		} else {
-			$extraOptionString = '';
-		}*/
-		
+				
 		$config = "var config = {};
 			config.divId = '$divId';
 			config.endpoint='$endpoint';
