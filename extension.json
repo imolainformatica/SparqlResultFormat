@@ -6,6 +6,7 @@
 		"Matteo Busanelli"
 	],
 	"url": "",
+	"descriptionmsg": "",
 	"description": "Permette di effettuare query sparql a endpoint e di visualizzarle in diversi formati",
 	"type": "parserhook",
 	"config": {
