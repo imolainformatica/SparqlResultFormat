@@ -5,6 +5,7 @@
 		]
 	},
 	"sparqlresultformat": "Sparql Result Format Documentation",
+	"sparqlresultformatdesc": "Enable the client-side execution of sparql query to different endpoint and produce various output format.",
 	"sprf.special.extra.options":"Extra Options",
 	"sprf.special.parameter.name": "Name",
 	"sprf.special.parameter.description": "Description",
