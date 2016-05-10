@@ -1,8 +1,10 @@
 Questo progetto contiene l'implementazione dell'estensione Mediawiki SparqlResultFormat.
 
 # Installazione
-1) Scompattare la cartella di progetto sotto la cartella extensions della vostra installazione mediawiki.
-
+1) Posizionarsi nella cartella extensions della vostra installazione mediawiki e lanciare il seguente comando
+```
+git clone http://git.imolinfo.it/piattaforma_semantica/SparqlResultFormat.git
+```
 2) Modificare il LocalSettings.php aggiungendo la seguente istruzione
 
 ```php
