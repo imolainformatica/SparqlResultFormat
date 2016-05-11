@@ -147,9 +147,8 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 		$divId = $this->getParameterValue($options,'divId','');
 		$divStyle =  $this->getParameterValue($options,'divStyle','');
 		$divCssClass =  $this->getParameterValue($options,'divCssClass','');
-		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery','');
 		$htmlContainer = "<div id='$divId-container' style='$divStyle' class='$divCssClass ii-graph-container'>
-			<div id='$divId' class='cytoscape-graph' style='width:100%; height:100%;' sparql-query='$escapedQuery'></div></div>";
+			<div id='$divId' class='cytoscape-graph' style='width:100%; height:100%;' sparql-query=''></div></div>";
 		return $htmlContainer;
 	}
 	
@@ -168,6 +167,7 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 	function generateLaunchScript($options){
 		$launchScript = "mw.loader.using( ['ext.SparqlResultFormat.main'], function () {
              mw.loader.using( 'ext.SparqlResultFormat.graph', function () {
+					  config.rootElement = spqlib.util.htmlDecode(config.rootElement);
                       spqlib.sparql2Graph(config);
               } );
         } );";
@@ -190,7 +190,7 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 		$divCssClass = $this->getParameterValue($options,'divCssClass',''); 
 		$nodeConfiguration = $this->getParameterValue($options,'nodeConfiguration','{}');
 		$edgeConfiguration = $this->getParameterValue($options,'edgeConfiguration','{}');
-		$rootElement = $this->getParameterValue($options,'rootElement','');
+		$rootElement = rawurlencode($this->getParameterValue($options,'rootElement',''));
 		$rootElementColor = $this->getParameterValue($options,'rootElementColor','');
 		$rootElementImage = $this->getParameterValue($options,'rootElementImage','');
 		$showLegend = $this->getParameterValue($options,'showLegend','true');
@@ -207,18 +207,21 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 		$edgeStyle = $this->getParameterValue($options,'edgeStyle','{}');
 		$labelLinkPattern = $this->getParameterValue($options,'labelLinkPattern',"$wgServer$wgScriptPath/index.php/{%s}");
 		$categoryLinkPattern = $this->getParameterValue($options,'categoryLinkPattern',"$wgServer$wgScriptPath/index.php/Category:{%s}");
-				
+		$escapedQuery = rawurlencode($this->getParameterValue($options,'sparqlEscapedQuery',''));
+		
 		$config = "var config = {};
 			config.divId = '$divId';
 			config.endpoint='$endpoint';
-			config.sparql=$('#$divId').attr('sparql-query');
+			//config.sparql=$('#$divId').attr('sparql-query');
+			config.sparql=decodeURIComponent(\"$escapedQuery\");
+			$('#$divId').attr('sparql-query',config.sparql);
 			config.queryPrefixes=prefixes;
 			config.basicAuthBase64String='$basicAuthBase64String';
 			config.spinnerImagePath='$spinnerImagePath';
 			config.divCssClass='$divCssClass';
 			config.nodeConfiguration=$nodeConfiguration;
 			config.edgeConfiguration=$edgeConfiguration;
-			config.rootElement='$rootElement';
+			config.rootElement=decodeURIComponent(\"$rootElement\");
 			config.rootElementColor='$rootElementColor';
 			config.rootElementImage='$rootElementImage';
 			config.showLegend='$showLegend';

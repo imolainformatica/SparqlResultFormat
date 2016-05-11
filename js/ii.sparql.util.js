@@ -23,6 +23,12 @@ spqlib.util = (function () {
 	  return $('<div/>').text(value).html();
 	};	
 	
+	my.htmlDecode = function (value){
+	  //create a in-memory div, set it's inner text(which jQuery automatically encodes)
+	  //then grab the encoded contents back out.  The div never exists on the page.
+	  return $('<div/>').html(value).text();
+	};	
+	
 	my.cutLongLabel = function (value,maxLength, maxWordLength){
 			if (!maxLength){
 				maxLength = 30; //sparqlLib.CONSTANTS.DEFAULT_LABEL_MAX_LENGTH;
