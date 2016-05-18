@@ -150,7 +150,6 @@ spqlib.graph = (function () {
 		var nodes = [];
 		var distinctNodes = [];
 		var distinctEdges = [];
-		var nodeIds = 1;
 		var colorConf = config.colorConf = createColorConf(config);
 		config.globalConfiguration=spqlib.graph.createGlobalCategoryConfiguration(config.nodeConfiguration,config.edgeConfiguration);
 		if (data.length == 0 && config.rootElement) {
@@ -182,29 +181,33 @@ spqlib.graph = (function () {
 				var color = mapTypeToColor(parentType, colorConf,
 						config.defaultNodeColor);
 				var node = createNode(parentID,parent,parentType,parentTypeURI, color, config.maxLabelLength, config.maxWordLength); 
-				distinctNodes[parentID] = parentID;
-				nodeIds++;
-				nodes.push({
-					data : node,
-					classes : "background"
-				});
+				distinctNodes[parentID] = node; //parentID;
+			} else {
+				//il nodo esiste già, dobbiamo aggiungere un'altra categoria alla lista?
+				var actualNode = distinctNodes[parentID];
+				if (actualNode.type.indexOf(parentType)==-1){ //il tipo non è tra quelli già presenti nel nodo
+					actualNode.type.push(parentType);
+					actualNode.typeURI.push(parentTypeURI);
+				}
 			}
 			if (!distinctNodes[childID]) {
 				var color = mapTypeToColor(childType, colorConf,
 						config.defaultNodeColor);
 				var node = createNode(childID,child,childType,childTypeURI, color, config.maxLabelLength, config.maxWordLength); 
 				
-				distinctNodes[childID] = childID;
-				nodeIds++;
-				nodes.push({
-					data : node,
-					classes : "background"
-				});
+				distinctNodes[childID] = node; //childID;
+			} else {
+				//il nodo esiste già, dobbiamo aggiungere un'altra categoria alla lista?
+				var actualNode = distinctNodes[childID];
+				if (actualNode.type.indexOf(childType)==-1){ //il tipo non è tra quelli già presenti nel nodo
+					actualNode.type.push(childType);
+					actualNode.typeURI.push(childTypeURI);
+				}
 			}
 			var edgeColor = mapTypeToColor(property, colorConf,
 					config.defaultEdgeColor);
 			
-			var edge = createEdge(distinctNodes[parentID], distinctNodes[childID],property,propertyURI,edgeColor);
+			var edge = createEdge(distinctNodes[parentID].id, distinctNodes[childID].id,property,propertyURI,edgeColor);
 			var edgeID = edge.source+"-"+edge.target+"-"+edge.uri+"-"+edge.property;
 			if (!distinctEdges[edgeID]){ //per evitare di aggiungere lo stesso arco più volte. capita quando il parent o il child hanno più valori di category
 				distinctEdges[edgeID] = edge;
@@ -213,6 +216,15 @@ spqlib.graph = (function () {
 				});
 			}	
 		}
+		//push all nodes
+		for (var key in distinctNodes) {
+			var n = distinctNodes[key];
+			nodes.push({
+				data : n,
+				classes : "background"
+			});
+		}
+		
 		drawGraph(nodes, edges, config);
 	}
 	
@@ -356,8 +368,10 @@ spqlib.graph = (function () {
 	function createNode(uri,label,type,typeURI, color, maxLength, maxWordLength) {
 		var node = new Object();
 		node.uri = node.id = uri;
-		node.type=type;
-		node.typeURI=typeURI;
+		node.type = [];
+		node.type.push(type);
+		node.typeURI = [];
+		node.typeURI.push(typeURI);
 		node.fullLabel = label;
 		node.label = spqlib.util.cutLongLabel(label,maxLength,maxWordLength);
 		node.color = color;
@@ -680,78 +694,6 @@ spqlib.graph = (function () {
 		return false;
 	}
 	
-	/*function renderExploreSection(props, nodeLabel, divId) {
-		var incomingHeader = "<div class='qtip-section'><b>Incoming connections</b></div>";
-		var outgoingHeader = "<div class='qtip-section'><b>Outgoing connections</b></div>";
-		var incomingLinks = "";
-		var outgoingLinks = "";
-		var output = "";
-		for (var i = 0; i < props.length; i++) {
-			if (props[i].property.direction == "IN") {
-				incomingLinks += renderExpandNodeLink(props[i], nodeLabel,
-						divId);
-			} else {
-				outgoingLinks += renderExpandNodeLink(props[i], nodeLabel,
-						divId);
-			}
-		}
-		if (incomingLinks != "") {
-			output += incomingHeader + incomingLinks;
-		}
-		if (outgoingLinks != "") {
-			output += outgoingHeader + outgoingLinks;
-		}
-		return output;
-	}*/
-	
-	/*function isNodeExpandedForRelation(graphId, elementId, propertyURI,
-			propertyDirection) {
-		var exp = spqlib.graph.graphImpl().getGraphElementData(graphId, elementId, "nodeExpansion");
-		var prop = "";
-		if (propertyDirection) {
-			if (propertyDirection == "IN") {
-				prop = "IN-" + propertyURI;
-			} else {
-				prop = "OUT-" + propertyURI;
-			}
-		} else {
-			prop = "OUT-" + propertyURI;
-		}
-		if (exp) {
-			if (exp[prop] == true) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}*/
-	
-
-	/*function renderExpandNodeLink(prop, nodeLabel, divId) {
-		var ICON_PLUS = "<span class='glyphicon glyphicon-plus-sign' style='margin-right:5px;'></span>";
-		var ICON_MINUS = "<span class='glyphicon glyphicon-minus-sign' style='margin-right:5px;'></span>";
-		var funcName = "";
-
-		var linkLabel = prop.property.label;
-		var icon = "";
-		if (isNodeExpandedForRelation(divId, nodeLabel, prop.property.uri,
-				prop.property.direction)) {
-			icon = ICON_MINUS;
-			funcName = "spqlib.graph.collapseNode";
-		} else {
-			icon = ICON_PLUS;
-			funcName = "spqlib.graph.expandNode";
-		}
-		linkLabel = icon + linkLabel;
-		linkLabel += "</a></br>";
-		var aLink = "<a href='#' onclick='" + funcName + "(\"" + divId
-				+ "\",\"" + nodeLabel + "\",\"" + prop.property.uri
-				+ "\",\"" + prop.property.direction + "\")' >";
-		return aLink + linkLabel;
-	}*/
-
 	function renderSingleCategoryLink(type,conf) {
 		var pattern = conf.categoryLinkPattern;
 		var link = spqlib.util.formatString(pattern,type);
@@ -767,7 +709,7 @@ spqlib.graph = (function () {
 			for (var i = 0; i < types.length; i++) {
 				out += renderSingleCategoryLink(types[i],conf);
 				if (i < types.length - 1) {
-					out += ",";
+					out += ", ";
 				}
 			}
 		} else {
