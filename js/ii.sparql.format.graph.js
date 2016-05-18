@@ -368,6 +368,8 @@ spqlib.graph = (function () {
 	function createNode(uri,label,type,typeURI, color, maxLength, maxWordLength) {
 		var node = new Object();
 		node.uri = node.id = uri;
+		node.mainType = type; //il tipo principale, quello che da lo stile al nodo (colore/immagine)
+		node.mainTypeURI = typeURI;
 		node.type = [];
 		node.type.push(type);
 		node.typeURI = [];

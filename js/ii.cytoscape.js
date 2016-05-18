@@ -181,10 +181,10 @@
 		**/
 		function assignBackgrounImageToNodesByCategory(graphId,obj,nodes){
 			if (!nodes){
-				var eles = g[graphId].elements('node[type="'
+				var eles = g[graphId].elements('node[mainType="'
 						+ obj.category + '"]');
 			} else {
-				var eles = nodes.nodes('node[type="'
+				var eles = nodes.nodes('node[mainType="'
 						+ obj.category + '"]');
 			}
 			for (var j = 0; j < eles.length; j++) {
