@@ -149,6 +149,7 @@ spqlib.graph = (function () {
 		var edges = [];
 		var nodes = [];
 		var distinctNodes = [];
+		var distinctEdges = [];
 		var nodeIds = 1;
 		var colorConf = config.colorConf = createColorConf(config);
 		config.globalConfiguration=spqlib.graph.createGlobalCategoryConfiguration(config.nodeConfiguration,config.edgeConfiguration);
@@ -202,10 +203,15 @@ spqlib.graph = (function () {
 			}
 			var edgeColor = mapTypeToColor(property, colorConf,
 					config.defaultEdgeColor);
+			
 			var edge = createEdge(distinctNodes[parentID], distinctNodes[childID],property,propertyURI,edgeColor);
-			edges.push({
-				data : edge
-			});
+			var edgeID = edge.source+"-"+edge.target+"-"+edge.uri+"-"+edge.property;
+			if (!distinctEdges[edgeID]){ //per evitare di aggiungere lo stesso arco più volte. capita quando il parent o il child hanno più valori di category
+				distinctEdges[edgeID] = edge;
+				edges.push({
+					data : edge
+				});
+			}	
 		}
 		drawGraph(nodes, edges, config);
 	}
