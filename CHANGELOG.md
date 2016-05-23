@@ -1,4 +1,9 @@
 # Changelog
+
+## 1.0.4
+23/05/2016
+aggiunta magic word smwSparqlDefaultGraph per leggere da template il valore della variabile $smwgSparqlDefaultGraph di semantic mediawiki
+
 ## 1.0.3
 18/05/2016
 sparql2graph: corretta gestione delle istanze appartenenti a più di una categoria

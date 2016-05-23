@@ -11,7 +11,8 @@ $magicWords['en'] = array(
 	'sparql2piechart' => array( 0, 'sparql2piechart' ),
 	'sparql2bubblechart' => array( 0, 'sparql2bubblechart' ),
 	'sparql2csv' => array( 0, 'sparql2csv' ),
-	'page2uri' => array( 0, 'page2uri' )
+	'page2uri' => array( 0, 'page2uri' ),
+	'smwSparqlDefaultGraph' => array( 0, 'smwSparqlDefaultGraph' )
 );
 
 

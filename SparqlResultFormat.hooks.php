@@ -18,6 +18,7 @@ class SparqlResultFormatHooks {
 		$parser->setFunctionHook( 'sparql2bubblechart', 'ExtSparqlResultFormat::sparql2bubblechart' );
 		$parser->setFunctionHook( 'sparql2csv', 'ExtSparqlResultFormat::sparql2csv' );
 		$parser->setFunctionHook( 'page2uri', 'ExtSparqlResultFormat::page2uri' );
+		$parser->setFunctionHook( 'smwSparqlDefaultGraph', 'ExtSparqlResultFormat::smwSparqlDefaultGraph' );
 
 		return true;
 	}

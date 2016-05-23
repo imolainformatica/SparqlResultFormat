@@ -141,6 +141,15 @@ class ExtSparqlResultFormat {
 		return $smwgNamespace.$esc;
 	}
 	
+	public static function smwSparqlDefaultGraph($parser){
+		global $smwgSparqlDefaultGraph;
+		if (isset($smwgSparqlDefaultGraph)){
+			return $smwgSparqlDefaultGraph;
+		}
+		return 'Error: no $smwgSparqlDefaultGraph variable definition';
+	}
+	
+	
 	public static function outputHtml(&$out, &$text){
 		$text = preg_replace_callback(
 			'/' . self::$markerPrefix . '-(\d+)' . self::$markerSuffix . '/S',
