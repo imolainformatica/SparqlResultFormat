@@ -53,6 +53,7 @@ spqlib.donutchart = (function () {
 	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql. 
 	 */
 	my.render = function (json, config) {
+		$("#"+config.divId).html("");
 		var head = json.head.vars;
 		var data = json.results.bindings;
 		if (!head || head.length<2){
