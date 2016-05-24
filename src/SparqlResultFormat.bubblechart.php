@@ -175,6 +175,7 @@ class SparqlResultFormatBubbleChart extends SparqlResultFormatBase implements Sp
 	}
 	
 	function generateLaunchScript($options){
+		$divId = $this->getParameterValue($options,'divId','');
 		$launchScript = "config.sparql=$('#$divId').attr('sparql-query');
 		mw.loader.using( ['ext.SparqlResultFormat.main'], function () {
              mw.loader.using( 'ext.SparqlResultFormat.bubblechart', function () {
