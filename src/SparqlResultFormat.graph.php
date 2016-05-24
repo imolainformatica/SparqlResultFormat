@@ -165,6 +165,7 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 	
 	
 	function generateLaunchScript($options){
+		$divId = $this->getParameterValue($options,'divId','');
 		$launchScript = "$('#$divId').attr('sparql-query',config.sparql);
 		mw.loader.using( ['ext.SparqlResultFormat.main'], function () {
              mw.loader.using( 'ext.SparqlResultFormat.graph', function () {

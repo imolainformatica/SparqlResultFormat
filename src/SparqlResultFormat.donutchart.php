@@ -76,6 +76,7 @@ class SparqlResultFormatDonutChart extends SparqlResultFormatBase implements Spa
 	
 	
 	function generateLaunchScript($options){
+		$divId = $this->getParameterValue($options,'divId','');
 		$launchScript = "config.sparql=$('#$divId').attr('sparql-query');
 		mw.loader.using( ['ext.SparqlResultFormat.main'], function () {
              mw.loader.using( 'ext.SparqlResultFormat.donutchart', function () {

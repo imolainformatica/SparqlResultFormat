@@ -162,6 +162,7 @@ class SparqlResultFormatBarChart extends SparqlResultFormatBase implements Sparq
 	
 	
 	function generateLaunchScript($options){
+		$divId = $this->getParameterValue($options,'divId','');
 		$launchScript = "
 					config.sparql=$('#$divId').attr('sparql-query');
 			mw.loader.using( ['ext.SparqlResultFormat.main'], function () {
