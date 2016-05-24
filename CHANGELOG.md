@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.5
+24/05/2016
+aggiunto loader e messaggio di errore in sparql2bubble e sparql2piechart
+cambiato modo di caricamento lato client in modo da essere compatibile con mediawiki 1.26
+
+
 ## 1.0.4
 23/05/2016
 aggiunta magic word smwSparqlDefaultGraph per leggere da template il valore della variabile $smwgSparqlDefaultGraph di semantic mediawiki
