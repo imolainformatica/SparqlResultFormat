@@ -166,16 +166,17 @@ class SparqlResultFormatBubbleChart extends SparqlResultFormatBase implements Sp
 	function generateJavascriptCode($options,$prefixes){
 		$config = $this->generateConfig($options);
 		$launch= $this->generateLaunchScript($options);
-		$output = "$(document).ready(function(){
-				$prefixes
+		$register = $this->jsRegisterFunction($launch);
+		$output = "$prefixes
 				$config
-				$launch
-			});";
+				$register				
+			";
 		return $output;	
 	}
 	
 	function generateLaunchScript($options){
-		$launchScript = "mw.loader.using( ['ext.SparqlResultFormat.main'], function () {
+		$launchScript = "config.sparql=$('#$divId').attr('sparql-query');
+		mw.loader.using( ['ext.SparqlResultFormat.main'], function () {
              mw.loader.using( 'ext.SparqlResultFormat.bubblechart', function () {
                       spqlib.sparql2BubbleChart(config);
               } );
@@ -206,7 +207,6 @@ class SparqlResultFormatBubbleChart extends SparqlResultFormatBase implements Sp
 		$config = "var config = {};
 			config.divId = '$divId';
 			config.endpoint='$endpoint';
-			config.sparql=$('#$divId').attr('sparql-query');
 			config.queryPrefixes=prefixes;
 			config.basicAuthBase64String='$basicAuthBase64String';
 			config.spinnerImagePath='$spinnerImagePath';

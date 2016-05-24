@@ -7,7 +7,7 @@ spqlib.piechart = (function () {
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
 		spqlib.util.parseExtraOptions(config);
-		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.piechart.render, config);
+		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.piechart.render, config,spqlib.piechart.preQuery,spqlib.piechart.failQuery);
 	}
 	
 	
@@ -19,6 +19,21 @@ spqlib.piechart = (function () {
 	
 	my.exportAsImage = function(){
 		
+	}
+	
+	my.preQuery = function(configuration){
+		$("#"+configuration.divId+"-legend").hide();
+		if (configuration.spinnerImagePath){
+			$("#"+configuration.divId).html("<div class='loader'><img src='"+configuration.spinnerImagePath+"' style='vertical-align:middle;'></div>");
+		} else {
+			$("#"+configuration.divId).html("Loading...");
+		}
+	}
+	
+	my.failQuery = function(configuration,jqXHR,textStatus){
+		$("#"+configuration.divId).html("");
+		$("#"+configuration.divId).html(spqlib.util.generateErrorBox(textStatus));
+		throw new Error("Error invoking sparql endpoint "+textStatus+" "+JSON.stringify(jqXHR));
 	}
 	
 	my.toggleFullScreen = function(graphId){

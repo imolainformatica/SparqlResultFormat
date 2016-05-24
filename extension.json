@@ -21,6 +21,9 @@
 		]
 	},
 	"Hooks": {
+		"BeforePageDisplay": [
+			"SparqlResultFormatHooks::addHTMLHeader"
+		],
 		"ParserFirstCallInit": [
 			"SparqlResultFormatHooks::onParserFirstCallInit"
 		],
@@ -29,6 +32,11 @@
 		]
 	},
 	"ResourceModules": {
+		"ext.SparqlResultFormat.start": {
+			"scripts": [
+				"js/ii.sparql.start.js"
+			]
+		},
 		"ext.SparqlResultFormat.main": {
 			"scripts": [
 				"js/ii.sparql.main.js",

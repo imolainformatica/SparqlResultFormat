@@ -26,4 +26,9 @@ class SparqlResultFormatHooks {
 	public static function outputHtml(&$out, &$text){
 		return ExtSparqlResultFormat::outputHtml($out, $text);
 	}
+	
+	public static function addHTMLHeader(&$out ){
+		$out->addModules( 'ext.SparqlResultFormat.start' );
+		return true;
+	}
 }

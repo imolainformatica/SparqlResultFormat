@@ -21,7 +21,7 @@ spqlib.table = (function () {
 	
 	my.failQuery = function(configuration,jqXHR,textStatus){
 		$("#"+configuration.divId).html("");
-		$("#"+configuration.divId).html(generateErrorBox(textStatus));
+		$("#"+configuration.divId).html(spqlib.util.generateErrorBox(textStatus));
 		throw new Error("Error invoking sparql endpoint "+textStatus+" "+JSON.stringify(jqXHR));
 	}
 	

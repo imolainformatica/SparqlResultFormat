@@ -79,23 +79,25 @@ class SparqlResultFormatCSV extends SparqlResultFormatBase implements SparqlForm
 		$separator = $this->getParameterValue($options,'separator',self::DEFAULT_SEPARATOR); 
 		
 		$js = "
-			mw.loader.load('ext.SparqlResultFormat.main')
-			mw.loader.load( 'ext.SparqlResultFormat.csv');
+
 			function downloadCSV(){
 				$prefixes
+				mw.loader.using(['ext.SparqlResultFormat.main'],function(){
+					mw.loader.using( ['ext.SparqlResultFormat.csv'],function(){
+						var config = {};
+						config.divId = '$divId';
+						config.endpoint='$endpoint';
+						config.sparql=$('#$divId').attr('sparql-query');
+						config.queryPrefixes=prefixes;
+						config.basicAuthBase64String='$basicAuthBase64String';
+						config.headerMapping = $headerMapping;
+						config.filename = '$filename';
+						config.separator = '$separator';
+						spqlib.sparql2CSV(config);
+						
+					});
+				});
 				
-				var config = {};
-				config.divId = '$divId';
-				config.endpoint='$endpoint';
-				config.sparql=$('#$divId').attr('sparql-query');
-				config.queryPrefixes=prefixes;
-				config.basicAuthBase64String='$basicAuthBase64String';
-				config.headerMapping = $headerMapping;
-				config.filename = '$filename';
-				config.separator = '$separator';
-				
-				
-				spqlib.sparql2CSV(config);
 			}";
 		return $js;
 	}

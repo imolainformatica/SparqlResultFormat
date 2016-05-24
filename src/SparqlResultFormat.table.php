@@ -91,17 +91,18 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 	function generateJavascriptCode($options,$prefixes){
 		$config = $this->generateConfig($options);
 		$launch= $this->generateLaunchScript($options);
-		$output = "$(document).ready(function(){
-				$prefixes
+		$register = $this->jsRegisterFunction($launch);
+		$output = "$prefixes
 				$config
-				$launch
-			});";
+				$register				
+			";
 		return $output;	
 	}
 	
 	function generateLaunchScript($options){
 		$divId = $this->getParameterValue($options,'divId','');
-		$launchScript = "mw.loader.using( ['ext.SparqlResultFormat.main','jquery.tablesorter'], function () {
+		$launchScript = "config.sparql=$('#$divId').attr('sparql-query');
+		mw.loader.using( ['ext.SparqlResultFormat.main','jquery.tablesorter'], function () {
              mw.loader.using( 'ext.SparqlResultFormat.table', function () {
                       spqlib.sparql2Table(config);
               } );
@@ -152,7 +153,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 			config.cssOddTdClass='$cssOddTdClass';
 			config.noResultMessage='$noResultMessage';
 			config.endpoint='$endpoint';
-			config.sparql=$('#$divId').attr('sparql-query');
+			//config.sparql=$('#$divId').attr('sparql-query');
 			config.queryPrefixes=prefixes;
 			config.basicAuthBase64String='$basicAuthBase64String';
 			config.linkBasePath='$linkBasePath';

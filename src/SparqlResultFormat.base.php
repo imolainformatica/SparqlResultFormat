@@ -93,6 +93,19 @@ class SparqlResultFormatBase {
 			}
 		}
 	}
+	
+	protected function jsRegisterFunction($launch){
+		$out = "if (!window.sparqlResultFormatsElements){
+					window.sparqlResultFormatsElements = [];
+				}
+				window.sparqlResultFormatsElements.push({config:config,
+					start:function(config){
+						$launch
+					}
+				});		
+				";
+		return $out;		
+	}
 
 }
 ?>

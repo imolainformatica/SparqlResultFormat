@@ -155,17 +155,18 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 	function generateJavascriptCode($options,$prefixes){
 		$config = $this->generateConfig($options);
 		$launch= $this->generateLaunchScript($options);
-		$output = "$(document).ready(function(){
-				$prefixes
+		$register = $this->jsRegisterFunction($launch);
+		$output = "$prefixes
 				$config
-				$launch
-			});";
+				$register				
+			";
 		return $output;	
 	}
 	
 	
 	function generateLaunchScript($options){
-		$launchScript = "mw.loader.using( ['ext.SparqlResultFormat.main'], function () {
+		$launchScript = "$('#$divId').attr('sparql-query',config.sparql);
+		mw.loader.using( ['ext.SparqlResultFormat.main'], function () {
              mw.loader.using( 'ext.SparqlResultFormat.graph', function () {
 					  config.rootElement = spqlib.util.htmlDecode(config.rootElement);
                       spqlib.sparql2Graph(config);
@@ -212,9 +213,7 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 		$config = "var config = {};
 			config.divId = '$divId';
 			config.endpoint='$endpoint';
-			//config.sparql=$('#$divId').attr('sparql-query');
 			config.sparql=decodeURIComponent(\"$escapedQuery\");
-			$('#$divId').attr('sparql-query',config.sparql);
 			config.queryPrefixes=prefixes;
 			config.basicAuthBase64String='$basicAuthBase64String';
 			config.spinnerImagePath='$spinnerImagePath';
