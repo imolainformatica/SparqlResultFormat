@@ -102,13 +102,14 @@ spqlib.table = (function () {
 			var filename = config.csvFileName || 'export.csv';
 			var label = config.csvLinkLabel || 'Export as CSV';
 			var csvFormAction = config.csvFormAction;
+			var formId = config.divId+"-form";
 			if (!csvFormAction){
 				throw ("csvFormAction vuota -> l'export pdf non funzionerà");
 			}
 			var tableContainer = $("#"+config.divId).find("table");
 			var exporter = $("<span class='export-table-csv' table-container-id='"+config.divId+"'> </span>")
 				.html("<a class='export'>"+label+"</a> \
-					<form action='"+csvFormAction+"' method ='post' > \
+					<form action='"+csvFormAction+"' method ='post' id='"+formId+"'> \
 					<input type='hidden' id='csv_text' name='csv_text' /> \
 					<input type='hidden' id='csv_file_name' name='csv_file_name' value='"+filename+"'/> \
 					</form>");
@@ -117,7 +118,7 @@ spqlib.table = (function () {
 				var divId = $(event.currentTarget).attr("table-container-id");
 				var table = $("#"+divId).find("table");
 				var csv = spqlib.util.exportTableToCSV(table);
-				var form = table.next().find("form");
+				var form = $("#"+formId);
 				form.find("input[id='csv_text']").val(csv);
 				form.submit();
 				
