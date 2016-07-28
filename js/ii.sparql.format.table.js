@@ -96,7 +96,7 @@ spqlib.table = (function () {
 		tbody+="</tbody>";
 		var table = "<table class='"+config.tableClass+"'>"+thead+tbody+"</table>";
 		$("#"+config.divId).html(table);
-		var csvExport = config.csvExport || false;
+		var csvExport = config.csvExport == "true" ? true : false;
 		if (spqlib.util.exportTableToCSV && csvExport){
 			//aggiungo il link per l'export csv delle pagine
 			var filename = config.csvFileName || 'export.csv';
@@ -112,7 +112,7 @@ spqlib.table = (function () {
 					<input type='hidden' id='csv_text' name='csv_text' /> \
 					<input type='hidden' id='csv_file_name' name='csv_file_name' value='"+filename+"'/> \
 					</form>");
-			exporter.insertAfter(tableContainer);
+			exporter.insertBefore(tableContainer);
 			exporter.on("click",function(event){
 				var divId = $(event.currentTarget).attr("table-container-id");
 				var table = $("#"+divId).find("table");

@@ -260,6 +260,9 @@
 						zoom : 0.9,
 						minZoom : config.minZoom,
 						maxZoom : config.maxZoom,
+						/*hideEdgesOnViewport: true,
+						hideLabelsOnViewport: true,
+						textureOnViewport: true,*/
 						wheelSensitivity : 0.1,
 						pan : {
 							x : 0,

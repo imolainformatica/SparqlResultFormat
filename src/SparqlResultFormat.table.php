@@ -157,7 +157,12 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 			config.queryPrefixes=prefixes;
 			config.basicAuthBase64String='$basicAuthBase64String';
 			config.linkBasePath='$linkBasePath';
+			config.csvExport='$csvExport';
+			config.csvFileName='$csvFileName';
+			config.csvLinkLabel='$csvLinkLabel';
+			config.csvFormAction='$csvDownloadAction';
 			config.spinnerImagePath='$spinnerImagePath';";
+
 		return $config;
 	}
 	

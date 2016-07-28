@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.6
+28/07/2016
+corretto bug di esportazione csv in magic word sparql2table
+
+
 ## 1.0.5
 24/05/2016
 aggiunto loader e messaggio di errore in sparql2bubble e sparql2piechart
