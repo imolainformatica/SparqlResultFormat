@@ -40,7 +40,7 @@ class SparqlResultFormatBase {
 		}
 		
 		if (isset($options[$paramName])){
-			return $options[$paramName];
+			return html_entity_decode ($options[$paramName],ENT_QUOTES	); 
 		} else {
 			//parametro non passato
 			//era obbligatorio

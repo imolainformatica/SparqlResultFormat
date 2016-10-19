@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.7
+17/10/2016
+[https://redmine.imolinfo.it/redmine/issues/2086] corretto bug per gestire correttamente i nomi di pagina contenenti degli apici singoli
+
+
 ## 1.0.6
 28/07/2016
 corretto bug di esportazione csv in magic word sparql2table
