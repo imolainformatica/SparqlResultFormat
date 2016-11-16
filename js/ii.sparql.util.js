@@ -106,10 +106,12 @@ spqlib.util = (function () {
 			if (preQueryCallback && typeof preQueryCallback=="function"){
 				preQueryCallback(configuration);
 			}
+			var queryTimeout=configuration.queryTimeout || 20000;
 			var basicAuthBase64String = configuration.basicAuthBase64String || false; 
         	var jqxhr = $.ajax({
 					url:endpoint,
 					type:'POST',
+					timeout: queryTimeout,
 					beforeSend: function(xhr) {
 						if (basicAuthBase64String){
 							xhr.setRequestHeader('Authorization', 'Basic ' + basicAuthBase64String);
@@ -120,6 +122,13 @@ spqlib.util = (function () {
         	}).done(function(json) {
 				successCallback(json, configuration,caller);
         	}).fail(function(jqXHR, textStatus, errorThrown) {
+				if (textStatus==="timeout"){
+					textStatus="Timeout error - cannot load all the graph"
+					//nascondo l'eventuale progress bar
+					var idContainer = configuration.divId+"-container";
+					var progressBar = $( "#"+idContainer).next();
+					progressBar.hide();
+				}
 				if (failCallback && typeof failCallback=="function"){
 					failCallback(configuration,jqXHR,textStatus);
 				}

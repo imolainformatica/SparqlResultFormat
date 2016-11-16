@@ -18,6 +18,11 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 					"mandatory" => true,
 					"description" => wfMessage("sprf.param.sparqlEscapedQuery")
 				),
+			"queryTimeout" => array(
+					"mandatory" => false,
+					"description" => wfMessage("sprf.param.queryTimeout"),
+					"default" => 20000
+				),
 			"divStyle" => array(
 					"mandatory" => false,
 					"description" => wfMessage("sprf.param.divStyle")
@@ -183,7 +188,8 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 		$endpointIndex = $this->getParameterValue($options,'sparqlEndpoint','');
 		$endpointData = $this->getSparqlEndpointByName($endpointIndex);
 		$endpoint = $endpointData['url'];
-		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString($endpointData);			
+		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString($endpointData);	
+		$queryTimeout = $this->getParameterValue($options,'queryTimeout',20000);
 		$divId = $this->getParameterValue($options,'divId','');
 		$divStyle = $this->getParameterValue($options,'divStyle','');
 		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery','');
@@ -216,6 +222,7 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 			config.endpoint='$endpoint';
 			config.sparql=decodeURIComponent(\"$escapedQuery\");
 			config.queryPrefixes=prefixes;
+			config.queryTimeout=$queryTimeout;
 			config.basicAuthBase64String='$basicAuthBase64String';
 			config.spinnerImagePath='$spinnerImagePath';
 			config.divCssClass='$divCssClass';

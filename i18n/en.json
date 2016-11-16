@@ -145,7 +145,8 @@
 	"sprf.param.categoryLinkPattern":"Text pattern to generate the link of node category in tooltip. Refer to node category with placeholder {%s}",
 	"sprf.param.csvExport":"true/false. If true, generates a link to download the content of the table as csv file",
 	"sprf.param.csvFileName":"The name of the output csv file",
-	"sprf.param.csvLinkLabel":"Label of the link to download the csv"
+	"sprf.param.csvLinkLabel":"Label of the link to download the csv",
+	"sprf.param.queryTimeout":"Maximum time for execution of a query (in milliseconds)"
 
 	
 }

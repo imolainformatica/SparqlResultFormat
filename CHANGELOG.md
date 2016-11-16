@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.8
+16/11/2016
+[https://redmine.imolinfo.it/redmine/issues/2198] gestione timeout in esecuzione query sparql per sparql2graph
+
+
 ## 1.0.7
 17/10/2016
 [https://redmine.imolinfo.it/redmine/issues/2086] corretto bug per gestire correttamente i nomi di pagina contenenti degli apici singoli
