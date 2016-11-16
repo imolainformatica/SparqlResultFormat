@@ -3,6 +3,7 @@
 ## 1.0.8
 16/11/2016
 [https://redmine.imolinfo.it/redmine/issues/2198] gestione timeout in esecuzione query sparql per sparql2graph
+[https://redmine.imolinfo.it/redmine/issues/2203] soglia sul numero massimo di nodi visualizzabili in sparql2graph
 
 
 ## 1.0.7
