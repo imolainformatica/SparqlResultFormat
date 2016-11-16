@@ -140,12 +140,12 @@ spqlib.graph = (function () {
 	
 	
 	my.render = function (json, config) {
-		
-		$("#"+config.divId+"-loader").html("Rendering...");
-		$("#"+config.divId+"-container").find(".ii-graph-legend-actions-list").show();
-		$("#"+config.divId+"-legend-container").attr("style","");
 		var head = json.head.vars;
 		var data = json.results.bindings;
+		$("#"+config.divId+"-container").find(".ii-graph-legend-actions-list").show();
+		$("#"+config.divId+"-legend-container").attr("style","");
+		$("#"+config.divId+"-loader").html("Rendering...");
+
 		var edges = [];
 		var nodes = [];
 		var distinctNodes = [];
@@ -224,7 +224,12 @@ spqlib.graph = (function () {
 				classes : "background"
 			});
 		}
-		
+		var maxNodes = config.maxNumNodes || 100;
+		if (nodes.length>maxNodes){
+			$("#"+config.divId+"-loader").html("");
+			$("#"+config.divId+"-loader").html(generateErrorBox("Error: too much nodes to draw on the graph"));
+			throw "Errore troppi nodi";			
+		}
 		drawGraph(nodes, edges, config);
 	}
 	

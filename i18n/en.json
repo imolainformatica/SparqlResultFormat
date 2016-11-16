@@ -146,7 +146,8 @@
 	"sprf.param.csvExport":"true/false. If true, generates a link to download the content of the table as csv file",
 	"sprf.param.csvFileName":"The name of the output csv file",
 	"sprf.param.csvLinkLabel":"Label of the link to download the csv",
-	"sprf.param.queryTimeout":"Maximum time for execution of a query (in milliseconds)"
+	"sprf.param.queryTimeout":"Maximum time for execution of a query (in milliseconds)",
+	"sprf.param.maxNumNodes":"Maximum number of nodes to be drawn. If the sparql query returns more records than this parameter no graph will be shown"
 
 	
 }

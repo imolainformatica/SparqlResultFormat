@@ -140,6 +140,12 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 					"mandatory" => false,
 					"description" => wfMessage("sprf.param.categoryLinkPattern"),
 					"example" => ""
+				),
+				"maxNumNodes" => array(
+					"mandatory" => false,
+					"description" => wfMessage("sprf.param.maxNumNodes"),
+					"example" => "",
+					"default" => 200
 				)
 	   ); 
 		$this->queryStructure = wfMessage("sprf.format.graph.query.structure").wfMessage("sprf.format.graph.query.structure.example")
@@ -178,18 +184,26 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
                       spqlib.sparql2Graph(config);
               } );
         } );";
-		return $launchScript;
+		return $launchScript;		
 	}
 	
 	
 	function generateConfig($options){
 		global $wgScriptPath;
 		global $wgServer;
+		global $wgSrfMaxNumNodes;
+		if (!isset($wgSrfMaxNumNodes)){
+			$wgSrfMaxNumNodes=200;
+		}
+		global $wgSrfQueryTimeout;
+		if (!isset($wgSrfQueryTimeout)){
+			$wgSrfQueryTimeout=20000;
+		}
 		$endpointIndex = $this->getParameterValue($options,'sparqlEndpoint','');
 		$endpointData = $this->getSparqlEndpointByName($endpointIndex);
 		$endpoint = $endpointData['url'];
 		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString($endpointData);	
-		$queryTimeout = $this->getParameterValue($options,'queryTimeout',20000);
+		$queryTimeout = $this->getParameterValue($options,'queryTimeout',$wgSrfQueryTimeout);
 		$divId = $this->getParameterValue($options,'divId','');
 		$divStyle = $this->getParameterValue($options,'divStyle','');
 		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery','');
@@ -216,6 +230,7 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 		$labelLinkPattern = $this->getParameterValue($options,'labelLinkPattern',"$wgServer$wgScriptPath/index.php/{%s}");
 		$categoryLinkPattern = $this->getParameterValue($options,'categoryLinkPattern',"$wgServer$wgScriptPath/index.php/Category:{%s}");
 		$escapedQuery = rawurlencode($this->getParameterValue($options,'sparqlEscapedQuery',''));
+		$maxNumNodes =  $this->getParameterValue($options,'maxNumNodes',$wgSrfMaxNumNodes);
 		
 		$config = "var config = {};
 			config.divId = '$divId';
@@ -244,7 +259,9 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 			config.nodeStyle=$nodeStyle;
 			config.edgeStyle=$edgeStyle;
 			config.labelLinkPattern='$labelLinkPattern';
-			config.categoryLinkPattern='$categoryLinkPattern';";	
+			config.categoryLinkPattern='$categoryLinkPattern';
+			config.maxNumNodes=$maxNumNodes;
+			";	
 			
 		return $config;
 	}	
