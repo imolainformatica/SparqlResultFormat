@@ -84,7 +84,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 		$divStyle = $this->getParameterValue($options,'divStyle',''); 
 		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery','');
 		$htmlContainer = "<div id='$divId-container' class='table-container'>
-			<div id='$divId' style='$divStyle' sparql-query='$escapedQuery'></div></div>";
+			<div id='$divId' style='$divStyle' sparql-query='".rawurlencode($escapedQuery)."'></div></div>";
 		return $htmlContainer;
 	}
 	
@@ -101,7 +101,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 	
 	function generateLaunchScript($options){
 		$divId = $this->getParameterValue($options,'divId','');
-		$launchScript = "config.sparql=$('#$divId').attr('sparql-query');
+		$launchScript = "config.sparql=decodeURIComponent($('#$divId').attr('sparql-query'));
 		mw.loader.using( ['ext.SparqlResultFormat.main','jquery.tablesorter'], function () {
              mw.loader.using( 'ext.SparqlResultFormat.table', function () {
                       spqlib.sparql2Table(config);

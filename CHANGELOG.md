@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.9
+18/01/2017
+[https://redmine.imolinfo.it/redmine/issues/2428] sparql2table - gestione apici singoli in query
+
+
 ## 1.0.8
 16/11/2016
 [https://redmine.imolinfo.it/redmine/issues/2198] gestione timeout in esecuzione query sparql per sparql2graph
