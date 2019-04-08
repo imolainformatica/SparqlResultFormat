@@ -152,6 +152,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 			config.cssEvenTdClass='$cssEvenTdClass';
 			config.cssOddTdClass='$cssOddTdClass';
 			config.noResultMessage='$noResultMessage';
+			config.endpointName='$endpointIndex';
 			config.endpoint='$endpoint';
 			//config.sparql=$('#$divId').attr('sparql-query');
 			config.queryPrefixes=prefixes;

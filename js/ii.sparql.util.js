@@ -97,7 +97,7 @@ spqlib.util = (function () {
 		 * effettua la chiamata asincrona all'endpoint sparql. al termine viene
 		 * richiamata la funzione di callback passata come parametro
 		 */
-        my.doQuery = function query(endpoint, sparql, successCallback, configuration,preQueryCallback,failCallback,caller) {
+        my.doQuery = function query(endpointName, sparql, successCallback, configuration,preQueryCallback,failCallback,caller) {
         	var mime = "application/sparql-results+json";
 			/*if (configuration.format && configuration.format=="csv"){
 				mime = "text/csv";
@@ -109,7 +109,8 @@ spqlib.util = (function () {
 			var queryTimeout=configuration.queryTimeout || 20000;
 			var basicAuthBase64String = configuration.basicAuthBase64String || false; 
         	var jqxhr = $.ajax({
-					url:endpoint,
+					/*url:endpoint,*/
+					url:"/extensions/SparqlResultFormat/api/query/index.php",
 					type:'POST',
 					timeout: queryTimeout,
 					beforeSend: function(xhr) {
@@ -118,7 +119,7 @@ spqlib.util = (function () {
 						}
 						xhr.setRequestHeader("Accept", mime);
 					},
-					data:{query:sparql}
+					data:{endpointName:endpointName,query:sparql}
         	}).done(function(json) {
 				successCallback(json, configuration,caller);
         	}).fail(function(jqXHR, textStatus, errorThrown) {

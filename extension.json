@@ -112,6 +112,11 @@
 				"js/libs/cytoscape-qtip.js"],
 			"dependencies":[],
 			"styles":["css/ii.style.css","css/ii.style.graph.css"]
+		},
+		"ext.jquery.qtip":{
+			"scripts":["js/libs/qtip/jquery.qtip.js"],
+			"dependencies":[],
+			"styles":["js/libs/qtip/jquery.qtip.css"]
 		}
 	},
 	"ResourceFileModulePaths": {
