@@ -44,7 +44,7 @@
 				"js/ii.sparql.util.js",
 				"js/libs/sparqljs/sparqljs-browser.js"
 			],
-			"dependencies": ["ext.jquery.qtip"],
+			"dependencies": ["ext.jquery.qtip", "ext.screenfull.js", "ext.fontawesome"],
 			"styles":["css/ii.style.treemap.css"]
 		},
 		"ext.SparqlResultFormat.graph": {
@@ -99,17 +99,17 @@
 			"styles":[]
 		},
 		"ext.SparqlResultFormat.treemap": {
-			"scripts":["js/ii.sparql.format.treemap.js","js/ii.d3.js","js/libs/d3.v3.min.js"],
+			"scripts":["js/ii.sparql.format.treemap.js","js/ii.d3.js","js/libs/d3/d3.v3.min.js"],
 			"dependencies":[],
 			"styles":[]
 		},
 		"ext.SparqlResultFormat.formats.graph": {
 			"scripts":["js/ii.sparql.format.graph.js",
 				"js/ii.cytoscape.js",
-				"js/libs/cytoscape.js",
-				"js/libs/dagre.min.js",
-				"js/libs/cytoscape-dagre.js",
-				"js/libs/cytoscape-qtip.js"],
+				"js/libs/cytoscape/cytoscape.js",
+				"js/libs/cytoscape/dagre.min.js",
+				"js/libs/cytoscape/cytoscape-dagre.js",
+				"js/libs/cytoscape/cytoscape-qtip.js"],
 			"dependencies":[],
 			"styles":["css/ii.style.css","css/ii.style.graph.css"]
 		},
@@ -117,6 +117,16 @@
 			"scripts":["js/libs/qtip/jquery.qtip.js"],
 			"dependencies":[],
 			"styles":["js/libs/qtip/jquery.qtip.css"]
+		},
+		"ext.screenfull.js":{
+			"scripts":["js/libs/screenfull.js/screenfull.min.js"],
+			"dependencies":[],
+			"styles":[]
+		},
+		"ext.fontawesome":{
+			"scripts":[],
+			"dependencies":[],
+			"styles":["css/libs/fontawesome/css/all.min.css"]
 		}
 	},
 	"ResourceFileModulePaths": {
