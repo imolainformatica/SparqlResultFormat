@@ -7,7 +7,7 @@ spqlib.donutchart = (function () {
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
 		spqlib.util.parseExtraOptions(config);
-		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.donutchart.render, config,spqlib.donutchart.preQuery,spqlib.donutchart.failQuery);
+		this.util.doQuery(config.endpointName, config.sparqlWithPrefixes, spqlib.donutchart.render, config,spqlib.donutchart.preQuery,spqlib.donutchart.failQuery);
 	}
 	
 	

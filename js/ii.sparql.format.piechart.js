@@ -7,7 +7,7 @@ spqlib.piechart = (function () {
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
 		spqlib.util.parseExtraOptions(config);
-		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.piechart.render, config,spqlib.piechart.preQuery,spqlib.piechart.failQuery);
+		this.util.doQuery(config.endpointName, config.sparqlWithPrefixes, spqlib.piechart.render, config,spqlib.piechart.preQuery,spqlib.piechart.failQuery);
 	}
 	
 	

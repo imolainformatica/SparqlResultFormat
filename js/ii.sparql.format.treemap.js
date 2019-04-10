@@ -7,7 +7,7 @@ spqlib.treemap = (function () {
 		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
-		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.treemap.render, config,spqlib.treemap.preQuery,spqlib.treemap.failQuery);
+		this.util.doQuery(config.endpointName, config.sparqlWithPrefixes, spqlib.treemap.render, config,spqlib.treemap.preQuery,spqlib.treemap.failQuery);
 	}
 	
 	var my = { };

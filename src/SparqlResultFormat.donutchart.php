@@ -112,8 +112,8 @@ class SparqlResultFormatDonutChart extends SparqlResultFormatBase implements Spa
 		$config = "var config = {};
 			config.divId = '$divId';
 			config.endpoint='$endpoint';
+			config.endpointName='$endpointIndex';
 			config.queryPrefixes=prefixes;
-			config.basicAuthBase64String='$basicAuthBase64String';
 			config.spinnerImagePath='$spinnerImagePath';
 			config.divCssClass='$divCssClass';
 			config.divCssClassFullScreen='$divCssClassFullScreen';

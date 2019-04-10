@@ -55,7 +55,6 @@ try {
 	$ch = curl_init($sparqlEndpoint);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-	curl_setopt($ch, CURLOPT_VERBOSE, true);
 	if (isset($user) && isset($password)){
 		curl_setopt($ch, CURLOPT_USERPWD, "$user:$password");
 	}

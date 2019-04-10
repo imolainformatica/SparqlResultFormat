@@ -10,6 +10,7 @@
 	"descriptionmsg": "sparqlresultformatdesc",
 	"description": "Permette di effettuare query sparql a endpoint e di visualizzarle in diversi formati",
 	"type": "parserhook",
+	"license-name":"MIT",
 	"config": {
 		"SparqlEndpointDefinition" : {}
 	},
