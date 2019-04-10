@@ -64,8 +64,38 @@ class SparqlResultFormatCSV extends SparqlResultFormatBase implements SparqlForm
 	   $this->queryStructure =	wfMessage("sprf.format.csv.query.structure");
     }
 	
+	function generateLaunchScript($options){
+		$divId = $this->getParameterValue($options,'divId','');
+		$launchScript = "
+		
+					  //config.rootElement = spqlib.util.htmlDecode(config.rootElement);
+                      //spqlib.sparql2CSV(config);			  
+						  $('#$divId-click').click(function() {
+							  mw.loader.using( ['ext.SparqlResultFormat.main'], function () {
+									mw.loader.using( 'ext.SparqlResultFormat.csv', function () {	
+										config.sparql=$('#$divId').attr('sparql-query');								
+										spqlib.sparql2CSV(config)
+									});
+								} );
+							} );
+              ";
+		return $launchScript;	
+		
+	}
+	
 	
 	function generateJavascriptCode($options,$prefixes){
+		$launch= $this->generateLaunchScript($options);
+		$config = $this->generateConfig($options);
+		$register = $this->jsRegisterFunction($launch);
+		$output = "$prefixes
+				$config
+				$register				
+			";
+		return $output;	
+	}
+	
+	function generateConfig($options){
 		global $wgScriptPath;
 		$endpointIndex = $this->getParameterValue($options,'sparqlEndpoint','');
 		$endpointData = $this->getSparqlEndpointByName($endpointIndex);
@@ -77,29 +107,15 @@ class SparqlResultFormatCSV extends SparqlResultFormatBase implements SparqlForm
 		$headerMapping = $this->getParameterValue($options,'headerMapping','{}'); 
 		$filename = $this->getParameterValue($options,'filename',self::DEFAULT_FILENAME); 
 		$separator = $this->getParameterValue($options,'separator',self::DEFAULT_SEPARATOR); 
-		
-		$js = "
-
-			function downloadCSV(){
-				$prefixes
-				mw.loader.using(['ext.SparqlResultFormat.main'],function(){
-					mw.loader.using( ['ext.SparqlResultFormat.csv'],function(){
-						var config = {};
+		$config = "var config = {};
 						config.divId = '$divId';
 						config.endpoint='$endpoint';
-						config.sparql=$('#$divId').attr('sparql-query');
+						config.endpointName='$endpointIndex';
 						config.queryPrefixes=prefixes;
-						config.basicAuthBase64String='$basicAuthBase64String';
 						config.headerMapping = $headerMapping;
 						config.filename = '$filename';
-						config.separator = '$separator';
-						spqlib.sparql2CSV(config);
-						
-					});
-				});
-				
-			}";
-		return $js;
+						config.separator = '$separator';";
+		return $config;
 	}
 	
 	function generateHtmlContainerCode($options){
@@ -110,22 +126,21 @@ class SparqlResultFormatCSV extends SparqlResultFormatBase implements SparqlForm
 		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery',''); 
 		$linkButtonCSSClass = $this->getParameterValue($options,'linkButtonCSSClass','');
 		$linkButtonLabel = $this->getParameterValue($options,'linkButtonLabel','');
-		$csvDownloadAction = "$wgScriptPath/extensions/SparqlResultFormat/getCSV.php";
+		$csvDownloadAction = "$wgScriptPath/extensions/SparqlResultFormat/api/download/index.php";
 		$label = $this->getParameterValue($options,'label',self::DEFAULT_LABEL);
 		
 		$formHtml = "<form id='$divId-form' action=\"$csvDownloadAction\" method='POST'>
 			<input type='hidden' name='csv_text' value=''>
 			<input type='hidden' name='csv_file_name' value=''>";
 		if (empty($linkButtonLabel)){
-			$formHtml.="<a onclick='javascript:downloadCSV()'>$label</a>";
+			$formHtml.="<a id='$divId-click'>$label</a>";
 		} else {
-			$formHtml.="<button class='$linkButtonCSSClass' type='button' onclick='javascript:downloadCSV()'>$linkButtonLabel</button>";
+			$formHtml.="<button id='$divId-click' class='$linkButtonCSSClass' type='button' >$linkButtonLabel</button>";
 		}
-		$formHtml.="</form>";
+		$formHtml.="<span id='$divId-loader' class='loader' style='display:none;'><img src='$wgScriptPath/extensions/SparqlResultFormat/img/spinner.gif'/></span><span id='$divId-error-status' class='csv-error-status' style='display:none;'><i class='fas fa-exclamation-triangle' style='color: #e60606d1;'></i></span></form>";
 		
 		$htmlContainer = "<div id='$divId' style='$divStyle' sparql-query='$escapedQuery' class='sparql-to-csv'>$formHtml</div>";
 		return $htmlContainer;
-		
 	}
 	
 	

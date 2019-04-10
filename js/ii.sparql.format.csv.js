@@ -6,7 +6,9 @@ spqlib.csv = (function () {
 		if (!config.sparqlWithPrefixes && config.sparql && config.queryPrefixes){
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
-		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.csv.render, config);
+		$("#"+config.divId+"-loader").show();
+		$("#"+config.divId+"-error-status").hide();
+		this.util.doQuery(config.endpointName, config.sparqlWithPrefixes, spqlib.csv.render, config,false,spqlib.csv.fail);
 	}
 	
 	var my = { };
@@ -14,6 +16,8 @@ spqlib.csv = (function () {
 	 * funzione di callback di default dopo la chiamata ajax all'endpoint sparql.
 	 */
 	my.render = function (json, config) {
+		$("#"+config.divId+"-loader").hide();
+		$("#"+config.divId+"-error-status").hide();
 		var csvAction = config.csvDownloadAction;
 		var fileName = config.filename || 'export.csv';
 		var csv = createCSVString(json,config);
@@ -22,6 +26,12 @@ spqlib.csv = (function () {
 		form.find("input[name='csv_file_name']").attr('value',fileName);
 		form.submit();
 	}
+	
+	my.fail = function(config,jqXHR,textStatus){
+		$("#"+config.divId+"-loader").hide();
+		$("#"+config.divId+"-error-status").show();
+	}
+	
 	
 	function createCSVString(json,config){
 		

@@ -234,6 +234,7 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 		
 		$config = "var config = {};
 			config.divId = '$divId';
+			config.endpointName='$endpointIndex';
 			config.endpoint='$endpoint';
 			config.sparql=decodeURIComponent(\"$escapedQuery\");
 			config.queryPrefixes=prefixes;

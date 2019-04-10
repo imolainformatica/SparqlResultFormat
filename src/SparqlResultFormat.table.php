@@ -141,7 +141,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 		$csvExport = $this->getParameterValue($options,'csvExport','false'); 
 		$csvFileName = $this->getParameterValue($options,'csvFileName','export.csv'); 
 		$csvLinkLabel = $this->getParameterValue($options,'csvLinkLabel','Export as CSV');
-		$csvDownloadAction = "$wgScriptPath/extensions/SparqlResultFormat/getCSV.php";		
+		$csvDownloadAction = "$wgScriptPath/extensions/SparqlResultFormat/api/download/";		
 		
 		$config = "var config = {};
 			config.divId = '$divId';
