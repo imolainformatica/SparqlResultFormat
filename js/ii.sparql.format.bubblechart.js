@@ -7,7 +7,7 @@ spqlib.bubblechart = (function () {
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes(config.sparql,config.queryPrefixes);
 		}
 		spqlib.util.parseExtraOptions(config);
-		this.util.doQuery(config.endpoint, config.sparqlWithPrefixes, spqlib.bubblechart.render, config,spqlib.bubblechart.preQuery,spqlib.bubblechart.failQuery);
+		this.util.doQuery(config.endpointName, config.sparqlWithPrefixes, spqlib.bubblechart.render, config,spqlib.bubblechart.preQuery,spqlib.bubblechart.failQuery);
 	}
 	
 	var my = { };
