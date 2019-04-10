@@ -58,3 +58,12 @@
 .graph-cytoscape-full-screen{
      height:100%;
 }
+.ii-graph-container{
+	background-color:white;
+	
+}
+
+.ii-graph-legend-box {
+	padding:5px;
+
+}
