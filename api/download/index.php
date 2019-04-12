@@ -1,11 +1,10 @@
 <?php
 
-if (getenv( 'MW_INSTALL_PATH' )=== false){
-	putenv("MW_INSTALL_PATH=".__DIR__."/../../../../");
+if ( getenv( 'MW_INSTALL_PATH' ) === false ) {
+	putenv( "MW_INSTALL_PATH=" . __DIR__ . "/../../../../" );
 }
 
 require __DIR__ . '/../../../../includes/WebStart.php';
-
 
 // URL safety checks
 if ( !$wgRequest->checkUrlExtension() ) {
@@ -13,28 +12,22 @@ if ( !$wgRequest->checkUrlExtension() ) {
 }
 
 try {
-	if (isset($_REQUEST['csv_file_name'])){
-		$filename=$_REQUEST['csv_file_name'];
-		header("Content-type: application/octet-stream");
-		header("Content-Disposition: attachment; filename=\"".$filename."\"");
-		$data=stripcslashes($_REQUEST['csv_text']);
-		echo $data; 
-	} else if (isset($_REQUEST['png_file_name'])){
-		$filename=$_REQUEST['png_file_name'];
-		$base64strImg=$_POST['png_string']; 
-		$data = explode(',', $base64strImg);
-		header("Content-Disposition: attachment; filename=\"".$filename."\"");
-		header('Content-Type: application/force-download'); 
-		echo base64_decode($data[1]);
+	if ( isset( $_REQUEST['csv_file_name'] ) ) {
+		$filename = $_REQUEST['csv_file_name'];
+		header( "Content-type: application/octet-stream" );
+		header( "Content-Disposition: attachment; filename=\"" . $filename . "\"" );
+		$data = stripcslashes( $_REQUEST['csv_text'] );
+		echo $data;
+	} elseif ( isset( $_REQUEST['png_file_name'] ) ) {
+		$filename = $_REQUEST['png_file_name'];
+		$base64strImg = $_POST['png_string'];
+		$data = explode( ',', $base64strImg );
+		header( "Content-Disposition: attachment; filename=\"" . $filename . "\"" );
+		header( 'Content-Type: application/force-download' );
+		echo base64_decode( $data[1] );
 	}
 
-} catch (Exception $e){
+} catch ( Exception $e ) {
 	echo 'Caught exception: ',  $e->getMessage(), "\n";
-	http_response_code (400);
+	http_response_code( 400 );
 }
-
-
-
-
-
-?>

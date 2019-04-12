@@ -1,148 +1,147 @@
 <?php
 
 class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFormat {
-	
+
 	function __construct() {
-		$this->name = wfMessage("sprf.format.table.title");
-		$this->description = wfMessage("sprf.format.table.description");
-		
-       $this->params = array(
-			"divId" => array(
+		$this->name = wfMessage( "sprf.format.table.title" );
+		$this->description = wfMessage( "sprf.format.table.description" );
+
+	   $this->params = [
+			"divId" => [
 					"mandatory" => true,
-					"description" => wfMessage("sprf.param.divId")
-				),
-			"sparqlEscapedQuery" => array(
+					"description" => wfMessage( "sprf.param.divId" )
+				],
+			"sparqlEscapedQuery" => [
 					"mandatory" => true,
-					"description" => wfMessage("sprf.param.sparqlEscapedQuery")
-				),
-			"sparqlEndpoint" => array(
+					"description" => wfMessage( "sprf.param.sparqlEscapedQuery" )
+				],
+			"sparqlEndpoint" => [
 				"mandatory" => true,
-				"description" => wfMessage("sprf.param.sparqlEndpoint")
-			),
-			"spinnerImagePath" => array(
+				"description" => wfMessage( "sprf.param.sparqlEndpoint" )
+			],
+			"spinnerImagePath" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.spinnerImagePath"),
+					"description" => wfMessage( "sprf.param.spinnerImagePath" ),
 					"default" => ""
-				),
-			"divStyle" => array(
+				],
+			"divStyle" => [
 				"mandatory" => false,
-				"description" => wfMessage("sprf.param.divStyle")
-			),
-			"tableClass" => array(
+				"description" => wfMessage( "sprf.param.divStyle" )
+			],
+			"tableClass" => [
 				"mandatory" => false,
-				"description" => wfMessage("sprf.param.tableClass")
-			),
-			"columnConfiguration" => array(
+				"description" => wfMessage( "sprf.param.tableClass" )
+			],
+			"columnConfiguration" => [
 				"mandatory" => false,
-				"description" => wfMessage("sprf.param.columnConfiguration")
-			),
-			"cssEvenRowClass" => array(
+				"description" => wfMessage( "sprf.param.columnConfiguration" )
+			],
+			"cssEvenRowClass" => [
 				"mandatory" => false,
-				"description" => wfMessage("sprf.param.cssEvenRowClass")
-			),
-			"cssOddRowClass" => array(
+				"description" => wfMessage( "sprf.param.cssEvenRowClass" )
+			],
+			"cssOddRowClass" => [
 				"mandatory" => false,
-				"description" => wfMessage("sprf.param.cssOddRowClass")
-			),
-			"cssEvenTdClass" => array(
+				"description" => wfMessage( "sprf.param.cssOddRowClass" )
+			],
+			"cssEvenTdClass" => [
 				"mandatory" => false,
-				"description" => wfMessage("sprf.param.cssEvenTdClass")
-			),
-			"cssOddTdClass" => array(
+				"description" => wfMessage( "sprf.param.cssEvenTdClass" )
+			],
+			"cssOddTdClass" => [
 				"mandatory" => false,
-				"description" => wfMessage("sprf.param.cssOddTdClass")
-			),
-			"noResultMessage" => array(
+				"description" => wfMessage( "sprf.param.cssOddTdClass" )
+			],
+			"noResultMessage" => [
 				"mandatory" => false,
-				"description" => wfMessage("sprf.param.noResultMessage")
-			),
-			"csvExport" => array(
+				"description" => wfMessage( "sprf.param.noResultMessage" )
+			],
+			"csvExport" => [
 				"mandatory" => false,
-				"description" => wfMessage("sprf.param.csvExport"),
-				"default" =>"false"
-			),
-			"csvFileName" => array(
+				"description" => wfMessage( "sprf.param.csvExport" ),
+				"default" => "false"
+			],
+			"csvFileName" => [
 				"mandatory" => false,
-				"description" => wfMessage("sprf.param.csvFileName"),
-				"default" =>"export.csv"
-			),
-			"csvLinkLabel" => array(
+				"description" => wfMessage( "sprf.param.csvFileName" ),
+				"default" => "export.csv"
+			],
+			"csvLinkLabel" => [
 				"mandatory" => false,
-				"description" => wfMessage("sprf.param.csvLinkLabel")
-			),
-			"linkBasePath" => array(
+				"description" => wfMessage( "sprf.param.csvLinkLabel" )
+			],
+			"linkBasePath" => [
 				"mandatory" => false,
-				"description" => wfMessage("sprf.param.linkBasePath"),
+				"description" => wfMessage( "sprf.param.linkBasePath" ),
 				"deprecated" => true
-			)	
-	   );   
-		$this->queryStructure =	wfMessage("sprf.format.table.query.structure");
-    }               
-	
-	function generateHtmlContainerCode($options){
-		$divId = $this->getParameterValue($options,'divId','');
-		$divStyle = $this->getParameterValue($options,'divStyle',''); 
-		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery','');
+			]
+ ];
+		$this->queryStructure =	wfMessage( "sprf.format.table.query.structure" );
+	}
+
+	function generateHtmlContainerCode( $options ) {
+		$divId = $this->getParameterValue( $options, 'divId', '' );
+		$divStyle = $this->getParameterValue( $options, 'divStyle', '' );
+		$escapedQuery = $this->getParameterValue( $options, 'sparqlEscapedQuery', '' );
 		$htmlContainer = "<div id='$divId-container' class='table-container'>
-			<div id='$divId' style='$divStyle' sparql-query='".rawurlencode($escapedQuery)."'></div></div>";
+			<div id='$divId' style='$divStyle' sparql-query='" . rawurlencode( $escapedQuery ) . "'></div></div>";
 		return $htmlContainer;
 	}
-	
-	function generateJavascriptCode($options,$prefixes){
-		$config = $this->generateConfig($options);
-		$launch= $this->generateLaunchScript($options);
-		$register = $this->jsRegisterFunction($launch);
+
+	function generateJavascriptCode( $options, $prefixes ) {
+		$config = $this->generateConfig( $options );
+		$launch = $this->generateLaunchScript( $options );
+		$register = $this->jsRegisterFunction( $launch );
 		$output = "$prefixes
 				$config
 				$register				
 			";
-		return $output;	
+		return $output;
 	}
-	
-	function generateLaunchScript($options){
-		$divId = $this->getParameterValue($options,'divId','');
+
+	function generateLaunchScript( $options ) {
+		$divId = $this->getParameterValue( $options, 'divId', '' );
 		$launchScript = "config.sparql=decodeURIComponent($('#$divId').attr('sparql-query'));
 		mw.loader.using( ['ext.SparqlResultFormat.main','jquery.tablesorter'], function () {
              mw.loader.using( 'ext.SparqlResultFormat.table', function () {
                       spqlib.sparql2Table(config);
               } );
         } );";
-		
+
 		$sortableTable = "$('#$divId').on( 'done', function() {
              var sortableTables = $('#$divId').find( 'table.sortable' );
              if ( sortableTables.length ) {         
                 sortableTables.tablesorter();   
              }
          });";
-		 return $launchScript.$sortableTable;
+		 return $launchScript . $sortableTable;
 	}
-	
-	function generateConfig($options){
+
+	function generateConfig( $options ) {
 		global $wgServer;
 		global $wgScriptPath;
-		$endpointIndex = $this->getParameterValue($options,'sparqlEndpoint','');
-		$endpointData = $this->getSparqlEndpointByName($endpointIndex);
+		$endpointIndex = $this->getParameterValue( $options, 'sparqlEndpoint', '' );
+		$endpointData = $this->getSparqlEndpointByName( $endpointIndex );
 		$endpoint = $endpointData['url'];
-		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString($endpointData);	
+		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString( $endpointData );
 
-		
-		$divId = $this->getParameterValue($options,'divId','');
-		$divStyle = $this->getParameterValue($options,'divStyle','');
-		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery','');
-		$tableClass = $this->getParameterValue($options,'tableClass','');
-		$columnConfiguration = $this->getParameterValue($options,'columnConfiguration','{}'); 
-		$cssEvenRowClass = $this->getParameterValue($options,'cssEvenRowClass',''); 
-		$cssOddRowClass = $this->getParameterValue($options,'cssOddRowClass',''); 
-		$cssEvenTdClass = $this->getParameterValue($options,'cssEvenTdClass',''); 
-		$cssOddTdClass = $this->getParameterValue($options,'cssOddTdClass','');
-		$noResultMessage = $this->getParameterValue($options,'noResultMessage',''); 
-		$linkBasePath = $this->getParameterValue($options,'linkBasePath',"$wgServer$wgScriptPath/index.php/");
-		$spinnerImagePath = $this->getParameterValue($options,'spinnerImagePath',"$wgScriptPath/extensions/SparqlResultFormat/img/spinner.gif");
-		$csvExport = $this->getParameterValue($options,'csvExport','false'); 
-		$csvFileName = $this->getParameterValue($options,'csvFileName','export.csv'); 
-		$csvLinkLabel = $this->getParameterValue($options,'csvLinkLabel','Export as CSV');
-		$csvDownloadAction = "$wgScriptPath/extensions/SparqlResultFormat/api/download/";		
-		
+		$divId = $this->getParameterValue( $options, 'divId', '' );
+		$divStyle = $this->getParameterValue( $options, 'divStyle', '' );
+		$escapedQuery = $this->getParameterValue( $options, 'sparqlEscapedQuery', '' );
+		$tableClass = $this->getParameterValue( $options, 'tableClass', '' );
+		$columnConfiguration = $this->getParameterValue( $options, 'columnConfiguration', '{}' );
+		$cssEvenRowClass = $this->getParameterValue( $options, 'cssEvenRowClass', '' );
+		$cssOddRowClass = $this->getParameterValue( $options, 'cssOddRowClass', '' );
+		$cssEvenTdClass = $this->getParameterValue( $options, 'cssEvenTdClass', '' );
+		$cssOddTdClass = $this->getParameterValue( $options, 'cssOddTdClass', '' );
+		$noResultMessage = $this->getParameterValue( $options, 'noResultMessage', '' );
+		$linkBasePath = $this->getParameterValue( $options, 'linkBasePath', "$wgServer$wgScriptPath/index.php/" );
+		$spinnerImagePath = $this->getParameterValue( $options, 'spinnerImagePath', "$wgScriptPath/extensions/SparqlResultFormat/img/spinner.gif" );
+		$csvExport = $this->getParameterValue( $options, 'csvExport', 'false' );
+		$csvFileName = $this->getParameterValue( $options, 'csvFileName', 'export.csv' );
+		$csvLinkLabel = $this->getParameterValue( $options, 'csvLinkLabel', 'Export as CSV' );
+		$csvDownloadAction = "$wgScriptPath/extensions/SparqlResultFormat/api/download/";
+
 		$config = "var config = {};
 			config.divId = '$divId';
 			config.tableClass='$tableClass';
@@ -166,7 +165,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 
 		return $config;
 	}
-	
+
 	/*function generateContainer($options){
 		$divId = $options['divId'];
 		$divStyle = $options['divStyle'];
@@ -174,10 +173,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 		$htmlContainer = "<div id='$divId-container' class='table-container'>
 			<div id='$divId' style='$divStyle' sparql-query='$escapedQuery'></div></div>";
 		return $htmlContainer;
-		
+
 	}*/
-	
-	
-	
+
 }
-?>

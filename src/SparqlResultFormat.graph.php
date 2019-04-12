@@ -1,43 +1,43 @@
 <?php
 
-class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFormat{
-	
+class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFormat {
+
 		function __construct() {
-		$this->name = wfMessage("sprf.format.graph.title");
-		$this->description = wfMessage("sprf.format.graph.description");
-       $this->params = array(
-			"divId" => array(
+		$this->name = wfMessage( "sprf.format.graph.title" );
+		$this->description = wfMessage( "sprf.format.graph.description" );
+	   $this->params = [
+			"divId" => [
 					"mandatory" => true,
-					"description" => wfMessage("sprf.param.divId")
-				),
-			"sparqlEndpoint" => array(
+					"description" => wfMessage( "sprf.param.divId" )
+				],
+			"sparqlEndpoint" => [
 					"mandatory" => true,
-					"description" => wfMessage("sprf.param.sparqlEndpoint")
-				),
-			"sparqlEscapedQuery" => array(
+					"description" => wfMessage( "sprf.param.sparqlEndpoint" )
+				],
+			"sparqlEscapedQuery" => [
 					"mandatory" => true,
-					"description" => wfMessage("sprf.param.sparqlEscapedQuery")
-				),
-			"queryTimeout" => array(
+					"description" => wfMessage( "sprf.param.sparqlEscapedQuery" )
+				],
+			"queryTimeout" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.queryTimeout"),
+					"description" => wfMessage( "sprf.param.queryTimeout" ),
 					"default" => 20000
-				),
-			"divStyle" => array(
+				],
+			"divStyle" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.divStyle")
-				),
-			"spinnerImagePath" => array(
+					"description" => wfMessage( "sprf.param.divStyle" )
+				],
+			"spinnerImagePath" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.spinnerImagePath")
-				),
-			"divCssClass" => array(
+					"description" => wfMessage( "sprf.param.spinnerImagePath" )
+				],
+			"divCssClass" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.divCssClass")
-				),
-			"nodeConfiguration" => array(
+					"description" => wfMessage( "sprf.param.divCssClass" )
+				],
+			"nodeConfiguration" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.nodeConfiguration1").wfMessage("sprf.param.nodeConfiguration2"),
+					"description" => wfMessage( "sprf.param.nodeConfiguration1" ) . wfMessage( "sprf.param.nodeConfiguration2" ),
 					"example" => "|nodeConfiguration=[
 					{ category:\"Application\",nodeColor:\"#000000\", image:\"{{filepath:Application_icon.png}}\"},
 					{ category:\"Application Component\",nodeColor:\"#00FF00\", image:\"{{filepath:Component_icon.png}}\"},
@@ -51,132 +51,130 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 					   ]}
 					
 					]"
-				),
-			"edgeConfiguration" => array(
+				],
+			"edgeConfiguration" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.edgeConfiguration1").wfMessage("sprf.param.edgeConfiguration2"),
+					"description" => wfMessage( "sprf.param.edgeConfiguration1" ) . wfMessage( "sprf.param.edgeConfiguration2" ),
 					"example" => "|edgeConfiguration=[{ relation:\"Belongs to application\",edgeColor:\"#00FF00\"}]"
-				),
-				"rootElement" => array(
+				],
+				"rootElement" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.rootElement"),
+					"description" => wfMessage( "sprf.param.rootElement" ),
 					"example" => ""
-				),
-				"rootElementColor" => array(
+				],
+				"rootElementColor" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.rootElementColor"),
+					"description" => wfMessage( "sprf.param.rootElementColor" ),
 					"example" => ""
-				),
-				"rootElementImage" => array(
+				],
+				"rootElementImage" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.rootElementImage"),
+					"description" => wfMessage( "sprf.param.rootElementImage" ),
 					"example" => ""
-				),
-				"showLegend" => array(
+				],
+				"showLegend" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.showLegend"),
+					"description" => wfMessage( "sprf.param.showLegend" ),
 					"example" => ""
-				),
-				"defaultNodeColor" => array(
+				],
+				"defaultNodeColor" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.defaultNodeColor"),
+					"description" => wfMessage( "sprf.param.defaultNodeColor" ),
 					"example" => "|defaultNodeColor=#CCC"
-				),
-				"defaultEdgeColor" => array(
+				],
+				"defaultEdgeColor" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.defaultEdgeColor"),
+					"description" => wfMessage( "sprf.param.defaultEdgeColor" ),
 					"example" => "|defaultEdgeColor=#CCC"
-				),
-				"splitQueryByUnion" => array(
+				],
+				"splitQueryByUnion" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.splitQueryByUnion")
-				),
-				"minZoom" => array(
+					"description" => wfMessage( "sprf.param.splitQueryByUnion" )
+				],
+				"minZoom" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.minZoom"),
+					"description" => wfMessage( "sprf.param.minZoom" ),
 					"example" => ""
-				),
-				"maxZoom" => array(
+				],
+				"maxZoom" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.maxZoom"),
+					"description" => wfMessage( "sprf.param.maxZoom" ),
 					"example" => ""
-				),
-				"layout" => array(
+				],
+				"layout" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.layout"),
+					"description" => wfMessage( "sprf.param.layout" ),
 					"default" => "dagre",
 					"example" => ""
-				),"layoutOptions" => array(
+				],"layoutOptions" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.layoutOptions"),
+					"description" => wfMessage( "sprf.param.layoutOptions" ),
 					"example" => "|layoutOptions={rankSep:200}"
-				),
-				"maxWordLength" => array(
+				],
+				"maxWordLength" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.maxWordLength"),
+					"description" => wfMessage( "sprf.param.maxWordLength" ),
 					"example" => ""
-				),"maxLabelLength" => array(
+				],"maxLabelLength" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.maxLabelLength"),
+					"description" => wfMessage( "sprf.param.maxLabelLength" ),
 					"example" => ""
-				),
-				"nodeStyle" => array(
+				],
+				"nodeStyle" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.nodeStyle"),
+					"description" => wfMessage( "sprf.param.nodeStyle" ),
 					"example" => "|nodeStyle={shape:'roundrectangle', width:120, height:80,'text-valign': 'center','text-halign': 'center','font-size':'12','border-color' : '#000','border-width' : 1,'text-max-width':120}"
-				),
-				"edgeStyle" => array(
+				],
+				"edgeStyle" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.edgeStyle"),
+					"description" => wfMessage( "sprf.param.edgeStyle" ),
 					"example" => "|edgeStyle={'target-arrow-shape':''}",
 					"example" => ""
-				),
-				"labelLinkPattern" => array(
+				],
+				"labelLinkPattern" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.labelLinkPattern"),
+					"description" => wfMessage( "sprf.param.labelLinkPattern" ),
 					"example" => ""
-				),
-				"categoryLinkPattern" => array(
+				],
+				"categoryLinkPattern" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.categoryLinkPattern"),
+					"description" => wfMessage( "sprf.param.categoryLinkPattern" ),
 					"example" => ""
-				),
-				"maxNumNodes" => array(
+				],
+				"maxNumNodes" => [
 					"mandatory" => false,
-					"description" => wfMessage("sprf.param.maxNumNodes"),
+					"description" => wfMessage( "sprf.param.maxNumNodes" ),
 					"example" => "",
 					"default" => 200
-				)
-	   ); 
-		$this->queryStructure = wfMessage("sprf.format.graph.query.structure").wfMessage("sprf.format.graph.query.structure.example")
-		."<h3><b>".wfMessage("sprf.common.old.version")."</b></h3>"
-		.wfMessage("sprf.format.graph.query.structure.old").wfMessage("sprf.format.graph.query.structure.old.example");	   
-    }
-	
-	
-	function generateHtmlContainerCode($options){
-		$divId = $this->getParameterValue($options,'divId','');
-		$divStyle =  $this->getParameterValue($options,'divStyle','');
-		$divCssClass =  $this->getParameterValue($options,'divCssClass','');
+				]
+	   ];
+		$this->queryStructure = wfMessage( "sprf.format.graph.query.structure" ) . wfMessage( "sprf.format.graph.query.structure.example" )
+		. "<h3><b>" . wfMessage( "sprf.common.old.version" ) . "</b></h3>"
+		. wfMessage( "sprf.format.graph.query.structure.old" ) . wfMessage( "sprf.format.graph.query.structure.old.example" );
+	 }
+
+	function generateHtmlContainerCode( $options ) {
+		$divId = $this->getParameterValue( $options, 'divId', '' );
+		$divStyle = $this->getParameterValue( $options, 'divStyle', '' );
+		$divCssClass = $this->getParameterValue( $options, 'divCssClass', '' );
 		$htmlContainer = "<div id='$divId-container' style='$divStyle' class='$divCssClass ii-graph-container'>
 			<div id='$divId' class='cytoscape-graph' style='width:100%; height:100%;' sparql-query=''></div></div>";
 		return $htmlContainer;
 	}
-	
-	function generateJavascriptCode($options,$prefixes){
-		$config = $this->generateConfig($options);
-		$launch= $this->generateLaunchScript($options);
-		$register = $this->jsRegisterFunction($launch);
+
+	function generateJavascriptCode( $options, $prefixes ) {
+		$config = $this->generateConfig( $options );
+		$launch = $this->generateLaunchScript( $options );
+		$register = $this->jsRegisterFunction( $launch );
 		$output = "$prefixes
 				$config
 				$register				
 			";
-		return $output;	
+		return $output;
 	}
-	
-	
-	function generateLaunchScript($options){
-		$divId = $this->getParameterValue($options,'divId','');
+
+	function generateLaunchScript( $options ) {
+		$divId = $this->getParameterValue( $options, 'divId', '' );
 		$launchScript = "$('#$divId').attr('sparql-query',config.sparql);
 		mw.loader.using( ['ext.SparqlResultFormat.main'], function () {
              mw.loader.using( 'ext.SparqlResultFormat.graph', function () {
@@ -184,54 +182,53 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
                       spqlib.sparql2Graph(config);
               } );
         } );";
-		return $launchScript;		
+		return $launchScript;
 	}
-	
-	
-	function generateConfig($options){
+
+	function generateConfig( $options ) {
 		global $wgScriptPath;
 		global $wgServer;
 		global $wgSrfMaxNumNodes;
-		if (!isset($wgSrfMaxNumNodes)){
-			$wgSrfMaxNumNodes=200;
+		if ( !isset( $wgSrfMaxNumNodes ) ) {
+			$wgSrfMaxNumNodes = 200;
 		}
 		global $wgSrfQueryTimeout;
-		if (!isset($wgSrfQueryTimeout)){
-			$wgSrfQueryTimeout=20000;
+		if ( !isset( $wgSrfQueryTimeout ) ) {
+			$wgSrfQueryTimeout = 20000;
 		}
-		$endpointIndex = $this->getParameterValue($options,'sparqlEndpoint','');
-		$endpointData = $this->getSparqlEndpointByName($endpointIndex);
+		$endpointIndex = $this->getParameterValue( $options, 'sparqlEndpoint', '' );
+		$endpointData = $this->getSparqlEndpointByName( $endpointIndex );
 		$endpoint = $endpointData['url'];
-		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString($endpointData);	
-		$queryTimeout = $this->getParameterValue($options,'queryTimeout',$wgSrfQueryTimeout);
-		$divId = $this->getParameterValue($options,'divId','');
-		$divStyle = $this->getParameterValue($options,'divStyle','');
-		$escapedQuery = $this->getParameterValue($options,'sparqlEscapedQuery','');
-		$spinnerImagePath = $this->getParameterValue($options,'spinnerImagePath',"$wgScriptPath/extensions/SparqlResultFormat/img/spinner.gif");
-		
-		$divCssClass = $this->getParameterValue($options,'divCssClass',''); 
-		$nodeConfiguration = $this->getParameterValue($options,'nodeConfiguration','{}');
-		$edgeConfiguration = $this->getParameterValue($options,'edgeConfiguration','{}');
-		$rootElement = rawurlencode($this->getParameterValue($options,'rootElement',''));
-		$rootElementColor = $this->getParameterValue($options,'rootElementColor','');
-		$rootElementImage = $this->getParameterValue($options,'rootElementImage','');
-		$showLegend = $this->getParameterValue($options,'showLegend','true');
-		$defaultNodeColor = $this->getParameterValue($options,'defaultNodeColor','#CCC');
-		$defaultEdgeColor = $this->getParameterValue($options,'defaultEdgeColor','#CCC');
-		$splitQueryByUnion = $this->getParameterValue($options,'splitQueryByUnion','false');
-		$minZoom = $this->getParameterValue($options,'minZoom',1);
-		$maxZoom = $this->getParameterValue($options,'maxZoom',1);
-		$layout = $this->getParameterValue($options,'layout','dagre');
-		$maxWordLength = $this->getParameterValue($options,'maxWordLength',12);
-		$maxLabelLength = $this->getParameterValue($options,'maxLabelLength',30);
-		$layoutOptions = $this->getParameterValue($options,'layoutOptions','{}');
-		$nodeStyle  = $this->getParameterValue($options,'nodeStyle','{}');
-		$edgeStyle = $this->getParameterValue($options,'edgeStyle','{}');
-		$labelLinkPattern = $this->getParameterValue($options,'labelLinkPattern',"$wgServer$wgScriptPath/index.php/{%s}");
-		$categoryLinkPattern = $this->getParameterValue($options,'categoryLinkPattern',"$wgServer$wgScriptPath/index.php/Category:{%s}");
-		$escapedQuery = rawurlencode($this->getParameterValue($options,'sparqlEscapedQuery',''));
-		$maxNumNodes =  $this->getParameterValue($options,'maxNumNodes',$wgSrfMaxNumNodes);
-		
+		$basicAuthBase64String = $this->getSparqlEndpointBasicAuthString( $endpointData );
+		$queryTimeout = $this->getParameterValue( $options, 'queryTimeout', $wgSrfQueryTimeout );
+		$divId = $this->getParameterValue( $options, 'divId', '' );
+		$divStyle = $this->getParameterValue( $options, 'divStyle', '' );
+		$escapedQuery = $this->getParameterValue( $options, 'sparqlEscapedQuery', '' );
+		$spinnerImagePath = $this->getParameterValue( $options, 'spinnerImagePath', "$wgScriptPath/extensions/SparqlResultFormat/img/spinner.gif" );
+
+		$divCssClass = $this->getParameterValue( $options, 'divCssClass', '' );
+		$nodeConfiguration = $this->getParameterValue( $options, 'nodeConfiguration', '{}' );
+		$edgeConfiguration = $this->getParameterValue( $options, 'edgeConfiguration', '{}' );
+		$rootElement = rawurlencode( $this->getParameterValue( $options, 'rootElement', '' ) );
+		$rootElementColor = $this->getParameterValue( $options, 'rootElementColor', '' );
+		$rootElementImage = $this->getParameterValue( $options, 'rootElementImage', '' );
+		$showLegend = $this->getParameterValue( $options, 'showLegend', 'true' );
+		$defaultNodeColor = $this->getParameterValue( $options, 'defaultNodeColor', '#CCC' );
+		$defaultEdgeColor = $this->getParameterValue( $options, 'defaultEdgeColor', '#CCC' );
+		$splitQueryByUnion = $this->getParameterValue( $options, 'splitQueryByUnion', 'false' );
+		$minZoom = $this->getParameterValue( $options, 'minZoom', 1 );
+		$maxZoom = $this->getParameterValue( $options, 'maxZoom', 1 );
+		$layout = $this->getParameterValue( $options, 'layout', 'dagre' );
+		$maxWordLength = $this->getParameterValue( $options, 'maxWordLength', 12 );
+		$maxLabelLength = $this->getParameterValue( $options, 'maxLabelLength', 30 );
+		$layoutOptions = $this->getParameterValue( $options, 'layoutOptions', '{}' );
+		$nodeStyle  = $this->getParameterValue( $options, 'nodeStyle', '{}' );
+		$edgeStyle = $this->getParameterValue( $options, 'edgeStyle', '{}' );
+		$labelLinkPattern = $this->getParameterValue( $options, 'labelLinkPattern', "$wgServer$wgScriptPath/index.php/{%s}" );
+		$categoryLinkPattern = $this->getParameterValue( $options, 'categoryLinkPattern', "$wgServer$wgScriptPath/index.php/Category:{%s}" );
+		$escapedQuery = rawurlencode( $this->getParameterValue( $options, 'sparqlEscapedQuery', '' ) );
+		$maxNumNodes = $this->getParameterValue( $options, 'maxNumNodes', $wgSrfMaxNumNodes );
+
 		$config = "var config = {};
 			config.divId = '$divId';
 			config.endpointName='$endpointIndex';
@@ -262,11 +259,9 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 			config.labelLinkPattern='$labelLinkPattern';
 			config.categoryLinkPattern='$categoryLinkPattern';
 			config.maxNumNodes=$maxNumNodes;
-			";	
-			
+			";
+
 		return $config;
-	}	
-	
-	
+	}
+
 }
-?>

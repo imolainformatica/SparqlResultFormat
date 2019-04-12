@@ -1,100 +1,98 @@
 <?php
 
 class SparqlResultFormatBase {
-	
-	
+
 	protected $name = "";
 	protected $description = "";
-	protected $params = array();
-	protected $extraOpts = array();
+	protected $params = [];
+	protected $extraOpts = [];
 	protected $queryStructure = "";
-	
-	public function getName(){
+
+	public function getName() {
 		return $this->name;
 	}
-	
-	public function getDescription(){
+
+	public function getDescription() {
 		return $this->description;
 	}
-	
-	public function getParams(){
+
+	public function getParams() {
 		return $this->params;
 	}
-	
-	public function getExtraOptions(){
+
+	public function getExtraOptions() {
 		return $this->extraOpts;
 	}
-	
-	public function getQueryStructure(){
+
+	public function getQueryStructure() {
 		return $this->queryStructure;
 	}
-	
-	
-	protected function getParameterValue($options,$paramName,$defaultValue){
-		$paramName = trim($paramName);
-		if (!isset($this->params[$paramName])){
-			throw new Exception("Param $paramName is not defined in params definition. ");
-			$paramDefinition = array();
+
+	protected function getParameterValue( $options, $paramName, $defaultValue ) {
+		$paramName = trim( $paramName );
+		if ( !isset( $this->params[$paramName] ) ) {
+			throw new Exception( "Param $paramName is not defined in params definition. " );
+			$paramDefinition = [];
 		} else {
 			$paramDefinition = $this->params[$paramName];
 		}
-		
-		if (isset($options[$paramName])){
-			return html_entity_decode ($options[$paramName],ENT_QUOTES);
+
+		if ( isset( $options[$paramName] ) ) {
+			return html_entity_decode( $options[$paramName], ENT_QUOTES );
 		} else {
-			//parametro non passato
-			//era obbligatorio
-			$mandatory = isset($paramDefinition["mandatory"]) ? $paramDefinition["mandatory"] : false;
-			if ($mandatory){
-				throw new Exception("Param $paramName must be specified");
+			// parametro non passato
+			// era obbligatorio
+			$mandatory = isset( $paramDefinition["mandatory"] ) ? $paramDefinition["mandatory"] : false;
+			if ( $mandatory ) {
+				throw new Exception( "Param $paramName must be specified" );
 			} else {
 				return $defaultValue;
 			}
 		}
 	}
-	
-	protected function getSparqlEndpointByName($endpointName){
+
+	protected function getSparqlEndpointByName( $endpointName ) {
 		global $wgSparqlEndpointDefinition;
-		if (isset($wgSparqlEndpointDefinition[$endpointName])){
+		if ( isset( $wgSparqlEndpointDefinition[$endpointName] ) ) {
 			return $wgSparqlEndpointDefinition[$endpointName];
 		} else {
-			throw new Exception("No endpoint '$endpointName' found in LocalSettings.php");
+			throw new Exception( "No endpoint '$endpointName' found in LocalSettings.php" );
 		}
 	}
-	
-	protected function getSparqlEndpointBasicAuthString($endpointData){
+
+	protected function getSparqlEndpointBasicAuthString( $endpointData ) {
 		$fieldName = 'basicAuth';
-		if (isset($endpointData[$fieldName])){
+		if ( isset( $endpointData[$fieldName] ) ) {
 			$basic = $endpointData[$fieldName];
-			$username = isset($basic['user']) ? $basic['user'] : '';
-			$password = isset($basic['password']) ? $basic['password'] : '';
-			return base64_encode("$username:$password");
+			$username = isset( $basic['user'] ) ? $basic['user'] : '';
+			$password = isset( $basic['password'] ) ? $basic['password'] : '';
+			return base64_encode( "$username:$password" );
 		} else {
 			return '';
 		}
 	}
-	
-	protected function checkExtraOptions($extra){
-		if (is_array($extra)){
-			foreach ($extra as $value) {
-				$this->checkExtraOptionName($value);
+
+	protected function checkExtraOptions( $extra ) {
+		if ( is_array( $extra ) ) {
+			foreach ( $extra as $value ) {
+				$this->checkExtraOptionName( $value );
 			}
 		} else {
-			$this->checkExtraOptionName($extra);
+			$this->checkExtraOptionName( $extra );
 		}
 	}
-	
-	private function checkExtraOptionName($value){
-		if (!empty($value)){
-			$pos = strpos($value,":");
-			$prop = substr($value,0,$pos);
-			if (!isset($this->extraOpts[$prop])){
-				throw new Exception("Extra Option $prop is not declared as a valid option for this format!");
+
+	private function checkExtraOptionName( $value ) {
+		if ( !empty( $value ) ) {
+			$pos = strpos( $value, ":" );
+			$prop = substr( $value, 0, $pos );
+			if ( !isset( $this->extraOpts[$prop] ) ) {
+				throw new Exception( "Extra Option $prop is not declared as a valid option for this format!" );
 			}
 		}
 	}
-	
-	protected function jsRegisterFunction($launch){
+
+	protected function jsRegisterFunction( $launch ) {
 		$out = "if (!window.sparqlResultFormatsElements){
 					window.sparqlResultFormatsElements = [];
 				}
@@ -104,8 +102,7 @@ class SparqlResultFormatBase {
 					}
 				});		
 				";
-		return $out;		
+		return $out;
 	}
 
 }
-?>

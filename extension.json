@@ -45,8 +45,10 @@
 				"js/ii.sparql.util.js",
 				"js/libs/sparqljs/sparqljs-browser.js"
 			],
-			"dependencies": ["ext.jquery.qtip", "ext.screenfull.js", "ext.fontawesome"],
-			"styles":["css/ii.style.treemap.css"]
+			"dependencies": ["mediawiki.jqueryMsg","ext.jquery.qtip", "ext.screenfull.js", "ext.fontawesome"],
+			"styles":["css/ii.style.treemap.css"],
+			"messages":["sprf.js.graph.show.legend","sprf.js.graph.hide.legend","sprf.js.graph.go.fullscreen","sprf.js.graph.exit.fullscreen"
+			]
 		},
 		"ext.SparqlResultFormat.graph": {
 			"scripts":[],
@@ -100,7 +102,12 @@
 			"styles":[]
 		},
 		"ext.SparqlResultFormat.treemap": {
-			"scripts":["js/ii.sparql.format.treemap.js","js/ii.d3.js","js/libs/d3/d3.v3.min.js"],
+			"scripts":["js/ii.sparql.format.treemap.js","js/ii.d3.js"],
+			"dependencies":["ext.d3.js"],
+			"styles":[]
+		},
+		"ext.d3.js": {
+			"scripts":["js/libs/d3/d3.js"],
 			"dependencies":[],
 			"styles":[]
 		},

@@ -28,7 +28,7 @@ spqlib.graph = (function () {
 				progressBar.text(perc);
 				var i=1; 
 				if (queries[i]){
-					spqlib.util.doQuery(config.endpoint, queries[i], spqlib.graph.addNodes, config,null,spqlib.graph.failQuery);
+					spqlib.util.doQuery(config.endpointName, queries[i], spqlib.graph.addNodes, config,null,spqlib.graph.failQuery);
 				} else {
 					$( "#"+ config.divId+"-container").next().hide();
 				}
@@ -63,6 +63,8 @@ spqlib.graph = (function () {
 
 	
 	my.toggleFullScreen = function(graphId){
+		var goFullscreenLabel=mw.message( 'sprf.js.graph.go.fullscreen' ).text();
+		var exitFullscreenLabel=mw.message( 'sprf.js.graph.exit.fullscreen' ).text();
 		var containerSelector = "#" + graphId + "-container";
 		var legendSelector = "#" + graphId + "-legend-container";
 		//$(containerSelector).toggleClass('ii-container-graph-full-screen');
@@ -75,9 +77,9 @@ spqlib.graph = (function () {
 		icon.toggleClass("fa-compress");
 		icon.toggleClass("fa-expand");
 		if (icon.hasClass("fa-expand")){
-			$(legendSelector).find(".action-fullscreen").find("span").text("Go fullscreen");
+			$(legendSelector).find(".action-fullscreen").find("span").text(goFullscreenLabel);
 		} else {
-			$(legendSelector).find(".action-fullscreen").find("span").text("Exit fullscreen");
+			$(legendSelector).find(".action-fullscreen").find("span").text(exitFullscreenLabel);
 		}
 		spqlib.graph.graphImpl().resize(graphId);
 		centerGraphToNode(graphId, spqlib.graph.graphImpl().getGraph(graphId).config.rootElement);
@@ -106,6 +108,8 @@ spqlib.graph = (function () {
 	}
 	
 	my.initHtml = function(config){
+		var goFullscreenLabel=mw.message( 'sprf.js.graph.go.fullscreen' ).text();
+		var exitFullscreenLabel=mw.message( 'sprf.js.graph.exit.fullscreen' ).text();
 		var idContainer = config.divId+"-container";
 		var idLoader = config.divId+"-loader";
 		var idLegendBox = config.divId+"-legend-box";
@@ -115,7 +119,7 @@ spqlib.graph = (function () {
 		var idLegend = config.divId+"-legend";
 		var idLegendActionList = config.divId+"-legend-actions-list";
 		var actionFullScreen = "<a href='#' onclick=\"javascript:spqlib.graph.toggleFullScreen('"+config.divId+"');\" class='action-fullscreen'><i class='fas fa-expand'> \
-		</i><span class='fullscreen-label' style='padding-left:10px;'>Go fullscreen</span></a>";
+		</i><span class='fullscreen-label' style='padding-left:10px;'>"+goFullscreenLabel+"</span></a>";
 		$( "#"+idContainer).before("<div id='"+idLoader+"' class='ii-graph-loader-box'></div>");
 		$( "#"+idContainer).prepend("<div id='"+idLegendBox+"' class='ii-graph-legend-box'></div>");
 		$( "#"+idLegendBox).prepend("<div id='"+idLegendContainer+"' class='ii-graph-legend-container cytoscape-legend-container'></div>");
@@ -125,7 +129,7 @@ spqlib.graph = (function () {
 		$( "#"+idLegendContainer).append("<div id='"+idLegendActionList+"' class='ii-graph-legend-actions-list cytoscape-actions-list'></div> ");
 		$( "#"+idLegendActionList).append("<div class='ii-graph-legend-action cytoscape-action'>"+actionFullScreen+"</div>");
 		if (config.splitQueryByUnion && config.splitQueryByUnion=="true"){
-			$( "#"+idContainer).after("<div class='progress'><div class='progress-bar ' role='progressbar' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100' style='width:0%'>0%</div></div>");
+			$( "#"+idContainer).after("<div class='progress'><div class='progress-bar ii-graph-progress-bar ' role='progressbar' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100' style='width:0%'>0%</div></div>");
 		}
 	}
 	
@@ -762,6 +766,9 @@ spqlib.graph = (function () {
 	 * genera il codice html della legenda
 	 */
 	my.drawLegend = function (config) {
+		
+		var showLegendLabel=mw.message( 'sprf.js.graph.show.legend' ).text();
+		var hideLegendLabel=mw.message( 'sprf.js.graph.hide.legend' ).text();
 		var divId = config.divId + "-legend";
 		var table = $("<table>").attr("id", "table-" + divId);
 		var showLegend = false;
@@ -818,25 +825,25 @@ spqlib.graph = (function () {
 		//Aggiungo gli eventi
 		$("#" + divLegendLabel).on("click", function(){
 			var value = $("#" + divLegendLabel+" span").text();
-			if (value == "Show legend"){
+			if (value == showLegendLabel){
 				//$("#" + divLegendContainer).show();
 				$("#" + divLegendContainer).slideDown("slow");
-				$("#" + divLegendLabel+" span").text("Hide legend");
-			} else if (value == "Hide legend") {
+				$("#" + divLegendLabel+" span").text(hideLegendLabel);
+			} else if (value == hideLegendLabel) {
 				$("#" + divLegendContainer).slideUp("slow");
 				//$("#" + divLegendContainer).hide();
-				$("#" + divLegendLabel+" span").text("Show legend");
+				$("#" + divLegendLabel+" span").text(showLegendLabel);
 			}
 		});
 
 		$("#" + divLegendContainer).on("mouseenter ", function(){
 			$("#" + divLegendContainer).show();
-			$("#" + divLegendLabel+" span").text("Hide legend");
+			$("#" + divLegendLabel+" span").text(hideLegendLabel);
 		});
 
 		$("#" + divLegendContainer).on("mouseleave", function(){
 			$("#" + divLegendContainer).slideUp("slow");
-			$("#" + divLegendLabel+" span").text("Show legend");
+			$("#" + divLegendLabel+" span").text(showLegendLabel);
 		});
 	}
 	

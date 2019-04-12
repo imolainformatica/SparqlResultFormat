@@ -1,13 +1,13 @@
 <?php
 
-if (getenv( 'MW_INSTALL_PATH' )=== false){
-	putenv("MW_INSTALL_PATH=".__DIR__."/../../../../");
+if ( getenv( 'MW_INSTALL_PATH' ) === false ) {
+	putenv( "MW_INSTALL_PATH=" . __DIR__ . "/../../../../" );
 }
-//echo getenv( 'MW_INSTALL_PATH' );
+// echo getenv( 'MW_INSTALL_PATH' );
 
 
 require __DIR__ . '/../../../../includes/WebStart.php';
-//require __DIR_.'SparqlEndpointCall.php';
+// require __DIR_.'SparqlEndpointCall.php';
 
 
 
@@ -16,71 +16,79 @@ if ( !$wgRequest->checkUrlExtension() ) {
 	return;
 }
 
-$query="";
-$sparqlEndpoint="";
+$query = "";
+$sparqlEndpoint = "";
 
 try {
-	if (!isset($_POST['endpointName'])){
-		throw new Exception('Cannot find "endpointName" parameter'); 
+	if ( !isset( $_POST['endpointName'] ) ) {
+		throw new Exception( 'Cannot find "endpointName" parameter' );
 	} else {
-		$endpointName=$_POST['endpointName'];
+		$endpointName = $_POST['endpointName'];
 	}
 
+	$connectionTimeout = 10;
+	$requestTimeout = 30;// seconds
 
-	if (!isset($wgSparqlEndpointDefinition[$endpointName])){
-		throw new Exception('Cannot find sparql endpoint with name '.$endpointName); 
+	if ( !isset( $wgSparqlEndpointDefinition[$endpointName] ) ) {
+		throw new Exception( 'Cannot find sparql endpoint with name ' . $endpointName );
 	} else {
-		$sparqlEndpoint=$wgSparqlEndpointDefinition[$endpointName]['url'];
-		if (isset($wgSparqlEndpointDefinition[$endpointName]['basicAuth'])){
-			$user=$wgSparqlEndpointDefinition[$endpointName]['basicAuth']['user'];
-			$password=$wgSparqlEndpointDefinition[$endpointName]['basicAuth']['password'];
+		$ep = $wgSparqlEndpointDefinition[$endpointName];
+		$sparqlEndpoint = $ep['url'];
+		if ( isset( $ep['basicAuth'] ) ) {
+
+			$user = $ep['basicAuth']['user'];
+			$password = $ep['basicAuth']['password'];
+		}
+		if ( isset( $ep['connectionTimeout'] ) ) {
+			$connectionTimeout = $ep['connectionTimeout'];
+		}
+		if ( isset( $ep['requestTimeout'] ) ) {
+			$requestTimeout = $ep['requestTimeout'];
 		}
 	}
 
-	if (!isset($_POST['query'])){
-		throw new Exception('Cannot find "query" parameter'); 
+	if ( !isset( $_POST['query'] ) ) {
+		throw new Exception( 'Cannot find "query" parameter' );
 	} else {
-		$query=$_POST['query'];
+		$query = $_POST['query'];
 	}
 
 	// set post fields
 	$post = [
-		'query'   => urlencode($query),
+		'query'   => $query,
 	];
+	$fields_string = "";
+	// url-ify the data for the POST
+	// foreach($post as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
+	// rtrim($fields_string, '&');
 
-	//url-ify the data for the POST
-	foreach($post as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
-	rtrim($fields_string, '&');
+	$fields_string = http_build_query( $post );
+	$ch = curl_init( $sparqlEndpoint );
+	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+	curl_setopt( $ch, CURLOPT_POSTFIELDS, $fields_string );
 
-	$ch = curl_init($sparqlEndpoint);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-	if (isset($user) && isset($password)){
-		curl_setopt($ch, CURLOPT_USERPWD, "$user:$password");
+	curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $connectionTimeout );
+	curl_setopt( $ch, CURLOPT_TIMEOUT, $requestTimeout ); // timeout in seconds
+	curl_setopt( $ch, CURLOPT_VERBOSE, true );
+	if ( isset( $user ) && isset( $password ) ) {
+		curl_setopt( $ch, CURLOPT_USERPWD, "$user:$password" );
 	}
-	$headers = array(
+	$headers = [
 		'Content-Type:application/x-www-form-urlencoded; charset=UTF-8',
 		'Accept: application/sparql-results+json'
-	);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
+	];
+	curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
 
 	// execute!
-	$response = curl_exec($ch);
-	$rc=curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	$ct=curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+	$response = curl_exec( $ch );
+	$rc = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+	$ct = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
 	// close the connection, release resources used
-	curl_close($ch);
-	header('Content-Type: '.$ct,true);
-	http_response_code ($rc);
+	curl_close( $ch );
+	header( 'Content-Type: ' . $ct, true );
+	http_response_code( $rc );
 	echo $response;
-} catch (Exception $e){
+} catch ( Exception $e ) {
 	echo 'Caught exception: ',  $e->getMessage(), "\n";
-	http_response_code (400);
+	http_response_code( 400 );
 }
-
-
-
-
-
-?>

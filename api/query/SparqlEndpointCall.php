@@ -1,71 +1,69 @@
 <?php
 
 class SparqlEndpointCall {
-	
-	
-	function execute($query,$endpoint){
+
+	function execute( $query, $endpoint ) {
 		$post = [
-			'query'   => urlencode($query),
+			'query'   => urlencode( $query ),
 		];
 
-		//url-ify the data for the POST
-		foreach($post as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
-		rtrim($fields_string, '&');
+		// url-ify the data for the POST
+		foreach ( $post as $key => $value ) { $fields_string .= $key . '=' . $value . '&';
+  }
+		rtrim( $fields_string, '&' );
 
-		$login="admin";
-		$password="bce263";
-		$ch = curl_init('https://ubiss-test.imolinfo.it/fuseki/dsread/query');
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-		curl_setopt($ch, CURLOPT_VERBOSE, true);
-		curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
-		$headers = array(
+		$login = "admin";
+		$password = "bce263";
+		$ch = curl_init( 'https://ubiss-test.imolinfo.it/fuseki/dsread/query' );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $fields_string );
+		curl_setopt( $ch, CURLOPT_VERBOSE, true );
+		curl_setopt( $ch, CURLOPT_USERPWD, "$login:$password" );
+		$headers = [
 			'Content-Type:application/x-www-form-urlencoded; charset=UTF-8',
 			'Accept: application/sparql-results+json'
-		);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
+		];
+		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
 
 		// execute!
-		$response = curl_exec($ch);
-		$rc=curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		$ct=curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+		$response = curl_exec( $ch );
+		$rc = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+		$ct = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
 		// close the connection, release resources used
-		curl_close($ch);
-		header('Content-Type: '.$ct,true);
-		http_response_code ($rc);
+		curl_close( $ch );
+		header( 'Content-Type: ' . $ct, true );
+		http_response_code( $rc );
 		echo $response;
-		echo var_dump($wgSparqlEndpointDefinition);
+		echo var_dump( $wgSparqlEndpointDefinition );
 	}
-	
-	
+
 	/*protected $name = "";
 	protected $description = "";
 	protected $params = array();
 	protected $extraOpts = array();
 	protected $queryStructure = "";
-	
+
 	public function getName(){
 		return $this->name;
 	}
-	
+
 	public function getDescription(){
 		return $this->description;
 	}
-	
+
 	public function getParams(){
 		return $this->params;
 	}
-	
+
 	public function getExtraOptions(){
 		return $this->extraOpts;
 	}
-	
+
 	public function getQueryStructure(){
 		return $this->queryStructure;
 	}
-	
-	
+
+
 	protected function getParameterValue($options,$paramName,$defaultValue){
 		$paramName = trim($paramName);
 		if (!isset($this->params[$paramName])){
@@ -74,7 +72,7 @@ class SparqlEndpointCall {
 		} else {
 			$paramDefinition = $this->params[$paramName];
 		}
-		
+
 		if (isset($options[$paramName])){
 			return html_entity_decode ($options[$paramName],ENT_QUOTES);
 		} else {
@@ -88,7 +86,7 @@ class SparqlEndpointCall {
 			}
 		}
 	}
-	
+
 	protected function getSparqlEndpointByName($endpointName){
 		global $wgSparqlEndpointDefinition;
 		if (isset($wgSparqlEndpointDefinition[$endpointName])){
@@ -97,7 +95,7 @@ class SparqlEndpointCall {
 			throw new Exception("No endpoint '$endpointName' found in LocalSettings.php");
 		}
 	}
-	
+
 	protected function getSparqlEndpointBasicAuthString($endpointData){
 		$fieldName = 'basicAuth';
 		if (isset($endpointData[$fieldName])){
@@ -109,7 +107,7 @@ class SparqlEndpointCall {
 			return '';
 		}
 	}
-	
+
 	protected function checkExtraOptions($extra){
 		if (is_array($extra)){
 			foreach ($extra as $value) {
@@ -119,7 +117,7 @@ class SparqlEndpointCall {
 			$this->checkExtraOptionName($extra);
 		}
 	}
-	
+
 	private function checkExtraOptionName($value){
 		if (!empty($value)){
 			$pos = strpos($value,":");
@@ -129,7 +127,7 @@ class SparqlEndpointCall {
 			}
 		}
 	}
-	
+
 	protected function jsRegisterFunction($launch){
 		$out = "if (!window.sparqlResultFormatsElements){
 					window.sparqlResultFormatsElements = [];
@@ -138,10 +136,9 @@ class SparqlEndpointCall {
 					start:function(config){
 						$launch
 					}
-				});		
+				});
 				";
-		return $out;		
+		return $out;
 	}*/
 
 }
-?>

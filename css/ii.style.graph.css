@@ -65,5 +65,11 @@
 
 .ii-graph-legend-box {
 	padding:5px;
+}
 
+.ii-graph-progress-bar{
+	background-color: #1fe51f;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid green;
 }
