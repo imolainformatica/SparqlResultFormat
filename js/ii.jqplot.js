@@ -91,7 +91,7 @@
 					},
 					pointLabels: { show: false }
 				},
-				seriesColor:colorscheme['rdgy'][9],
+				seriesColor:colorscheme.rdgy[9],
 				axesDefaults: {
 					tickRenderer: $.jqplot.CanvasAxisTickRenderer,
 				},
@@ -125,7 +125,7 @@
 					location: 'ne',
 					placement: 'inside'
 				}      
-			}
+			};
 			
 			 var defaultBarChartHorizontalOptions = {
 				// Only animate if we're not using excanvas (not in IE 7 or IE 8)..
@@ -139,7 +139,7 @@
 					},
 					pointLabels: { show: false }
 				},
-				seriesColor:colorscheme['rdgy'][9],
+				seriesColor:colorscheme.rdgy[9],
 				axesDefaults: {
 					tickRenderer: $.jqplot.CanvasAxisTickRenderer,
 				},
@@ -173,7 +173,7 @@
 					location: 'ne',
 					placement: 'inside'
 				}      
-			}
+			};
 			
 			var defaultCutLongLabelFormatter = function(format,value){
 				  var maxLength = spqlib.barchart.DEFAULT_AXIS_LABEL_MAX_LENGTH;
@@ -181,11 +181,11 @@
 					  value = value.substr(0,maxLength)+"...";
 				  }
 				  return value;
-			  }
+			  };
 			
 			function defaultBarchartTooltipContentEditor(str, seriesIndex, pointIndex, plot) {
 				var label = plot.axes.xaxis.ticks[pointIndex];
-				var html = "<span class='jqplot-tooltip-label'>"+label+"</span></br><span class='jqplot-tooltip-series-name'>"+plot.series[seriesIndex]["label"] + " = </span>";
+				var html = "<span class='jqplot-tooltip-label'>"+label+"</span></br><span class='jqplot-tooltip-series-name'>"+plot.series[seriesIndex].label + " = </span>";
 				var value = "";
 				if (Array.isArray(plot.data[seriesIndex][pointIndex])){
 					var arrayLength = plot.data[seriesIndex][pointIndex].length;
@@ -200,7 +200,7 @@
 			var defaultPieChartOptions = {
 				animate: true,
 				title: {text:'',show:true},
-				seriesColor:colorscheme['rdgy'][9],
+				seriesColor:colorscheme.rdgy[9],
 				  seriesDefaults: {
 					// Make this a pie chart.
 					renderer: jQuery.jqplot.PieRenderer, 
@@ -212,7 +212,7 @@
 					}
 				  }, 
 				  legend: { show:true, location: 'e' }
-				}
+				};
 				
 			function defaultPiechartTooltipContentEditor(str, seriesIndex, pointIndex, plot) {
 				var label =  plot.data[seriesIndex][pointIndex][0];
@@ -231,7 +231,7 @@
 			var defaultDonutChartOptions = {
 				animate: true,
 				title: {text:'',show:true},
-				seriesColor:colorscheme['spectral'][9],
+				seriesColor:colorscheme.spectral[9],
 				seriesDefaults: {
 				  // make this a donut chart.
 				  renderer:$.jqplot.DonutRenderer,
@@ -252,7 +252,7 @@
 					tooltipContentEditor:defaultDonutchartTooltipContentEditor 					
 					},*/
 				legend: { show:true, location: 'e' }
-			  }
+			  };
 			  
 			 var defaultBubbleChartOptions = {
 				title: {text:'',show:true},
@@ -282,7 +282,7 @@
 							  tickOptions: {}
 						}
 					}
-			}
+			};
 	
 	     /**
 		 *  label - array di stringhe
@@ -533,7 +533,7 @@
 						series[i][j]=[label[j],value];
 					}
 				}
-				for (var i=0;i<series.length;i++){
+				for (i=0;i<series.length;i++){
 					s.push(series[i]);
 				}
 			}
@@ -801,7 +801,7 @@
 			 drawBubbleChart:drawBubbleChart,
 			 defaultCutLongLabelFormatter:defaultCutLongLabelFormatter,
 			 getChart:getChart
-		}
+		};
 
 	});
 
