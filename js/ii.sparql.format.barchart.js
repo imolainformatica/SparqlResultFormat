@@ -1,7 +1,7 @@
 spqlib.barchart = ( function () {
 	/**
-	* Entry point
-	*/
+	 * Entry point
+	 */
 	spqlib.sparql2BarChart = function ( config ) {
 		if ( !config.sparqlWithPrefixes && config.sparql && config.queryPrefixes ) {
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes( config.sparql, config.queryPrefixes );
@@ -17,8 +17,8 @@ spqlib.barchart = ( function () {
 	my.exportAsImage = function () {};
 	my.toggleFullScreen = function ( graphId ) {
 		var graphDiv = $( '#' + graphId + '-container' ),
-		 cssClass = this.config.divCssClass,
-		 cssClassFullScreen = this.config.divCssClassFullScreen;
+			cssClass = this.config.divCssClass,
+			cssClassFullScreen = this.config.divCssClassFullScreen;
 		graphDiv.toggleClass( cssClass );
 		graphDiv.toggleClass( cssClassFullScreen );
 		this.replot( this.options );
@@ -42,16 +42,16 @@ spqlib.barchart = ( function () {
 	my.render = function ( json, config ) {
 		$( '#' + config.divId ).html( '' );
 		var head = json.head.vars,
-		 data = json.results.bindings;
+			data = json.results.bindings;
 		if ( !head || head.length < 2 ) {
 			throw 'Too few fields in sparql result. Need at least 2 columns';
 		}
-		var field_label = head[ 0 ],
-		 numSeries = head.length - 1,
-		 labels = [],
-		 series = [];
+		var fieldLabel = head[ 0 ],
+			numSeries = head.length - 1,
+			labels = [],
+			series = [];
 		for ( var i = 0; i < data.length; i++ ) {
-			labels.push( spqlib.util.getSparqlFieldValue( data[ i ][ field_label ] ) );
+			labels.push( spqlib.util.getSparqlFieldValue( data[ i ][ fieldLabel ] ) );
 			for ( var j = 0; j < numSeries; j++ ) {
 				if ( !series[ j ] ) {
 					series[ j ] = [ data.length ];
@@ -60,25 +60,25 @@ spqlib.barchart = ( function () {
 			}
 		}
 		var chartId = config.divId,
-		 chart = spqlib.barchart.chartImpl().drawBarChart( labels, series, config );
+			chart = spqlib.barchart.chartImpl().drawBarChart( labels, series, config );
 		chart.toggleFullScreen = my.toggleFullScreen;
 		spqlib.addToRegistry( chartId, chart );
 		$( '#' + chartId ).trigger( 'done' );
 	};
 	my.defaultBarChartTooltipContent = function ( label, value, config, seriesIndex ) {
 		var spanLabel = '',
-		 textLabel = '',
-		 labelPattern = config.seriesConfiguration[ seriesIndex ].assetPattern,
-		 linkPattern = config.seriesConfiguration[ seriesIndex ].assetLinkPattern,
-		 showLink = config.seriesConfiguration[ seriesIndex ].showLink,
-		 seriesLabel = config.seriesConfiguration[ seriesIndex ].label,
-		 valuePattern = config.seriesConfiguration[ seriesIndex ].valuePattern;
+			textLabel = '',
+			labelPattern = config.seriesConfiguration[ seriesIndex ].assetPattern,
+			linkPattern = config.seriesConfiguration[ seriesIndex ].assetLinkPattern,
+			showLink = config.seriesConfiguration[ seriesIndex ].showLink,
+			seriesLabel = config.seriesConfiguration[ seriesIndex ].label,
+			valuePattern = config.seriesConfiguration[ seriesIndex ].valuePattern;
 		if ( labelPattern ) {
 			textLabel = spqlib.util.formatString( labelPattern, label );
 		} else {
 			textLabel = label;
 		}
-		if ( showLink == 'true' ) {
+		if ( showLink === 'true' ) {
 			var url = '#';
 			if ( linkPattern ) {
 				url = spqlib.util.formatString( linkPattern, label );
@@ -91,7 +91,7 @@ spqlib.barchart = ( function () {
 		if ( valuePattern ) {
 			value = spqlib.util.formatString( valuePattern, value, '{%d}' );
 		}
-		var html = "<span class='close' onclick='javascript:$(this).parent().hide();'>x</span><span class=\"jqplot-tooltip-label\">" + spanLabel + '</span></br>';
+		var html = "<span class='close' onclick='javascript:$(this).parent().hide();'><a href='#'><i class='far fa-times-circle'></i></a></span><span class=\"jqplot-tooltip-label\">" + spanLabel + '</span></br>';
 		html += '<span class="jqplot-tooltip-serie-label">' + seriesLabel + '</span>';
 		html += '<span class="jqplot-tooltip-value">' + value + '</span>';
 		return html;
