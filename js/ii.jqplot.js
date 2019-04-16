@@ -464,10 +464,10 @@
 			yValue = yValuePattern ? spqlib.util.formatString( yValuePattern, yValue, '{%d}' ) : yValue;
 			rValue = rValuePattern ? spqlib.util.formatString( rValuePattern, rValue, '{%d}' ) : rValue;
 
-			$( '#tooltip1b' ).css( { left: chart_left + x + 5, top: chart_top + y, 'z-index': 9999999999999 } );
+			$( '#tooltip1b' ).css( { left: chart_left + x-200 + 5, top: chart_top + y-200, 'z-index': 9999999999999 } );
 			var oldAssetName = $( '#tooltip1b' ).attr( 'label' );
 			$( '#tooltip1b' ).attr( 'label', assetName );
-			$( '#tooltip1b' ).html( '<span class="close" onclick="javascript:$(this).parent().hide();">x</span><span class="instance-name">' +
+			$( '#tooltip1b' ).html( '<span class="close" onclick="javascript:$(this).parent().hide();"><i class="far fa-times-circle" style="cursor: pointer;"></i></span><span class="instance-name">' +
 			assetNameSpan + '</span><br />' + xLabel + ' ' + xValue + '<br />' + yLabel + ' ' +
 			yValue + '<br />' + rLabel + ' ' + rValue );
 			if ( oldAssetName != assetName ) {
