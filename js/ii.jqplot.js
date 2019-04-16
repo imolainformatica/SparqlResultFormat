@@ -404,14 +404,16 @@
 
 		function defaultBarChartDataClick( ev, seriesIndex, pointIndex, data ) {
 			var chartId = ev.currentTarget.id,
-			 chart = $( '#' + chartId ),
+			 chart = $( '#' + chartId )[ 0 ],
 			 plot = c[ chartId ],
 			 tooltip = $( '#' + chartId + ' .jqplot-highlighter-tooltip' ),
-			 x = ev.pageX;
-			 y = ev.pageY;
+			 offsetLeft = chart.offsetLeft,
+			 offsetTop = chart.offsetTop,
+			 x = ev.pageX - offsetLeft,
+			 y = ev.pageY - offsetTop,
 			 oldPointIndex = parseInt( tooltip.attr( 'pointIndex' ) );
 			tooltip.attr( 'pointIndex', pointIndex );
-			tooltip.css( 'position', 'fixed' );
+			tooltip.css( 'position', 'absolute' );
 			tooltip.css( 'left', x + 'px' );
 			tooltip.css( 'top', y + 'px' );
 			tooltip.css( 'z-index', '999' );
