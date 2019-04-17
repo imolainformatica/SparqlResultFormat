@@ -32,7 +32,6 @@ class SparqlResultFormatBase {
 		$paramName = trim( $paramName );
 		if ( !isset( $this->params[$paramName] ) ) {
 			throw new Exception( "Param $paramName is not defined in params definition. " );
-			$paramDefinition = [];
 		} else {
 			$paramDefinition = $this->params[$paramName];
 		}
