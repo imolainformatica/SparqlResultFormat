@@ -1,4 +1,4 @@
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/gcornacchia/SparqlResultFormat/badges/quality-score.png?b=master&s=498347b5e4c5198a0b0d0d6484fc546fd8f924a5]
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/gcornacchia/SparqlResultFormat/badges/quality-score.png?b=master&s=498347b5e4c5198a0b0d0d6484fc546fd8f924a5)]
 
 Questo progetto contiene l'implementazione dell'estensione Mediawiki SparqlResultFormat.
 
