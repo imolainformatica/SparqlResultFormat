@@ -5,11 +5,11 @@
     "jakub-onderka/php-console-highlighter": "0.3.2",
     "mediawiki/minus-x": "0.3.1",
 	"phpunit/phpunit": "^6",
-	"phpmetrics/phpmetrics":"2.4.1"
+	"phpmetrics/phpmetrics":"2.4.1",
+    "mediawiki/mediawiki-phan-config": "^0.5.0"
   },
   "scripts": {
     "test": [
-      "parallel-lint . --exclude vendor --exclude node_modules",
       "phpcs -p -s",
       "minus-x check ."
     ],
@@ -20,7 +20,8 @@
     ],
 	"phpmetrics": [
       "phpmetrics --report-html=./html ."
-    ]
+    ],
+	"eslint":["eslint -o output.html -f html js"]
   },
   "require": {
     "phan/phan": "^1.2"

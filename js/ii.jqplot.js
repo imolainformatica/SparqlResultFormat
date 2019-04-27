@@ -333,8 +333,8 @@
 						 oldPointIndex = tooltip.attr( 'pointIndex' );
 					tooltip.attr( 'pointIndex', pointIndex );
 					tooltip.css( 'position', 'absolute' );
-					tooltip.css( 'left', x-200 + 'px' );
-					tooltip.css( 'top', y-200 + 'px' );
+					tooltip.css( 'left', x - 200 + 'px' );
+					tooltip.css( 'top', y - 200 + 'px' );
 					tooltip.css( 'z-index', '999' );
 					var html = config.pieChartTooltipContent ? config.pieChartTooltipContent.call( data[ 0 ], data[ 1 ], config ) : spqlib.piechart.defaultPieChartTooltipContent( data[ 0 ], data[ 1 ], config );
 					if ( oldPointIndex != pointIndex ) {
@@ -414,8 +414,8 @@
 			 oldPointIndex = parseInt( tooltip.attr( 'pointIndex' ) );
 			tooltip.attr( 'pointIndex', pointIndex );
 			tooltip.css( 'position', 'absolute' );
-			tooltip.css( 'left', x-200 + 'px' );
-			tooltip.css( 'top', y-200 + 'px' );
+			tooltip.css( 'left', x - 200 + 'px' );
+			tooltip.css( 'top', y - 200 + 'px' );
 			tooltip.css( 'z-index', '999' );
 			var dataObject = plot.data[ seriesIndex ][ pointIndex ],
 			 isHorizontal = plot.config.extraOptions[ PROP_CHART_DIRECTION ] == 'horizontal',
@@ -464,7 +464,7 @@
 			yValue = yValuePattern ? spqlib.util.formatString( yValuePattern, yValue, '{%d}' ) : yValue;
 			rValue = rValuePattern ? spqlib.util.formatString( rValuePattern, rValue, '{%d}' ) : rValue;
 
-			$( '#tooltip1b' ).css( { left: chart_left + x-200 + 5, top: chart_top + y-200, 'z-index': 9999999999999 } );
+			$( '#tooltip1b' ).css( { left: chart_left + x - 200 + 5, top: chart_top + y - 200, 'z-index': 9999999999999 } );
 			var oldAssetName = $( '#tooltip1b' ).attr( 'label' );
 			$( '#tooltip1b' ).attr( 'label', assetName );
 			$( '#tooltip1b' ).html( '<span class="close" onclick="javascript:$(this).parent().hide();"><i class="far fa-times-circle" style="cursor: pointer;"></i></span><span class="instance-name">' +
@@ -489,8 +489,8 @@
 			 oldPointIndex = tooltip.attr( 'pointIndex' );
 			tooltip.attr( 'pointIndex', pointIndex );
 			tooltip.css( 'position', 'absolute' );
-			tooltip.css( 'left', x-200 + 'px' );
-			tooltip.css( 'top', y-200 + 'px' );
+			tooltip.css( 'left', x - 200 + 'px' );
+			tooltip.css( 'top', y - 200 + 'px' );
 			tooltip.css( 'z-index', '999' );
 			var html = config.donutChartTooltipContent ? config.donutChartTooltipContent.call( data[ 0 ], data[ 1 ], config ) : spqlib.donutchart.defaultDonutChartTooltipContent( data[ 0 ], data[ 1 ], config );
 			if ( oldPointIndex != pointIndex ) {

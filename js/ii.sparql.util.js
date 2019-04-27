@@ -107,7 +107,7 @@ spqlib.util = ( function ( sparqljs ) {
 	my.doQuery = function query( endpointName, sparql, successCallback,
 		configuration, preQueryCallback, failCallback, caller ) {
 		var mime = 'application/sparql-results+json',
-			queryTimeout = configuration.queryTimeout || 20000,
+			queryTimeout = configuration.queryTimeout || 31000,
 			basicAuthBase64String = configuration.basicAuthBase64String || false,
 			jqxhr,
 			idContainer,
