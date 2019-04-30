@@ -5,7 +5,7 @@
     "jakub-onderka/php-console-highlighter": "0.3.2",
     "mediawiki/minus-x": "0.3.1",
 	"phpunit/phpunit": "^6",
-	"phpmetrics/phpmetrics":"2.4.1",
+    "phpmetrics/phpmetrics": "^2.4",
     "mediawiki/mediawiki-phan-config": "^0.5.0"
   },
   "scripts": {
@@ -21,7 +21,9 @@
 	"phpmetrics": [
       "phpmetrics --report-html=./html ."
     ],
-	"eslint":["eslint -o output.html -f html js"]
+	"eslint":["eslint -o output.html -f html js"],
+"quality":["phpmetrics --report-html=./quality/phpmetrics .","eslint --fix --quiet -o quality/eslint-output.html -f html js"
+		]
   },
   "require": {
     "phan/phan": "^1.2"
