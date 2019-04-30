@@ -32,7 +32,7 @@ before_install:
   - ip addr # for confirmation. can be skipped
   - cat /etc/hosts # optionally check the content *before*
   - docker pull mediawiki:$MW_VERSION
-  - docker run -d -p 8080:80 -d
+  - docker run -d -p 8080:80 -d mediawiki
   - docker ps -a
 
 cache:
