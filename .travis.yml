@@ -11,7 +11,9 @@ services:
 matrix:
   fast_finish: true
   include:
-    - env: DB=mysql; MW_VERSION=1.32.0; PHPUNIT=5.7.*
+    - env: DB=mysql; MW_VERSION=1.32.0;
+      php: 7.1
+    - env: DB=mysql; MW_VERSION=1.31.0;
       php: 7.1
 
 
@@ -37,6 +39,8 @@ before_install:
   - curl -Lv http://localhost:8080
   - docker exec wiki sh -c "echo 'wfLoadExtension( \"SparqlResultFormat\" );' >> LocalSettings.php"
   - curl -Lv http://localhost:8080/index.php/Special:SparqlResultFormat
+  
+script: ls -l
 
 cache:
   directories:
