@@ -15,8 +15,8 @@ services:
   wiki:
     container_name: wiki
     image: mediawiki:${MW_VERSION}
-    #command: sh -c "sleep 10 && php maintenance/install.php wiki admin --pass password --dbtype mysql --dbname mediawiki_db --dbserver wikidb --dbuser wikiuser --dbpass password --installdbuser wikiuser --installdbpass password"
-
+    volumes:    
+    - ../../:/var/www/html/extensions/SparqlResultFormat/
       
     ports:
       - 8080:80
