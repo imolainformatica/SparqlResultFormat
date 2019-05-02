@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  wikidb:
+    container_name: wikidb
+    image: mariadb:10.3.4
+    environment:
+      MYSQL_DATABASE: "mediawiki_db"
+      MYSQL_USER: "wikiuser"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "password"
+    ports:
+      - 3306:3306
+
+  wiki:
+    container_name: wiki
+    image: mediawiki:${MW_VERSION}
+    #command: sh -c "sleep 10 && php maintenance/install.php wiki admin --pass password --dbtype mysql --dbname mediawiki_db --dbserver wikidb --dbuser wikiuser --dbpass password --installdbuser wikiuser --installdbpass password"
+
+      
+    ports:
+      - 8080:80
+    links:
+      - wikidb
+    depends_on:
+      - wikidb
+      
+

@@ -32,8 +32,8 @@ before_install:
   - ip addr # for confirmation. can be skipped
   - cat /etc/hosts # optionally check the content *before*
   - docker pull mediawiki:$MW_VERSION
-  - docker run -d -p 8080:80 -d mediawiki
-  - docker ps -a
+  - docker-compose -f tests/travis/docker-compose.yml up
+  - docker exec wiki sh -c "php maintenance/install.php wiki admin --pass password --dbtype mysql --dbname mediawiki_db --dbserver wikidb --dbuser wikiuser --dbpass password --installdbuser wikiuser --installdbpass password --server http://localhost:8080 --scriptpath ''"
 
 cache:
   directories:
