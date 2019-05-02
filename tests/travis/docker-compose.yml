@@ -10,7 +10,7 @@ services:
       MYSQL_PASSWORD: "password"
       MYSQL_ROOT_PASSWORD: "password"
     ports:
-      - 3306:3306
+      - 33306:3306
 
   wiki:
     container_name: wiki

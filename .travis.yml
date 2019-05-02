@@ -33,7 +33,7 @@ before_install:
   - cat /etc/hosts # optionally check the content *before*
   - docker pull mediawiki:$MW_VERSION
   - docker-compose -f tests/travis/docker-compose.yml up
-  - docker exec wiki sh -c "php maintenance/install.php wiki admin --pass password --dbtype mysql --dbname mediawiki_db --dbserver wikidb --dbuser wikiuser --dbpass password --installdbuser wikiuser --installdbpass password --server http://localhost:8080 --scriptpath ''"
+  - docker exec wiki sh -c "php maintenance/install.php wiki admin --pass password --dbtype mysql --dbname mediawiki_db --dbserver wikidb --dbport 33306 --dbuser wikiuser --dbpass password --installdbuser wikiuser --installdbpass password --server http://localhost:8080 --scriptpath ''"
 
 cache:
   directories:
