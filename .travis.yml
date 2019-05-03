@@ -15,6 +15,14 @@ matrix:
       php: 7.1
     - env: DB=mysql; MW_VERSION=1.31.0;
       php: 7.1
+    - env: DB=mysql; MW_VERSION=1.30.0;
+      php: 7.1
+    - env: DB=mysql; MW_VERSION=1.29.0;
+      php: 7.1
+    - env: DB=mysql; MW_VERSION=1.28.0;
+      php: 7.1
+    - env: DB=mysql; MW_VERSION=1.27;
+      php: 7.1
 
 
 # Dec 16, 2015 (GCE switch): Travis support wrote (Tomcat + Java):
