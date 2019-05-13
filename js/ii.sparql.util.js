@@ -250,8 +250,8 @@ spqlib.util = ( function ( sparqljs ) {
 	 * splitta le query con N union in N query con una sola clausola in where
 	 */
 	my.splitQueryByUnion = function ( sparql ) {
-		var parser = new sparqljs.Parser(),
-			generator = new sparqljs.Generator(),
+		var parser = window.sparqljs.Parser(),
+			generator = window.sparqljs.Generator(),
 			query = parser.parse( sparql ),
 			where = query.where[ 0 ],
 			results = [],
