@@ -1,20 +1,28 @@
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/gcornacchia/SparqlResultFormat/badges/quality-score.png?b=master&s=498347b5e4c5198a0b0d0d6484fc546fd8f924a5)](https://scrutinizer-ci.com/g/gcornacchia/SparqlResultFormat/?branch=master)
+# SparqlResultFormat
 
-Questo progetto contiene l'implementazione dell'estensione Mediawiki SparqlResultFormat.
 
-# Installazione
-1) Posizionarsi nella cartella extensions della vostra installazione mediawiki e lanciare il seguente comando
-```
-git clone http://git.imolinfo.it/piattaforma_semantica/SparqlResultFormat.git
-```
-2) Modificare il LocalSettings.php aggiungendo la seguente istruzione
+SparqlResultFormat is a free, open-source extension to [MediaWiki](https://www.semantic-mediawiki.org/wiki/MediaWiki) that lets you query different Sparql endpoints and represent output data in various formats.
+
+## Requirements
+
+- PHP 5.3 or later
+- MediaWiki 1.25 or later
+
+## Installation
+
+Once you have downloaded the code, place the 'Variables' directory within your
+MediaWiki 'extensions' directory. Then add the following code to your LocalSettings.php file:
 
 ```php
-<?php
 wfLoadExtension( 'SparqlResultFormat' );
 ```
-3) Verificare che l'estensione sia correttamente installanta nella pagina speciale **Special:Version** del vostro mediawiki. 
 
-4) Raggiungere la pagina speciale **Special:SparqlResultFormat** per vedere la documentazione sull'utilizzo delle magic words e dei vari parametri.
 
-5) Enjoy!
+## Documentation
+
+The documentation can be found directly on the **Special:SparqlResultFormat** page on your mediawiki after the installation.
+
+
+## License
+
+[MIT](LICENSE.md)
