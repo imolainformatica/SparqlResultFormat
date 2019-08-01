@@ -19,11 +19,11 @@ rect.parent,
 }
 
 .grandparent {
-  background-color: orange;
+ 
 }
 
 .grandparent:hover rect {
-  fill: #ee9700;
+  
 }
 
 .children rect.parent,
@@ -51,25 +51,6 @@ rect.parent,
 
 .children:hover rect.child {
   fill: #bbb;
-}
-
-g.children.accesso rect{
- fill:#ca4441;
-}
-g.children.supporto rect{
- fill:#a4b85c;
-}
-
-g.children.servizi-applicativi-comuni rect{
- fill:#788bca;
-}
-
-g.children.operations rect{
- fill:#78c9b2;
-}
-
-g.children.applicazioni-infrastrutturali rect{
- fill:#9c7ed7;
 }
 
 .treemap-info-box-selected-item{
