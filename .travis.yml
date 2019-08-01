@@ -11,6 +11,8 @@ services:
 matrix:
   fast_finish: true
   include:
+    - env: DB=mysql; MW_VERSION=1.33.0;
+      php: 7.1
     - env: DB=mysql; MW_VERSION=1.32.0;
       php: 7.1
     - env: DB=mysql; MW_VERSION=1.31.0;
