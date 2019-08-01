@@ -148,8 +148,8 @@
 	"sprf.param.csvLinkLabel":"Label of the link to download the csv",
 	"sprf.param.queryTimeout":"Maximum time for execution of a query (in milliseconds)",
 	"sprf.param.maxNumNodes":"Maximum number of nodes to be drawn. If the sparql query returns more records than this parameter no graph will be shown",
-	"sprf.js.graph.show.legend":"Show Legenddd",
-	"sprf.js.graph.hide.legend":"Hide Legenddd",
+	"sprf.js.graph.show.legend":"Show Legend",
+	"sprf.js.graph.hide.legend":"Hide Legend",
 	"sprf.js.graph.go.fullscreen":"Go Fullscreen",
 	"sprf.js.graph.exit.fullscreen":"Exit Fullscreen"
 
