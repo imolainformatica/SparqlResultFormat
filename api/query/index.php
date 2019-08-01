@@ -3,13 +3,8 @@
 if ( getenv( 'MW_INSTALL_PATH' ) === false ) {
 	putenv( "MW_INSTALL_PATH=" . __DIR__ . "/../../../../" );
 }
-// echo getenv( 'MW_INSTALL_PATH' );
-
 
 require __DIR__ . '/../../../../includes/WebStart.php';
-// require __DIR_.'SparqlEndpointCall.php';
-
-
 
 // URL safety checks
 if ( !$wgRequest->checkUrlExtension() ) {
@@ -69,7 +64,7 @@ try {
 
 	curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $connectionTimeout );
 	curl_setopt( $ch, CURLOPT_TIMEOUT, $requestTimeout ); // timeout in seconds
-	curl_setopt( $ch, CURLOPT_VERBOSE, true );
+	curl_setopt( $ch, CURLOPT_VERBOSE, false );
 	if ( isset( $user ) && isset( $password ) ) {
 		curl_setopt( $ch, CURLOPT_USERPWD, "$user:$password" );
 	}
