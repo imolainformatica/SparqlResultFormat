@@ -7,7 +7,7 @@ spqlib.barchart = ( function () {
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes( config.sparql, config.queryPrefixes );
 		}
 		spqlib.util.parseExtraOptions( config );
-		this.util.doQuery( config.endpointName, config.sparqlWithPrefixes, spqlib.barchart.render, config, spqlib.barchart.preQuery, spqlib.barchart.failQuery );
+		this.util.doQuery(config.endpoint,config.endpointName, config.sparqlWithPrefixes, spqlib.barchart.render, config, spqlib.barchart.preQuery, spqlib.barchart.failQuery );
 	};
 	var my = {};
 	my.DEFAULT_AXIS_LABEL_MAX_LENGTH = 15;

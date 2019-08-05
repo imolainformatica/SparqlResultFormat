@@ -6,6 +6,15 @@ if ( getenv( 'MW_INSTALL_PATH' ) === false ) {
 
 require __DIR__ . '/../../../../includes/WebStart.php';
 
+function setHTTPStatusCode($code){
+	if (false === function_exists('http_response_code')) {
+		header("X-returnCode: $code",true,$code);
+	}else {
+		http_response_code( $code );
+	}
+}
+
+
 // URL safety checks
 if ( !$wgRequest->checkUrlExtension() ) {
 	return;
@@ -49,9 +58,9 @@ try {
 	}
 
 	// set post fields
-	$post = [
+	$post = array(
 		'query'   => $query,
-	];
+	);
 	$fields_string = "";
 	// url-ify the data for the POST
 	// foreach($post as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
@@ -68,10 +77,10 @@ try {
 	if ( isset( $user ) && isset( $password ) ) {
 		curl_setopt( $ch, CURLOPT_USERPWD, "$user:$password" );
 	}
-	$headers = [
+	$headers = array(
 		'Content-Type:application/x-www-form-urlencoded; charset=UTF-8',
 		'Accept: application/sparql-results+json'
-	];
+	);
 	curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
 
 	// execute!
@@ -81,9 +90,9 @@ try {
 	// close the connection, release resources used
 	curl_close( $ch );
 	header( 'Content-Type: ' . $ct, true );
-	http_response_code( $rc );
+	setHTTPStatusCode($rc);
 	echo $response;
 } catch ( Exception $e ) {
 	echo 'Caught exception: ',  $e->getMessage(), "\n";
-	http_response_code( 400 );
+	setHTTPStatusCode(400);
 }

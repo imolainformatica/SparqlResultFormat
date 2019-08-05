@@ -6,7 +6,7 @@ spqlib.table = ( function () {
 		if ( !config.sparqlWithPrefixes && config.sparql && config.queryPrefixes ) {
 			config.sparqlWithPrefixes = spqlib.util.addPrefixes( config.sparql, config.queryPrefixes );
 		}
-		this.util.doQuery( config.endpointName, config.sparqlWithPrefixes, spqlib.table.renderTable, config, spqlib.table.preQuery, spqlib.table.failQuery );
+		this.util.doQuery( config.endpoint, config.endpointName, config.sparqlWithPrefixes, spqlib.table.renderTable, config, spqlib.table.preQuery, spqlib.table.failQuery );
 	};
 
 	var my = { };

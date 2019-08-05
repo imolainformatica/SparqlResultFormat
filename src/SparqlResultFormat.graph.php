@@ -232,7 +232,7 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 		$config = "var config = {};
 			config.divId = '$divId';
 			config.endpointName='$endpointIndex';
-			config.endpoint='$endpoint';
+			config.endpoint='$wgScriptPath/extensions/SparqlResultFormat/api/query/index.php';
 			config.sparql=decodeURIComponent(\"$escapedQuery\");
 			config.queryPrefixes=prefixes;
 			config.queryTimeout=$queryTimeout;

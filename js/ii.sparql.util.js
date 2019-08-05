@@ -104,7 +104,7 @@ spqlib.util = ( function ( sparqljs ) {
 	 * effettua la chiamata asincrona all'endpoint sparql. al termine viene
 	 * richiamata la funzione di callback passata come parametro
 	 */
-	my.doQuery = function query( endpointName, sparql, successCallback,
+	my.doQuery = function query(queryEndpoint, targetEndpointName, sparql, successCallback,
 		configuration, preQueryCallback, failCallback, caller ) {
 		var mime = 'application/sparql-results+json',
 			queryTimeout = configuration.queryTimeout || 31000,
@@ -122,7 +122,7 @@ spqlib.util = ( function ( sparqljs ) {
 
 		jqxhr = $.ajax( {
 			/* url:endpoint,*/
-			url: '/extensions/SparqlResultFormat/api/query/index.php',
+			url: queryEndpoint, //'/extensions/SparqlResultFormat/api/query/index.php',
 			type: 'POST',
 			timeout: queryTimeout,
 			beforeSend: function ( xhr ) {
@@ -132,7 +132,7 @@ spqlib.util = ( function ( sparqljs ) {
 				xhr.setRequestHeader( 'Accept', mime );
 			},
 			data: {
-				endpointName: endpointName,
+				endpointName: targetEndpointName,
 				query: sparql
 			}
 		} ).done( function ( json ) {

@@ -28,7 +28,7 @@ spqlib.graph = ( function () {
 				progressBar.text( perc );
 				var i = 1;
 				if ( queries[ i ] ) {
-					spqlib.util.doQuery( config.endpointName, queries[ i ], spqlib.graph.addNodes, config, null, spqlib.graph.failQuery );
+					spqlib.util.doQuery( config.endpoint, config.endpointName, queries[ i ], spqlib.graph.addNodes, config, null, spqlib.graph.failQuery );
 				} else {
 					$( '#' + config.divId + '-container' ).next().hide();
 				}
@@ -36,7 +36,7 @@ spqlib.graph = ( function () {
 				$( '#' + config.divId ).on( 'singleQueryDone', function () {
 					i++;
 					if ( queries[ i ] ) {
-						spqlib.util.doQuery( config.endpointName, queries[ i ], spqlib.graph.addNodes, config, null, spqlib.graph.failQuery );
+						spqlib.util.doQuery( config.endpoint, config.endpointName, queries[ i ], spqlib.graph.addNodes, config, null, spqlib.graph.failQuery );
 					} else {
 						// nascondo la progress bar
 						$( '#' + config.divId + '-container' ).next().hide();
@@ -44,10 +44,10 @@ spqlib.graph = ( function () {
 				} );
 			} );
 			if ( queries.length > 0 ) {
-				spqlib.util.doQuery( config.endpointName, queries[ 0 ], spqlib.graph.render, config, spqlib.graph.preQuery, spqlib.graph.failQuery );
+				spqlib.util.doQuery( config.endpoint, config.endpointName, queries[ 0 ], spqlib.graph.render, config, spqlib.graph.preQuery, spqlib.graph.failQuery );
 			}
 		} else {
-			spqlib.util.doQuery( config.endpointName, config.sparqlWithPrefixes, spqlib.graph.render, config, spqlib.graph.preQuery, spqlib.graph.failQuery );
+			spqlib.util.doQuery( config.endpoint, config.endpointName, config.sparqlWithPrefixes, spqlib.graph.render, config, spqlib.graph.preQuery, spqlib.graph.failQuery );
 		}
 	};
 
@@ -577,7 +577,7 @@ spqlib.graph = ( function () {
 	function loadExtraDataTypeProperties( obj, props, conf ) {
 		// devo recupeare le informazioni e metterle dentro al nodo in modo che siano visualizzate
 		var sparql = generateReadPropertyQuery( obj, props, conf.queryPrefixes );
-		spqlib.util.doQuery( conf.endpointName, sparql, spqlib.graph.addInfoToNode, conf, null, null, obj );
+		spqlib.util.doQuery( config.endpoint, config.endpointName, sparql, spqlib.graph.addInfoToNode, conf, null, null, obj );
 	}
 
 	function generateReadPropertyQuery( obj, props, prefixes ) {
@@ -624,7 +624,7 @@ spqlib.graph = ( function () {
 			throw "'" + direction + "' is invalid for direction parameter";
 		}
 		query = spqlib.util.addPrefixes( query, config.queryPrefixes );
-		spqlib.util.doQuery( config.endpointName, query, spqlib.graph.addNodes, config, null, null, { graphId: graphId, nodeURI: nodeURI, propToExpand: propToExpand, direction: direction } );
+		spqlib.util.doQuery( config.endpoint, config.endpointName, query, spqlib.graph.addNodes, config, null, null, { graphId: graphId, nodeURI: nodeURI, propToExpand: propToExpand, direction: direction } );
 		// nascondo il tooltip
 		node.trigger( 'unfocus' );
 	};

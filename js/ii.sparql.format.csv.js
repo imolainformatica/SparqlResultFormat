@@ -8,7 +8,7 @@ spqlib.csv = ( function () {
 		}
 		$( '#' + config.divId + '-loader' ).show();
 		$( '#' + config.divId + '-error-status' ).hide();
-		this.util.doQuery( config.endpointName, config.sparqlWithPrefixes, spqlib.csv.render, config, false, spqlib.csv.fail );
+		this.util.doQuery( config.endpoint, config.endpointName, config.sparqlWithPrefixes, spqlib.csv.render, config, false, spqlib.csv.fail );
 	};
 
 	var my = { };

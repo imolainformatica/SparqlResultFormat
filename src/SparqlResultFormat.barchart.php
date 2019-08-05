@@ -193,7 +193,7 @@ class SparqlResultFormatBarChart extends SparqlResultFormatBase implements Sparq
 
 		$config = "var config = {};
 			config.divId = '$divId';
-			config.endpoint='$endpoint';
+			config.endpoint='$wgScriptPath/extensions/SparqlResultFormat/api/query/index.php';
 			config.endpointName='$endpointIndex';
 			config.queryPrefixes=prefixes;
 			config.spinnerImagePath='$spinnerImagePath';

@@ -152,7 +152,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 			config.cssOddTdClass='$cssOddTdClass';
 			config.noResultMessage='$noResultMessage';
 			config.endpointName='$endpointIndex';
-			config.endpoint='$endpoint';
+			config.endpoint='$wgScriptPath/extensions/SparqlResultFormat/api/query/index.php';
 			//config.sparql=$('#$divId').attr('sparql-query');
 			config.queryPrefixes=prefixes;
 			config.basicAuthBase64String='$basicAuthBase64String';
