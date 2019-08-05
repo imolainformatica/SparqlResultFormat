@@ -7,59 +7,59 @@ class SparqlResultFormatCSV extends SparqlResultFormatBase implements SparqlForm
 	const DEFAULT_LABEL = 'Download as CSV';
 
 	function __construct() {
-		$this->name = wfMessage( "sprf.format.csv.title" );
-		$this->description = wfMessage( "sprf.format.csv.description" );
-	   $this->params = [
-			"divId" => [
+		$this->name = wfMessage("sprf.format.csv.title");
+		$this->description = wfMessage("sprf.format.csv.description");
+       $this->params = array(
+			"divId" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.divId" )
-				],
-			"sparqlEndpoint" => [
+					"description" => wfMessage("sprf.param.divId")
+				),
+			"sparqlEndpoint" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.sparqlEndpoint" )
-				],
-			"sparqlEscapedQuery" => [
+					"description" => wfMessage("sprf.param.sparqlEndpoint")
+				),
+			"sparqlEscapedQuery" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.sparqlEscapedQuery" )
-				],
-			"divStyle" => [
+					"description" => wfMessage("sprf.param.sparqlEscapedQuery")
+				),
+			"divStyle" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.divStyle" )
-				],
-			"scriptPath" => [
+					"description" => wfMessage("sprf.param.divStyle")
+				),
+			"scriptPath" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.scriptPath" ),
 					"deprecated" => true
-				],
-			"headerMapping" => [
+				),
+			"headerMapping" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.headerMapping" ),
-					"example" => wfMessage( "sprf.param.headerMapping.example" )
-				],
-			"filename" => [
+					"description" => wfMessage("sprf.param.headerMapping"),
+					"example" => wfMessage("sprf.param.headerMapping.example")
+				),
+			"filename" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.filename" ),
 					"default" => self::DEFAULT_FILENAME
-				],
-			"separator" => [
+				),
+			"separator" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.separator" ),
 					"default" => self::DEFAULT_SEPARATOR
-				],
-			"linkButtonLabel" => [
+				),
+			"linkButtonLabel" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.linkButtonLabel" )
-				],
-			"linkButtonCSSClass" => [
+					"description" => wfMessage("sprf.param.linkButtonLabel")
+				),
+			"linkButtonCSSClass" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.linkButtonCSSClass" )
-				],
-			"label" => [
+					"description" => wfMessage("sprf.param.linkButtonCSSClass")
+				),
+			"label" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.label" ),
 					"default" => self::DEFAULT_LABEL
-				]
-	   ];
+				)
+	   );
 
 	   $this->queryStructure =	wfMessage( "sprf.format.csv.query.structure" );
 	}

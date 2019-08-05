@@ -3,51 +3,52 @@
 class SparqlResultFormatTreemap extends SparqlResultFormatBase implements SparqlFormat {
 
 	function __construct() {
-		$this->name = wfMessage( "sprf.format.treemap.title" );
-		$this->description = wfMessage( "sprf.format.treemap.description" );
-	   $this->params = [
-			"divId" => [
+		
+		$this->name = wfMessage("sprf.format.treemap.title");
+		$this->description = wfMessage("sprf.format.treemap.description");
+       $this->params = array(
+			"divId" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.divId" )
-				],
-			"sparqlEndpoint" => [
+					"description" => wfMessage("sprf.param.divId")
+				),
+			"sparqlEndpoint" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.sparqlEndpoint" )
-				],
-			"sparqlEscapedQuery" => [
+					"description" => wfMessage("sprf.param.sparqlEndpoint")
+				),
+			"sparqlEscapedQuery" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.sparqlEscapedQuery" )
-				],
-			"divStyle" => [
+					"description" => wfMessage("sprf.param.sparqlEscapedQuery")
+				),
+			"divStyle" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.divStyle" )
-				],
-			"spinnerImagePath" => [
+					"description" => wfMessage("sprf.param.divStyle")
+				),
+			"spinnerImagePath" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.spinnerImagePath" )
-				],
-			"divCssClass" => [
+					"description" => wfMessage("sprf.param.spinnerImagePath")
+				),
+			"divCssClass" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.divCssClass" )
-				],
-			"divCssClassFullScreen" => [
+					"description" => wfMessage("sprf.param.divCssClass")
+				),
+			"divCssClassFullScreen" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.divCssClassFullScreen" )
-				],
-				"rootElement" => [
+					"description" => wfMessage("sprf.param.divCssClassFullScreen")
+				),
+				"rootElement" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.rootElement" )
-				],
-				"leavesLinkPattern" => [
+					"description" => wfMessage("sprf.param.rootElement")
+				),
+				"leavesLinkPattern" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.leavesLinkPattern" )
-				],
-				"openLinkOnLeaves" => [
+					"description" => wfMessage("sprf.param.leavesLinkPattern")
+				),
+				"openLinkOnLeaves" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.openLinkOnLeaves" )
-				]
-	   ];
-	   $this->queryStructure = wfMessage( "sprf.format.treemap.query.structure" ) . wfMessage( "sprf.format.treemap.query.structure.example" );
+					"description" => wfMessage("sprf.param.openLinkOnLeaves")
+				)
+	   );
+	   $this->queryStructure = wfMessage("sprf.format.treemap.query.structure").wfMessage("sprf.format.treemap.query.structure.example");
 	}
 	function generateHtmlContainerCode( $options ) {
 		$divId = $this->getParameterValue( $options, 'divId', '' );

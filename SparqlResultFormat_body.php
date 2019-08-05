@@ -8,7 +8,7 @@ class ExtSparqlResultFormat {
 	private static $markerSuffix = "END_SPARQL_II";
 
 	// Must be public for use in anonymous callback function in PHP 5.3
-	public static $elements = [];
+	public static $elements = array();
 
 	public static function sparql2FormatTemplate( $parser, $options_array, $format ) {
 		global $wgSparqlEndpointDefinition;
@@ -88,7 +88,7 @@ class ExtSparqlResultFormat {
 	}
 
 	public static function extractOptions( array $options ) {
-		$results = [];
+		$results = array();
 
 		foreach ( $options as $option ) {
 			$pair = explode( '=', $option, 2 );
@@ -100,9 +100,9 @@ class ExtSparqlResultFormat {
 						array_push( $results[$name], $value );
 					} else {
 						$oldVal = $results[$name];
-						$results[$name] = [];
-						array_push( $results[$name], $oldVal );
-						array_push( $results[$name], $value );
+						$results[$name] = array();
+						array_push($results[$name],$oldVal);
+						array_push($results[$name],$value);
 					}
 				} else {
 					$results[$name] = $value;

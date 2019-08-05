@@ -6,77 +6,77 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 		$this->name = wfMessage( "sprf.format.table.title" );
 		$this->description = wfMessage( "sprf.format.table.description" );
 
-	   $this->params = [
-			"divId" => [
+       $this->params = array(
+			"divId" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.divId" )
-				],
-			"sparqlEscapedQuery" => [
+					"description" => wfMessage("sprf.param.divId")
+				),
+			"sparqlEscapedQuery" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.sparqlEscapedQuery" )
-				],
-			"sparqlEndpoint" => [
+					"description" => wfMessage("sprf.param.sparqlEscapedQuery")
+				),
+			"sparqlEndpoint" => array(
 				"mandatory" => true,
-				"description" => wfMessage( "sprf.param.sparqlEndpoint" )
-			],
-			"spinnerImagePath" => [
+				"description" => wfMessage("sprf.param.sparqlEndpoint")
+			),
+			"spinnerImagePath" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.spinnerImagePath" ),
 					"default" => ""
-				],
-			"divStyle" => [
+				),
+			"divStyle" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.divStyle" )
-			],
-			"tableClass" => [
+				"description" => wfMessage("sprf.param.divStyle")
+			),
+			"tableClass" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.tableClass" )
-			],
-			"columnConfiguration" => [
+				"description" => wfMessage("sprf.param.tableClass")
+			),
+			"columnConfiguration" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.columnConfiguration" )
-			],
-			"cssEvenRowClass" => [
+				"description" => wfMessage("sprf.param.columnConfiguration")
+			),
+			"cssEvenRowClass" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.cssEvenRowClass" )
-			],
-			"cssOddRowClass" => [
+				"description" => wfMessage("sprf.param.cssEvenRowClass")
+			),
+			"cssOddRowClass" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.cssOddRowClass" )
-			],
-			"cssEvenTdClass" => [
+				"description" => wfMessage("sprf.param.cssOddRowClass")
+			),
+			"cssEvenTdClass" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.cssEvenTdClass" )
-			],
-			"cssOddTdClass" => [
+				"description" => wfMessage("sprf.param.cssEvenTdClass")
+			),
+			"cssOddTdClass" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.cssOddTdClass" )
-			],
-			"noResultMessage" => [
+				"description" => wfMessage("sprf.param.cssOddTdClass")
+			),
+			"noResultMessage" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.noResultMessage" )
-			],
-			"csvExport" => [
+				"description" => wfMessage("sprf.param.noResultMessage")
+			),
+			"csvExport" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.csvExport" ),
-				"default" => "false"
-			],
-			"csvFileName" => [
+				"description" => wfMessage("sprf.param.csvExport"),
+				"default" =>"false"
+			),
+			"csvFileName" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.csvFileName" ),
-				"default" => "export.csv"
-			],
-			"csvLinkLabel" => [
+				"description" => wfMessage("sprf.param.csvFileName"),
+				"default" =>"export.csv"
+			),
+			"csvLinkLabel" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.csvLinkLabel" )
-			],
-			"linkBasePath" => [
+				"description" => wfMessage("sprf.param.csvLinkLabel")
+			),
+			"linkBasePath" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.linkBasePath" ),
+				"description" => wfMessage("sprf.param.linkBasePath"),
 				"deprecated" => true
-			]
- ];
-		$this->queryStructure =	wfMessage( "sprf.format.table.query.structure" );
+			)	
+	   );   
+		$this->queryStructure =	wfMessage("sprf.format.table.query.structure");
 	}
 
 	function generateHtmlContainerCode( $options ) {
@@ -165,15 +165,5 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 
 		return $config;
 	}
-
-	/*function generateContainer($options){
-		$divId = $options['divId'];
-		$divStyle = $options['divStyle'];
-		$escapedQuery = $options['sparqlEscapedQuery'];
-		$htmlContainer = "<div id='$divId-container' class='table-container'>
-			<div id='$divId' style='$divStyle' sparql-query='$escapedQuery'></div></div>";
-		return $htmlContainer;
-
-	}*/
 
 }

@@ -3,146 +3,149 @@
 class SparqlResultFormatBubbleChart extends SparqlResultFormatBase implements SparqlFormat {
 
 	function __construct() {
-		$this->name = wfMessage( "sprf.format.bubblechart.title" );
-		$this->description = wfMessage( "sprf.format.bubblechart.description" );
-	   $this->params = [
-			"divId" => [
+		
+		$this->name = wfMessage("sprf.format.bubblechart.title");
+		$this->description = wfMessage("sprf.format.bubblechart.description");
+       $this->params = array(
+			"divId" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.divId" )
-				],
-			"sparqlEndpoint" => [
+					"description" => wfMessage("sprf.param.divId")
+				),
+			"sparqlEndpoint" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.sparqlEndpoint" )
-				],
-			"sparqlEscapedQuery" => [
+					"description" => wfMessage("sprf.param.sparqlEndpoint")
+				),
+			"sparqlEscapedQuery" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.sparqlEscapedQuery" )
-				],
-			"divStyle" => [
+					"description" => wfMessage("sprf.param.sparqlEscapedQuery")
+				),
+			"divStyle" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.divStyle" )
-				],
-			"spinnerImagePath" => [
+					"description" => wfMessage("sprf.param.divStyle")
+				),
+			"spinnerImagePath" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.spinnerImagePath" )
-				],
-			"divCssClass" => [
+					"description" => wfMessage("sprf.param.spinnerImagePath")
+				),
+			"divCssClass" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.divCssClass" )
-				],
-			"divCssClassFullScreen" => [
+					"description" => wfMessage("sprf.param.divCssClass")
+				),
+			"divCssClassFullScreen" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.divCssClassFullScreen" )
-				],
-			"extraOption" => [
+					"description" => wfMessage("sprf.param.divCssClassFullScreen")
+				),
+			"extraOption" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.extraOption" )
-			],
-	   ];
-
-		$this->extraOpts = [
-			"chart.title" => [
-					"description" => wfMessage( "sprf.options.chart.title" ),
+				"description" => wfMessage("sprf.param.extraOption")
+			),
+	   );
+	   
+	    $this->extraOpts = array(
+			"chart.title" => array(
+					"description" => wfMessage("sprf.options.chart.title"),
 					"default" => "",
 					"example" => "|extraOption=sprf.options.chart.title:New title"
-				],
-				"chart.axis.x.label" => [
-					"description" => wfMessage( "sprf.options.chart.axis.x.label" ),
+				),
+				"chart.axis.x.label" => array(
+					"description" => wfMessage("sprf.options.chart.axis.x.label"),
 					"default" => "",
 					"example" => ""
-				],
-				"chart.axis.y.label" => [
-					"description" => wfMessage( "sprf.options.chart.axis.y.label" ),
+				),
+				"chart.axis.y.label" => array(
+					"description" => wfMessage("sprf.options.chart.axis.y.label"),
 					"default" => "",
 					"example" => ""
-				],
-				"chart.axis.x.label.font.size" => [
-					"description" => wfMessage( "sprf.options.chart.axis.x.label" ),
+				),
+				"chart.axis.x.label.font.size" => array(
+					"description" => wfMessage("sprf.options.chart.axis.x.label"),
 					"default" => "14pt",
 					"example" => "|extraOption=chart.axis.x.label.font.size:20pt"
-				],
-				"chart.axis.y.label.font.size" => [
-					"description" => wfMessage( "sprf.options.chart.axis.y.label.font.size" ),
+				),
+				"chart.axis.y.label.font.size" => array(
+					"description" => wfMessage("sprf.options.chart.axis.y.label.font.size"),
 					"default" => "14pt",
 					"example" => "|extraOption=chart.axis.y.label.font.size:20pt"
-				],
-				"chart.axis.x.font.size" => [
-					"description" => wfMessage( "sprf.options.chart.axis.x.font.size" ),
+				),
+				"chart.axis.x.font.size" => array(
+					"description" => wfMessage("sprf.options.chart.axis.x.font.size"),
 					"default" => "10pt",
 					"example" => "|extraOption=chart.axis.x.font.size:14pt"
-				],
-				"chart.axis.y.font.size" => [
-					"description" => wfMessage( "sprf.options.chart.axis.y.font.size" ),
+				),
+				"chart.axis.y.font.size" => array(
+					"description" => wfMessage("sprf.options.chart.axis.y.font.size"),
 					"default" => "10pt",
 					"example" => "|extraOption=chart.axis.y.font.size:14pt"
-				],
-				"chart.legend.column.asset" => [
-					"description" => wfMessage( "sprf.options.chart.legend.column.asset" ),
+				),
+				"chart.legend.column.asset" => array(
+					"description" => wfMessage("sprf.options.chart.legend.column.asset"),
 					"default" => "",
 					"example" => "|extraOption="
-				],
-				"chart.legend.column.radius" => [
-					"description" => wfMessage( "sprf.options.chart.legend.column.radius" ),
+				),
+				"chart.legend.column.radius" => array(
+					"description" => wfMessage("sprf.options.chart.legend.column.radius"),
 					"default" => "",
 					"example" => "|extraOption="
-				],
-				"chart.legend.show" => [
-					"description" => wfMessage( "sprf.options.chart.legend.show" ),
+				),
+				"chart.legend.show" => array(
+					"description" => wfMessage("sprf.options.chart.legend.show"),
 					"default" => "true",
 					"example" => "|extraOption=chart.legend.show:false"
-				],
-				"chart.tooltip.x.label" => [
-					"description" => wfMessage( "sprf.options.chart.tooltip.x.label" ),
+				),
+				"chart.tooltip.x.label" => array(
+					"description" => wfMessage("sprf.options.chart.tooltip.x.label"),
 					"default" => "",
 					"example" => "|extraOption=chart.tooltip.x.label:"
-				],
-				"chart.tooltip.y.label" => [
-					"description" => wfMessage( "sprf.options.chart.tooltip.y.label" ),
+				),
+				"chart.tooltip.y.label" => array(
+					"description" => wfMessage("sprf.options.chart.tooltip.y.label"),
 					"default" => "",
 					"example" => "|extraOption="
-				],
-				"chart.tooltip.r.label" => [
-					"description" => wfMessage( "sprf.options.chart.tooltip.r.label" ),
+				),
+				"chart.tooltip.r.label" => array(
+					"description" => wfMessage("sprf.options.chart.tooltip.r.label"),
 					"default" => "",
 					"example" => "|extraOption="
-				],
-				"chart.legend.show" => [
-					"description" => wfMessage( "sprf.options.chart.legend.show" ),
+				),
+				"chart.legend.show" => array(
+					"description" => wfMessage("sprf.options.chart.legend.show"),
 					"default" => "",
 					"example" => "|extraOption="
-				],
-				"chart.tooltip.asset.label.pattern" => [
-					"description" => wfMessage( "sprf.options.chart.tooltip.asset.label.pattern" ),
+				),
+				"chart.tooltip.asset.label.pattern" => array(
+					"description" => wfMessage("sprf.options.chart.tooltip.asset.label.pattern"),
 					"default" => "",
 					"example" => "|extraOption="
-				],
-				"chart.tooltip.asset.link.show" => [
-					"description" => wfMessage( "sprf.options.chart.tooltip.asset.link.show" ),
+				),
+				"chart.tooltip.asset.link.show" => array(
+					"description" => wfMessage("sprf.options.chart.tooltip.asset.link.show"),
 					"default" => "",
 					"example" => "|extraOption="
-				],
-				"chart.tooltip.asset.label.link.pattern" => [
-					"description" => wfMessage( "sprf.options.chart.tooltip.asset.label.link.pattern" ),
+				),
+				"chart.tooltip.asset.label.link.pattern" => array(
+					"description" => wfMessage("sprf.options.chart.tooltip.asset.label.link.pattern"),
 					"default" => "",
 					"example" => "|extraOption="
-				],
-				"chart.tooltip.x.value.pattern" => [
-					"description" => wfMessage( "sprf.options.chart.tooltip.x.value.pattern" ),
+				),
+				"chart.tooltip.x.value.pattern" => array(
+					"description" => wfMessage("sprf.options.chart.tooltip.x.value.pattern"),
 					"default" => "",
 					"example" => "|extraOption="
-				],
-				"chart.tooltip.y.value.pattern" => [
-					"description" => wfMessage( "sprf.options.chart.tooltip.y.value.pattern" ),
+				),
+				"chart.tooltip.y.value.pattern" => array(
+					"description" => wfMessage("sprf.options.chart.tooltip.y.value.pattern"),
 					"default" => "",
 					"example" => "|extraOption="
-				],
-				"chart.tooltip.r.value.pattern" => [
-					"description" => wfMessage( "sprf.options.chart.tooltip.r.value.pattern" ),
+				),
+				"chart.tooltip.r.value.pattern" => array(
+					"description" => wfMessage("sprf.options.chart.tooltip.r.value.pattern"),
 					"default" => "",
 					"example" => "|extraOption="
-				]
-	   ];
-	   $this->queryStructure = wfMessage( "sprf.format.bubblechart.query.structure" ) . wfMessage( "sprf.format.bubblechart.query.structure.example" );
+				)
+	   );
+	   $this->queryStructure = wfMessage("sprf.format.bubblechart.query.structure").wfMessage("sprf.format.bubblechart.query.structure.example");
+
+	   
 	}
 
 	function generateHtmlContainerCode( $options ) {

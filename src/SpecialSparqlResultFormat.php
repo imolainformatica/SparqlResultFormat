@@ -31,7 +31,7 @@ class SpecialSparqlResultFormat extends SpecialPage {
 			}
 		</style>" );
 
-		$formats = [
+		$formats = array(
 			"table" => new SparqlResultFormatTable,
 			"csv" => new SparqlResultFormatCSV,
 			"piechart" => new SparqlResultFormatPieChart,
@@ -40,10 +40,10 @@ class SpecialSparqlResultFormat extends SpecialPage {
 			"bubblechart" => new SparqlResultFormatBubbleChart,
 			"treemap" => new SparqlResultFormatTreemap,
 			"graph" => new SparqlResultFormatGraph
-		];
-		// tab
-		$output->addHTML( "<h1>" . wfMessage( "sprf.common.step1" ) . "</h1>" );
-		$localSettingsExample = " " . '$wgSparqlEndpointDefinition' . "['<b>&lt;endpoint name&gt;</b>'] = array(
+		);
+		//tab
+		$output->addHTML("<h1>".wfMessage("sprf.common.step1")."</h1>");
+		$localSettingsExample = " ".'$wgSparqlEndpointDefinition'."['<b>&lt;endpoint name&gt;</b>'] = array(
 			<div class='indent'>'url' =>'<b>&lt;endpoint url&gt;</b>',
 			<div>'basicAuth' => array( /*optional*/</div>
 			<div class='indent'>	'user' => '<b>&lt;basic auth user&gt;</b>',</div>

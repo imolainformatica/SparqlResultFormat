@@ -3,39 +3,39 @@
 class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFormat {
 
 		function __construct() {
-		$this->name = wfMessage( "sprf.format.graph.title" );
-		$this->description = wfMessage( "sprf.format.graph.description" );
-	   $this->params = [
-			"divId" => [
+		$this->name = wfMessage("sprf.format.graph.title");
+		$this->description = wfMessage("sprf.format.graph.description");
+       $this->params = array(
+			"divId" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.divId" )
-				],
-			"sparqlEndpoint" => [
+					"description" => wfMessage("sprf.param.divId")
+				),
+			"sparqlEndpoint" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.sparqlEndpoint" )
-				],
-			"sparqlEscapedQuery" => [
+					"description" => wfMessage("sprf.param.sparqlEndpoint")
+				),
+			"sparqlEscapedQuery" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.sparqlEscapedQuery" )
-				],
-			"queryTimeout" => [
+					"description" => wfMessage("sprf.param.sparqlEscapedQuery")
+				),
+			"queryTimeout" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.queryTimeout" ),
 					"default" => 20000
-				],
-			"divStyle" => [
+				),
+			"divStyle" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.divStyle" )
-				],
-			"spinnerImagePath" => [
+					"description" => wfMessage("sprf.param.divStyle")
+				),
+			"spinnerImagePath" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.spinnerImagePath" )
-				],
-			"divCssClass" => [
+					"description" => wfMessage("sprf.param.spinnerImagePath")
+				),
+			"divCssClass" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.divCssClass" )
-				],
-			"nodeConfiguration" => [
+					"description" => wfMessage("sprf.param.divCssClass")
+				),
+			"nodeConfiguration" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.nodeConfiguration1" ) . wfMessage( "sprf.param.nodeConfiguration2" ),
 					"example" => "|nodeConfiguration=[
@@ -51,106 +51,106 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 					   ]}
 					
 					]"
-				],
-			"edgeConfiguration" => [
+				),
+			"edgeConfiguration" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.edgeConfiguration1" ) . wfMessage( "sprf.param.edgeConfiguration2" ),
 					"example" => "|edgeConfiguration=[{ relation:\"Belongs to application\",edgeColor:\"#00FF00\"}]"
-				],
-				"rootElement" => [
+				),
+				"rootElement" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.rootElement" ),
 					"example" => ""
-				],
-				"rootElementColor" => [
+				),
+				"rootElementColor" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.rootElementColor" ),
 					"example" => ""
-				],
-				"rootElementImage" => [
+				),
+				"rootElementImage" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.rootElementImage" ),
 					"example" => ""
-				],
-				"showLegend" => [
+				),
+				"showLegend" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.showLegend" ),
 					"example" => ""
-				],
-				"defaultNodeColor" => [
+				),
+				"defaultNodeColor" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.defaultNodeColor" ),
 					"example" => "|defaultNodeColor=#CCC"
-				],
-				"defaultEdgeColor" => [
+				),
+				"defaultEdgeColor" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.defaultEdgeColor" ),
 					"example" => "|defaultEdgeColor=#CCC"
-				],
-				"splitQueryByUnion" => [
+				),
+				"splitQueryByUnion" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.splitQueryByUnion" )
-				],
-				"minZoom" => [
+					"description" => wfMessage("sprf.param.splitQueryByUnion")
+				),
+				"minZoom" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.minZoom" ),
 					"example" => ""
-				],
-				"maxZoom" => [
+				),
+				"maxZoom" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.maxZoom" ),
 					"example" => ""
-				],
-				"layout" => [
+				),
+				"layout" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.layout" ),
 					"default" => "dagre",
 					"example" => ""
-				],"layoutOptions" => [
+				),"layoutOptions" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.layoutOptions" ),
 					"example" => "|layoutOptions={rankSep:200}"
-				],
-				"maxWordLength" => [
+				),
+				"maxWordLength" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.maxWordLength" ),
 					"example" => ""
-				],"maxLabelLength" => [
+				),"maxLabelLength" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.maxLabelLength" ),
 					"example" => ""
-				],
-				"nodeStyle" => [
+				),
+				"nodeStyle" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.nodeStyle" ),
 					"example" => "|nodeStyle={shape:'roundrectangle', width:120, height:80,'text-valign': 'center','text-halign': 'center','font-size':'12','border-color' : '#000','border-width' : 1,'text-max-width':120}"
-				],
-				"edgeStyle" => [
+				),
+				"edgeStyle" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.edgeStyle" ),
 					"example" => "|edgeStyle={'target-arrow-shape':''}",
 					"example" => ""
-				],
-				"labelLinkPattern" => [
+				),
+				"labelLinkPattern" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.labelLinkPattern" ),
 					"example" => ""
-				],
-				"categoryLinkPattern" => [
+				),
+				"categoryLinkPattern" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.categoryLinkPattern" ),
 					"example" => ""
-				],
-				"maxNumNodes" => [
+				),
+				"maxNumNodes" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.maxNumNodes" ),
 					"example" => "",
 					"default" => 200
-				]
-	   ];
-		$this->queryStructure = wfMessage( "sprf.format.graph.query.structure" ) . wfMessage( "sprf.format.graph.query.structure.example" )
-		. "<h3><b>" . wfMessage( "sprf.common.old.version" ) . "</b></h3>"
-		. wfMessage( "sprf.format.graph.query.structure.old" ) . wfMessage( "sprf.format.graph.query.structure.old.example" );
+				)
+	   ); 
+		$this->queryStructure = wfMessage("sprf.format.graph.query.structure").wfMessage("sprf.format.graph.query.structure.example")
+		."<h3><b>".wfMessage("sprf.common.old.version")."</b></h3>"
+		.wfMessage("sprf.format.graph.query.structure.old").wfMessage("sprf.format.graph.query.structure.old.example");	   
 	 }
 
 	function generateHtmlContainerCode( $options ) {

@@ -3,52 +3,53 @@
 class SparqlResultFormatDonutChart extends SparqlResultFormatBase implements SparqlFormat {
 
 		function __construct() {
-		$this->name = wfMessage( "sprf.format.donutchart.title" );
-		$this->description = wfMessage( "sprf.format.donutchart.description" );
-	   $this->params = [
-			"divId" => [
+			
+		$this->name = wfMessage("sprf.format.donutchart.title");
+		$this->description = wfMessage("sprf.format.donutchart.description");
+       $this->params = array(
+			"divId" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.divId" )
-				],
-			"sparqlEndpoint" => [
+					"description" => wfMessage("sprf.param.divId")
+				),
+			"sparqlEndpoint" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.sparqlEndpoint" )
-				],
-			"sparqlEscapedQuery" => [
+					"description" => wfMessage("sprf.param.sparqlEndpoint")
+				),
+			"sparqlEscapedQuery" => array(
 					"mandatory" => true,
-					"description" => wfMessage( "sprf.param.sparqlEscapedQuery" )
-				],
-			"divStyle" => [
+					"description" => wfMessage("sprf.param.sparqlEscapedQuery")
+				),
+			"divStyle" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.divStyle" )
-				],
-			"spinnerImagePath" => [
+					"description" => wfMessage("sprf.param.divStyle")
+				),
+			"spinnerImagePath" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.spinnerImagePath" )
-				],
-			"divCssClass" => [
+					"description" => wfMessage("sprf.param.spinnerImagePath")
+				),
+			"divCssClass" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.divCssClass" )
-				],
-			"divCssClassFullScreen" => [
+					"description" => wfMessage("sprf.param.divCssClass")
+				),
+			"divCssClassFullScreen" => array(
 					"mandatory" => false,
-					"description" => wfMessage( "sprf.param.divCssClassFullScreen" )
-				],
-			"extraOption" => [
+					"description" => wfMessage("sprf.param.divCssClassFullScreen")
+				),
+			"extraOption" => array(
 				"mandatory" => false,
-				"description" => wfMessage( "sprf.param.extraOption" )
-			],
-	   ];
-
-	   $this->extraOpts = [
-			"chart.title" => [
-					"description" => wfMessage( "sprf.options.chart.title" ),
+				"description" => wfMessage("sprf.param.extraOption")
+			),
+	   );
+	   
+	   $this->extraOpts = array(
+			"chart.title" => array(
+					"description" => wfMessage("sprf.options.chart.title"),
 					"default" => "",
 					"example" => "|extraOption=chart.title:New Title"
-				]
+				)
 
-	   ];
-	   $this->queryStructure = wfMessage( "sprf.format.donutchart.query.structure" ) . wfMessage( "sprf.format.donutchart.query.structure.example" );
+	   );
+	   $this->queryStructure = wfMessage("sprf.format.donutchart.query.structure").wfMessage("sprf.format.donutchart.query.structure.example");
 	 }
 
 	function generateHtmlContainerCode( $options ) {

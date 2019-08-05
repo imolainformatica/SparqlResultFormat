@@ -4,8 +4,8 @@ class SparqlResultFormatBase {
 
 	protected $name = "";
 	protected $description = "";
-	protected $params = [];
-	protected $extraOpts = [];
+	protected $params = array();
+	protected $extraOpts = array();
 	protected $queryStructure = "";
 
 	public function getName() {
