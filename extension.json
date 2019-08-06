@@ -1,0 +1,162 @@
+{
+	"name": "SparqlResultFormat",
+	"version": "1.0.10",
+	"manifest_version": "1",
+	"author": [
+		"Gabriele Cornacchia",
+		"Matteo Busanelli"
+	],
+	"url": "",
+	"descriptionmsg": "sparqlresultformatdesc",
+	"description": "Permette di effettuare query sparql a endpoint e di visualizzarle in diversi formati",
+	"type": "parserhook",
+	"license-name":"MIT",
+	"config": {
+		"SparqlEndpointDefinition" : {}
+	},
+	"ExtensionMessagesFiles": {
+		"SparqlResultFormatMagic": "SparqlResultFormat.i18n.magic.php"
+	},
+	"MessagesDirs": {
+		"SparqlResultFormat": [
+			"i18n"
+		]
+	},
+	"Hooks": {
+		"BeforePageDisplay": [
+			"SparqlResultFormatHooks::addHTMLHeader"
+		],
+		"ParserFirstCallInit": [
+			"SparqlResultFormatHooks::onParserFirstCallInit"
+		],
+		"ParserAfterTidy": [
+			"SparqlResultFormatHooks::outputHtml"
+		]
+	},
+	"ResourceModules": {
+		"ext.SparqlResultFormat.start": {
+			"scripts": [
+				"js/ii.sparql.start.js"
+			]
+		},
+		"ext.SparqlResultFormat.main": {
+			"scripts": [
+				"js/ii.sparql.main.js",
+				"js/ii.sparql.util.js",
+				"js/libs/sparqljs/sparqljs-browser.js"
+			],
+			"dependencies": ["mediawiki.jqueryMsg","ext.jquery.qtip", "ext.screenfull.js", "ext.fontawesome"],
+			"styles":["css/ii.style.treemap.css"],
+			"messages":["sprf.js.graph.show.legend","sprf.js.graph.hide.legend","sprf.js.graph.go.fullscreen","sprf.js.graph.exit.fullscreen"
+			]
+		},
+		"ext.SparqlResultFormat.graph": {
+			"scripts":[],
+			"dependencies":["ext.SparqlResultFormat.formats.graph"],
+			"styles":["css/ii.style.css"]
+		},
+		"ext.SparqlResultFormat.table": {
+			"scripts":["js/ii.sparql.format.table.js","js/ii.sparql.format.csv.js"],
+			"dependencies":[],
+			"styles":["css/ii.style.css"]
+		},
+		"ext.SparqlResultFormat.jqplot": {
+			"scripts":["js/ii.jqplot.js",
+				"js/libs/jqplot/jquery.jqplot.min.js",
+				"js/libs/jqplot/jqplot.pieRenderer.js",
+				"js/libs/jqplot/jqplot.donutRenderer.js",
+				"js/libs/jqplot/jqplot.barRenderer.js",
+				"js/libs/jqplot/jqplot.bubbleRenderer.js",
+				"js/libs/jqplot/jqplot.highlighter.js",
+				"js/libs/jqplot/jqplot.categoryAxisRenderer.js",
+				"js/libs/jqplot/jqplot.canvasTextRenderer.js",
+				"js/libs/jqplot/jqplot.canvasAxisTickRenderer.js",
+				"js/libs/jqplot/jqplot.canvasAxisLabelRenderer.js"
+			],
+			"dependencies":[],
+			"styles":["css/jquery.jqplot.min.css"]
+		},
+		"ext.SparqlResultFormat.barchart": {
+			"scripts":["js/ii.sparql.format.barchart.js"],
+			"dependencies":["ext.SparqlResultFormat.jqplot"],
+			"styles":["css/jquery.jqplot.min.css","css/ii.style.css"]
+		},
+		"ext.SparqlResultFormat.piechart": {
+			"scripts":["js/ii.sparql.format.piechart.js"],
+			"dependencies":["ext.SparqlResultFormat.jqplot"],
+			"styles":["css/ii.style.css"]
+		},
+		"ext.SparqlResultFormat.donutchart": {
+			"scripts":["js/ii.sparql.format.donutchart.js"],
+			"dependencies":["ext.SparqlResultFormat.jqplot"],
+			"styles":["css/ii.style.css"]
+		},
+		"ext.SparqlResultFormat.bubblechart": {
+			"scripts":["js/ii.sparql.format.bubblechart.js"],
+			"dependencies":["ext.SparqlResultFormat.jqplot"],
+			"styles":["css/ii.style.css"]
+		},
+		"ext.SparqlResultFormat.csv": {
+			"scripts":["js/ii.sparql.format.csv.js"],
+			"dependencies":[],
+			"styles":[]
+		},
+		"ext.SparqlResultFormat.treemap": {
+			"scripts":["js/ii.sparql.format.treemap.js","js/ii.d3.js"],
+			"dependencies":["ext.d3.js"],
+			"styles":[]
+		},
+		"ext.d3.js": {
+			"scripts":["js/libs/d3/d3.js"],
+			"dependencies":[],
+			"styles":[]
+		},
+		"ext.SparqlResultFormat.formats.graph": {
+			"scripts":["js/ii.sparql.format.graph.js",
+				"js/ii.cytoscape.js",
+				"js/libs/cytoscape/cytoscape.js",
+				"js/libs/cytoscape/dagre.min.js",
+				"js/libs/cytoscape/cytoscape-dagre.js",
+				"js/libs/cytoscape/cytoscape-qtip.js"],
+			"dependencies":[],
+			"styles":["css/ii.style.css","css/ii.style.graph.css"]
+		},
+		"ext.jquery.qtip":{
+			"scripts":["js/libs/qtip/jquery.qtip.js"],
+			"dependencies":[],
+			"styles":["js/libs/qtip/jquery.qtip.css"]
+		},
+		"ext.screenfull.js":{
+			"scripts":["js/libs/screenfull.js/screenfull.min.js"],
+			"dependencies":[],
+			"styles":[]
+		},
+		"ext.fontawesome":{
+			"scripts":[],
+			"dependencies":[],
+			"styles":["css/libs/fontawesome/css/all.min.css"]
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "",
+		"remoteExtPath": "SparqlResultFormat"
+	},
+	"SpecialPages": {
+		"SparqlResultFormat": "SpecialSparqlResultFormat"
+	},
+	"AutoloadClasses": {
+		"ExtSparqlResultFormat": "SparqlResultFormat_body.php",
+		"SparqlResultFormatHooks": "SparqlResultFormat.hooks.php",
+		"SparqlFormat": "src/SparqlResultFormat.interface.php",
+		"SparqlResultFormatTable": "src/SparqlResultFormat.table.php",
+		"SparqlResultFormatBarChart": "src/SparqlResultFormat.barchart.php",
+		"SparqlResultFormatBubbleChart": "src/SparqlResultFormat.bubblechart.php",
+		"SparqlResultFormatTreemap": "src/SparqlResultFormat.treemap.php",
+		"SparqlResultFormatCSV": "src/SparqlResultFormat.csv.php",
+		"SparqlResultFormatBase": "src/SparqlResultFormat.base.php",
+		"SparqlResultFormatPieChart": "src/SparqlResultFormat.piechart.php",
+		"SparqlResultFormatDonutChart": "src/SparqlResultFormat.donutchart.php",
+		"SparqlResultFormatGraph": "src/SparqlResultFormat.graph.php",
+		"SpecialSparqlResultFormat":"src/SpecialSparqlResultFormat.php"
+	}
+}

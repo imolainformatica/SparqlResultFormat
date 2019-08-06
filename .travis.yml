@@ -1,0 +1,60 @@
+# https://docs.travis-ci.com/user/languages/php
+language: php
+sudo: required
+
+# https://docs.travis-ci.com/user/trusty-ci-environment/
+dist: trusty
+
+services:
+  - docker
+
+matrix:
+  fast_finish: true
+  include:
+    - env: DB=mysql; MW_VERSION=1.33.0;
+      php: 7.1
+    - env: DB=mysql; MW_VERSION=1.32.0;
+      php: 7.1
+    - env: DB=mysql; MW_VERSION=1.31.0;
+      php: 7.1
+    - env: DB=mysql; MW_VERSION=1.30.0;
+      php: 7.1
+    - env: DB=mysql; MW_VERSION=1.29.0;
+      php: 7.1
+    - env: DB=mysql; MW_VERSION=1.28;
+      php: 7.1
+    - env: DB=mysql; MW_VERSION=1.27;
+      php: 7.1
+
+
+# Dec 16, 2015 (GCE switch): Travis support wrote (Tomcat + Java):
+# bug in the JDK: http://bugs.java.com/bugdatabase/view_bug.do?bug_id=7089443.
+# The hostname for the precise-gce platform is longer than 64 characters on the
+# VM your job is running on
+#- sudo hostname "$(hostname | cut -c1-63)"
+#- sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts | sudo tee /etc/hosts
+#- cat /etc/hosts # optionally check the content *after*
+
+# Aug 12, 2016: (incident:2p40l49r3yxd) Travis support asks to add `sudo sysctl ...`
+# After investigation, removed the lines from Dec 16, 2015 as it emptied the hosts file
+before_install:
+  - phpenv config-rm xdebug.ini # https://github.com/travis-ci/travis-ci/issues/1697
+  - sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+  - sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+  - ip addr # for confirmation. can be skipped
+  - cat /etc/hosts # optionally check the content *before*
+  - composer install
+  - docker-compose -f tests/travis/docker-compose.yml up -d
+  - sleep 20
+  - docker exec wiki sh -c "php maintenance/install.php wiki admin --pass password --dbtype mysql --dbname mediawiki_db --dbserver wikidb --dbport 33306 --dbuser wikiuser --dbpass password --installdbuser wikiuser --installdbpass password --server http://localhost:8080 --scriptpath ''"
+  - curl -Lv http://localhost:8080
+  - docker exec wiki sh -c "echo 'wfLoadExtension( \"SparqlResultFormat\" );' >> LocalSettings.php"
+  - curl -Lv http://localhost:8080/index.php/Special:SparqlResultFormat
+  
+script: 
+  - ls -l
+  - ./vendor/bin/phpunit --bootstrap vendor/autoload.php tests/phpunit
+
+cache:
+  directories:
+    - $HOME/.composer/cache
