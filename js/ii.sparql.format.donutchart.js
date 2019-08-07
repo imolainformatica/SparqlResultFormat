@@ -73,6 +73,20 @@ spqlib.donutchart = ( function () {
 		}
 		var chartId = config.divId,
 		 chart = spqlib.donutchart.chartImpl().drawDonutChart( labels, series, config );
+		 $( '#headertabs ul li a' ).on(
+			'click',
+			function ( event, ui ) {
+				var tabDivId = $( this ).attr( 'href' ),
+					 t = $( tabDivId ).find(
+						'.sparqlresultformat-donutchart' );
+				t.each( function () {
+					var id = $( this ).attr( 'id' ),
+						 c = spqlib.getById( id );
+					if ( c ) {
+						c.replot();
+					}
+				} );
+			} );
 		spqlib.addToRegistry( chartId, chart );
 	};
 

@@ -59,8 +59,22 @@ spqlib.barchart = ( function () {
 				series[ j ][ i ] = spqlib.util.getSparqlFieldValueToNumber( data[ i ][ head[ j + 1 ] ] );
 			}
 		}
-		var chartId = config.divId,
-			chart = spqlib.barchart.chartImpl().drawBarChart( labels, series, config );
+		var chartId = config.divId;
+		var chart = spqlib.barchart.chartImpl().drawBarChart( labels, series, config );
+		$( '#headertabs ul li a' ).on(
+			'click',
+			function ( event, ui ) {
+				var tabDivId = $( this ).attr( 'href' ),
+					 t = $( tabDivId ).find(
+						'.sparqlresultformat-barchart' );
+				t.each( function () {
+					var id = $( this ).attr( 'id' ),
+						 c = spqlib.getById( id );
+					if ( c ) {
+						c.replot();
+					}
+				} );
+			} );
 		chart.toggleFullScreen = my.toggleFullScreen;
 		spqlib.addToRegistry( chartId, chart );
 		$( '#' + chartId ).trigger( 'done' );

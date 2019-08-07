@@ -79,6 +79,20 @@ spqlib.piechart = ( function () {
 
 		var chartId = config.divId,
 		 chart = spqlib.piechart.chartImpl().drawPieChart( labels, series, config );
+		$( '#headertabs ul li a' ).on(
+			'click',
+			function ( event, ui ) {
+				var tabDivId = $( this ).attr( 'href' ),
+					 t = $( tabDivId ).find(
+						'.sparqlresultformat-piechart' );
+				t.each( function () {
+					var id = $( this ).attr( 'id' ),
+						 c = spqlib.getById( id );
+					if ( c ) {
+						c.replot();
+					}
+				} );
+			} );
 		chart.toggleFullScreen = my.toggleFullScreen;
 		spqlib.addToRegistry( chartId, chart );
 	};
