@@ -1,5 +1,6 @@
 # SparqlResultFormat
 
+[![Build Status](https://travis-ci.org/imolainformatica/SparqlResultFormat.svg?branch=master)](https://travis-ci.org/imolainformatica/SparqlResultFormat)
 
 SparqlResultFormat is a free, open-source extension to [MediaWiki](https://www.semantic-mediawiki.org/wiki/MediaWiki) that lets you query different Sparql endpoints and represent output data in various formats.
 
