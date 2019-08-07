@@ -56,7 +56,7 @@ class SparqlResultFormatTreemap extends SparqlResultFormatBase implements Sparql
 		$divCssClass = $this->getParameterValue( $options, 'divCssClass', '' );
 		$escapedQuery = $this->getParameterValue( $options, 'sparqlEscapedQuery', '' ); // $options['sparqlEscapedQuery'];
 		$htmlContainer = "<div id='$divId-container' style='$divStyle' class='$divCssClass'>
-			<div id='$divId' style='width:100%; height:100%;' class='d3-treemap' sparql-query='$escapedQuery'></div>
+			<div id='$divId' class='sparqlresultformat-treemap' style='width:100%; height:100%;' class='d3-treemap' sparql-query='$escapedQuery'></div>
 				<div id='tooltip-treemap' class='hidden' <p><strong id='heading'></strong></p>
 				<p><span id='tooltip-text'></span></p>
 				</div>
