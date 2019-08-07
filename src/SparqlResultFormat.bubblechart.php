@@ -156,7 +156,7 @@ class SparqlResultFormatBubbleChart extends SparqlResultFormatBase implements Sp
 		$htmlContainer = "
 		<div style='position: absolute; z-index: 99; left: 0px; top: 0px; display: none;' id='tooltip1b' class='jqplot-highlighter-tooltip'></div>
 		<div id='$divId-container' style='$divStyle' class='$divCssClass'>
-			<div id='$divId' style='width:100%; height:100%;' sparql-query='$escapedQuery'></div>
+			<div id='$divId' class='sparqlresultformat-bubblechart' style='width:100%; height:100%;' sparql-query='$escapedQuery'></div>
 			<div id='$divId-legend' class='legend-table-container'></div>
 			</div>";
 		return $htmlContainer;

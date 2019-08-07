@@ -84,6 +84,20 @@ spqlib.treemap = ( function () {
 				resize: spqlib.treemap.chartImpl().drawTreemap,
 				toggleFullScreen: spqlib.treemap.toggleFullScreen
 			};
+		$( '#headertabs ul li a' ).on(
+			'click',
+			function ( event, ui ) {
+				var tabDivId = $( this ).attr( 'href' ),
+					 t = $( tabDivId ).find(
+						'.sparqlresultformat-treemap' );
+				t.each( function () {
+					var id = $( this ).attr( 'id' ),
+						 c = spqlib.getById( id );
+					if ( c ) {
+						c.resize(c.res,c.config);
+					}
+				} );
+			} );
 		spqlib.treemap.chartImpl().drawTreemap( res, config );
 		spqlib.addToRegistry( chartId, chart );
 	};

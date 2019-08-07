@@ -58,7 +58,7 @@ class SparqlResultFormatDonutChart extends SparqlResultFormatBase implements Spa
 		$divCssClass = $this->getParameterValue( $options, 'divCssClass', '' );
 		$escapedQuery = $this->getParameterValue( $options, 'sparqlEscapedQuery', '' );
 		$htmlContainer = "<div id='$divId-container' style='$divStyle' class='$divCssClass'>
-			<div id='$divId' style='width:100%; height:100%;' sparql-query='$escapedQuery'></div></div>";
+			<div id='$divId' class='sparqlresultformat-donutchart' style='width:100%; height:100%;' sparql-query='$escapedQuery'></div></div>";
 		return $htmlContainer;
 	}
 

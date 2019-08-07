@@ -144,7 +144,7 @@ class SparqlResultFormatBarChart extends SparqlResultFormatBase implements Sparq
 		$divCssClass = $this->getParameterValue( $options, 'divCssClass', '' );
 		$escapedQuery = $this->getParameterValue( $options, 'sparqlEscapedQuery', '' );
 		$htmlContainer = "<div id='$divId-container' style='$divStyle' class='$divCssClass'>
-			<div id='$divId' style='width:100%; height:100%;' sparql-query='$escapedQuery'></div></div>";
+			<div id='$divId' class='sparqlresultformat-barchart' style='width:100%; height:100%;' sparql-query='$escapedQuery'></div></div>";
 		return $htmlContainer;
 	}
 
