@@ -10,7 +10,7 @@ SparqlResultFormat is a free, open-source extension to [MediaWiki](https://www.s
 
 ## Installation
 
-Once you have downloaded the code, place the 'Variables' directory within your
+Once you have downloaded the code, place the 'SparqlResultFormat' directory within your
 MediaWiki 'extensions' directory. Then add the following code to your LocalSettings.php file:
 
 ```php
