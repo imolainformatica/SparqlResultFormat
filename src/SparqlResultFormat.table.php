@@ -113,7 +113,9 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
              if ( sortableTables.length ) {         
                 sortableTables.tablesorter();   
              }
-         });";
+         });
+
+		 ";
 		 return $launchScript . $sortableTable;
 	}
 
@@ -141,6 +143,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 		$csvFileName = $this->getParameterValue( $options, 'csvFileName', 'export.csv' );
 		$csvLinkLabel = $this->getParameterValue( $options, 'csvLinkLabel', 'Export as CSV' );
 		$csvDownloadAction = "$wgScriptPath/extensions/SparqlResultFormat/api/download/";
+		$sparqlEndpoint = $this->getSparqlProxyEndpoint();
 
 		$config = "var config = {};
 			config.divId = '$divId';
@@ -152,7 +155,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 			config.cssOddTdClass='$cssOddTdClass';
 			config.noResultMessage='$noResultMessage';
 			config.endpointName='$endpointIndex';
-			config.endpoint='$wgScriptPath/extensions/SparqlResultFormat/api/query/index.php';
+			config.endpoint='$sparqlEndpoint';
 			//config.sparql=$('#$divId').attr('sparql-query');
 			config.queryPrefixes=prefixes;
 			config.basicAuthBase64String='$basicAuthBase64String';

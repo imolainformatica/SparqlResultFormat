@@ -105,9 +105,10 @@ class SparqlResultFormatCSV extends SparqlResultFormatBase implements SparqlForm
 		$headerMapping = $this->getParameterValue( $options, 'headerMapping', '{}' );
 		$filename = $this->getParameterValue( $options, 'filename', self::DEFAULT_FILENAME );
 		$separator = $this->getParameterValue( $options, 'separator', self::DEFAULT_SEPARATOR );
+		$sparqlEndpoint = $this->getSparqlProxyEndpoint();
 		$config = "var config = {};
 						config.divId = '$divId';
-			config.endpoint='$wgScriptPath/extensions/SparqlResultFormat/api/query/index.php';
+			config.endpoint='$sparqlEndpoint';
 						config.endpointName='$endpointIndex';
 						config.queryPrefixes=prefixes;
 						config.headerMapping = $headerMapping;

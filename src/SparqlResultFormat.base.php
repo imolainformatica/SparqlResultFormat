@@ -74,6 +74,12 @@ class SparqlResultFormatBase {
 			return '';
 		}
 	}
+	
+	protected function getSparqlProxyEndpoint(  ) {
+		global $wgScriptPath;
+		return "$wgScriptPath/extensions/SparqlResultFormat/api/query/sparql.php";
+	}
+	
 
 	protected function checkExtraOptions( $extra ) {
 		if ( is_array( $extra ) ) {

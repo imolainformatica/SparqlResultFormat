@@ -49,6 +49,11 @@ try {
 		if ( isset( $ep['requestTimeout'] ) ) {
 			$requestTimeout = $ep['requestTimeout'];
 		}
+		if (isset($ep['verifySSLCertificate'])){
+			$sslServerCertificateVerification=$ep['verifySSLCertificate'];
+		} else {
+			$sslServerCertificateVerification=true;
+		}
 	}
 
 	if ( !isset( $_POST['query'] ) ) {
@@ -56,16 +61,19 @@ try {
 	} else {
 		$query = $_POST['query'];
 	}
-
+} catch ( Exception $e ) {
+	echo 'Caught exception: ',  $e->getMessage(), "\n";
+	setHTTPStatusCode(400);
+	exit();
+}
+	
+	
+try {
 	// set post fields
 	$post = array(
 		'query'   => $query,
 	);
 	$fields_string = "";
-	// url-ify the data for the POST
-	// foreach($post as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
-	// rtrim($fields_string, '&');
-
 	$fields_string = http_build_query( $post );
 	$ch = curl_init( $sparqlEndpoint );
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
@@ -77,6 +85,10 @@ try {
 	if ( isset( $user ) && isset( $password ) ) {
 		curl_setopt( $ch, CURLOPT_USERPWD, "$user:$password" );
 	}
+	if (isset($sslServerCertificateVerification)){
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $sslServerCertificateVerification);
+	}
+	
 	$headers = array(
 		'Content-Type:application/x-www-form-urlencoded; charset=UTF-8',
 		'Accept: application/sparql-results+json'
@@ -87,6 +99,9 @@ try {
 	$response = curl_exec( $ch );
 	$rc = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 	$ct = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
+	if (curl_errno($ch)){
+		throw new Exception('Error: '.curl_error($ch));
+	}
 	// close the connection, release resources used
 	curl_close( $ch );
 	header( 'Content-Type: ' . $ct, true );
@@ -94,5 +109,5 @@ try {
 	echo $response;
 } catch ( Exception $e ) {
 	echo 'Caught exception: ',  $e->getMessage(), "\n";
-	setHTTPStatusCode(400);
+	setHTTPStatusCode(500);
 }
