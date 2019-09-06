@@ -97,7 +97,7 @@ class SparqlResultFormatDonutChart extends SparqlResultFormatBase implements Spa
 
 		$divCssClass = $this->getParameterValue( $options, 'divCssClass', '' );
 		$divCssClassFullScreen = $this->getParameterValue( $options, 'divCssClassFullScreen', '' );
-
+		$sparqlEndpoint = $this->getSparqlProxyEndpoint();
 		$extraOption = $this->getParameterValue( $options, 'extraOption', '' );
 		$this->checkExtraOptions( $extraOption );
 		if ( is_array( $extraOption ) ) {
@@ -108,7 +108,7 @@ class SparqlResultFormatDonutChart extends SparqlResultFormatBase implements Spa
 
 		$config = "var config = {};
 			config.divId = '$divId';
-			config.endpoint='$wgScriptPath/extensions/SparqlResultFormat/api/query/index.php';
+			config.endpoint='$sparqlEndpoint';
 			config.endpointName='$endpointIndex';
 			config.queryPrefixes=prefixes;
 			config.spinnerImagePath='$spinnerImagePath';

@@ -121,8 +121,7 @@ spqlib.util = ( function ( sparqljs ) {
 		}
 
 		jqxhr = $.ajax( {
-			/* url:endpoint,*/
-			url: queryEndpoint, //'/extensions/SparqlResultFormat/api/query/index.php',
+			url: queryEndpoint,
 			type: 'POST',
 			timeout: queryTimeout,
 			beforeSend: function ( xhr ) {

@@ -228,11 +228,11 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 		$categoryLinkPattern = $this->getParameterValue( $options, 'categoryLinkPattern', "$wgServer$wgScriptPath/index.php/Category:{%s}" );
 		$escapedQuery = rawurlencode( $this->getParameterValue( $options, 'sparqlEscapedQuery', '' ) );
 		$maxNumNodes = $this->getParameterValue( $options, 'maxNumNodes', $wgSrfMaxNumNodes );
-
+		$sparqlEndpoint = $this->getSparqlProxyEndpoint();
 		$config = "var config = {};
 			config.divId = '$divId';
 			config.endpointName='$endpointIndex';
-			config.endpoint='$wgScriptPath/extensions/SparqlResultFormat/api/query/index.php';
+			config.endpoint='$sparqlEndpoint';
 			config.sparql=decodeURIComponent(\"$escapedQuery\");
 			config.queryPrefixes=prefixes;
 			config.queryTimeout=$queryTimeout;

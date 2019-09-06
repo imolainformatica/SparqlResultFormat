@@ -99,10 +99,11 @@ class SparqlResultFormatTreemap extends SparqlResultFormatBase implements Sparql
 		$rootElement = $this->getParameterValue( $options, 'rootElement', '' );
 		$leavesLinkPattern = $this->getParameterValue( $options, 'leavesLinkPattern', '' );
 		$openLinkOnLeaves = $this->getParameterValue( $options, 'openLinkOnLeaves', 'false' );
+		$sparqlEndpoint = $this->getSparqlProxyEndpoint();
 
 		$config = "var config = {};
 			config.divId = '$divId';
-			config.endpoint='$wgScriptPath/extensions/SparqlResultFormat/api/query/index.php';
+			config.endpoint='$sparqlEndpoint';
 			config.endpointName='$endpointIndex';
 			config.queryPrefixes=prefixes;
 			config.divCssClass='$divCssClass';

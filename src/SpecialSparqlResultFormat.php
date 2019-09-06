@@ -50,6 +50,9 @@ class SpecialSparqlResultFormat extends SpecialPage {
 			<div class='indent'>	'password' => '<b>&lt;basic auth password&gt;</b>'</div>
 			<div>),</div>
 			<div></div>
+			<div>'connectionTimeout' => 0, /*in seconds*/</div>
+		<div>'requestTimeout' => 30,/*in seconds*/</div>
+		<div>'verifySSLCertificate' => false, /*to disable server certificate verification*/</div>
 			<div>'prefixes' => array( /*optional*/</div>
 					<div class='indent'>'skos' => 'http://www.w3.org/2004/02/skos/core#',</div>
 					<div class='indent'>'foaf' => 'http://xmlns.com/foaf/0.1/',</div>

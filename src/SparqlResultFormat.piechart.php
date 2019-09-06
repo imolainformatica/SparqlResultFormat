@@ -131,10 +131,11 @@ class SparqlResultFormatPieChart extends SparqlResultFormatBase implements Sparq
 		$extraOption = $this->getParameterValue( $options, 'extraOption', '' );
 		$this->checkExtraOptions( $extraOption );
 		$extraOptionString = implode( "||", $extraOption );
+		$sparqlEndpoint = $this->getSparqlProxyEndpoint();
 
 		$config = "var config = {};
 			config.divId = '$divId';
-			config.endpoint='$wgScriptPath/extensions/SparqlResultFormat/api/query/index.php';
+			config.endpoint='$sparqlEndpoint';
 			config.endpointName='$endpointIndex';
 			config.queryPrefixes=prefixes;
 			config.spinnerImagePath='$spinnerImagePath';
