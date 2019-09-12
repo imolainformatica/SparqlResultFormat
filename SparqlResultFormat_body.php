@@ -18,7 +18,7 @@ class ExtSparqlResultFormat {
 		# getting endpoint data defined in localsettings
 		$endpointData = $wgSparqlEndpointDefinition[$options['sparqlEndpoint']];
 		# generating code for prefixes array
-		$prefixes = $endpointData['prefixes'];
+		$prefixes = isset($endpointData['prefixes']) ? $endpointData['prefixes'] : null;
 		$javascriptPrefixesArray = self::createJavascriptPrefixesArray( $prefixes );
 
 		# format specific code
