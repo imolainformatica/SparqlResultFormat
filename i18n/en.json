@@ -57,7 +57,7 @@
 	"sprf.format.bubblechart.query.structure.example": "select ?person count(?property) as ?x count(?property2) as ?y count(?property3) as ?r <div>where { ?person rdf:type foaf:Person. ... }</div>",
 	"sprf.format.treemap.title":"Treemap",
 	"sprf.format.treemap.description":"Convert the result of a sparql query to a zoomable treemap",
-	"sprf.format.treemap.usage": "<nowiki>{{#treemap:|divId=table1 |sparqlEndpoint=endpoint1|sparqlEscapedQuery=select ?parent ?....}}</nowiki>",
+	"sprf.format.treemap.usage": "<nowiki>{{#sparql2treemap:|divId=table1 |sparqlEndpoint=endpoint1|sparqlEscapedQuery=select ?parent ?....}}</nowiki>",
 	"sprf.format.treemap.query.structure": "The query must adjust to the following rules: <ul><li>All rows must represent a couple: parent value e child value with an optional numerical value</li><li>The first column is the parent. The second is the child. The third (optional) is the weight for leaves node.</li><li>If the third column is not specified the weight of all leaves will be set to 1</li></ul>",
 	"sprf.format.treemap.query.structure.example": "select ?parent ?child <div>where { ?parent ?relation ?child. ... }</div>",
 	"sprf.param.divId":"Identifier of this element. <b>Must be unique</b> inside the page",
