@@ -88,10 +88,11 @@ try {
 	if (isset($sslServerCertificateVerification)){
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $sslServerCertificateVerification);
 	}
-	
+	$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "SparqlResultFormat Sparql CURL";
 	$headers = array(
-		'Content-Type:application/x-www-form-urlencoded; charset=UTF-8',
-		'Accept: application/sparql-results+json'
+		"Content-Type:application/x-www-form-urlencoded; charset=UTF-8",
+		"Accept: application/sparql-results+json",
+		"User-Agent: $userAgent"
 	);
 	curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
 

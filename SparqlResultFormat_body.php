@@ -160,8 +160,10 @@ class ExtSparqlResultFormat {
 
 	public static function createJavascriptPrefixesArray( $prefixes ) {
 		$res = "var prefixes = [];";
-		foreach ( $prefixes as $key => &$val ) {
-			$res .= " prefixes.push({pre:'$key',ns:'$val'});";
+		if (is_array($prefixes)){
+			foreach ( $prefixes as $key => &$val ) {
+				$res .= " prefixes.push({pre:'$key',ns:'$val'});";
+			}
 		}
 		return $res;
 	}
