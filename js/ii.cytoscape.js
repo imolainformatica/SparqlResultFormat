@@ -117,7 +117,10 @@
 					},
 					position: {
 						my: 'top center',
-						at: 'bottom center'
+						at: 'bottom center',
+						target: $("#"+divId+"-container"),
+						container: $("#"+divId+"-container"),
+						viewport: $("#"+divId+"-container")
 					},
 					style: {
 						classes: 'qtip-bootstrap',
@@ -146,7 +149,10 @@
 				},
 				position: {
 					my: 'top center',
-					at: 'bottom center'
+					at: 'bottom center',
+					target: $("#"+divId+"-container"),
+					container: $("#"+divId+"-container"),
+					viewport: $("#"+divId+"-container")
 				},
 				style: {
 					classes: 'qtip-bootstrap',
