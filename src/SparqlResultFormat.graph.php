@@ -158,7 +158,12 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 		$divStyle = $this->getParameterValue( $options, 'divStyle', '' );
 		$divCssClass = $this->getParameterValue( $options, 'divCssClass', '' );
 		$htmlContainer = "<div id='$divId-container' style='$divStyle' class='$divCssClass ii-graph-container'>
-			<div id='$divId' class='cytoscape-graph' style='width:100%; height:100%;' sparql-query=''></div></div>";
+			<div id='$divId' class='cytoscape-graph' style='width:100%; height:100%;' sparql-query=''></div>";
+		$htmlContainer .="<div id='$divId-zoom-controls' class='ii-graph-zoom-controls'>"
+                       ."<div class='ii-graph-zoom-controls-in  fa fa-search-plus' sprf-graph-id='$divId'></div>"
+                       ."<div class='ii-graph-zoom-controls-out  fa fa-search-minus' sprf-graph-id='$divId'></div>"
+                       ."</div>";
+		$htmlContainer .="</div>";
 		return $htmlContainer;
 	}
 
