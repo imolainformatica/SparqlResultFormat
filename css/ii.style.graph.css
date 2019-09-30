@@ -73,3 +73,17 @@
     border-radius: 5px;
     border: 1px solid green;
 }
+
+.ii-graph-zoom-controls {
+	width:20px;
+	height:20px;
+	float: right;
+    position: relative;
+    top: -70px;
+    right: 20px;
+	
+}
+
+.ii-graph-zoom-controls div{
+cursor: pointer;
+}
