@@ -6,7 +6,7 @@
 		"Gabriele Cornacchia",
 		"Matteo Busanelli"
 	],
-	"url": "./Special:SparqlResultFormat",
+	"url": "https://www.mediawiki.org/wiki/Extension:SparqlResultFormat",
 	"descriptionmsg": "sparqlresultformatdesc",
 	"description": "Permette di effettuare query sparql a endpoint e di visualizzarle in diversi formati",
 	"type": "parserhook",
