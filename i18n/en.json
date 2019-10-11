@@ -151,7 +151,9 @@
 	"sprf.js.graph.show.legend":"Show Legend",
 	"sprf.js.graph.hide.legend":"Hide Legend",
 	"sprf.js.graph.go.fullscreen":"Go Fullscreen",
-	"sprf.js.graph.exit.fullscreen":"Exit Fullscreen"
-
-	
+	"sprf.js.graph.exit.fullscreen":"Exit Fullscreen",
+	"sprf.param.action.zoom.controls.visible":"Specify if zoom controls must be visible or not",
+	"sprf.param.action.donwload.image.visible":"Specify if the download image button must be visible or not",
+	"sprf.param.action.fullscreen.visible":"Specify if the fullscreen button must be visible or not",
+	"sprf.js.graph.download.image":"Download Image"
 }

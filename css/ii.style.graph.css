@@ -26,9 +26,9 @@
    margin-top:30px;
 
 }
-.cytoscape-action i{
-   font-size:30px; 
-   padding-left:20px;
+.cytoscape-action {
+   font-size:20px; 
+   padding-left:10px;
 }
 
 .container-cytoscape-full-screen{
@@ -81,9 +81,44 @@
     position: relative;
     top: -70px;
     right: 20px;
+	font-size: 20px;
 	
 }
 
 .ii-graph-zoom-controls div{
 cursor: pointer;
 }
+
+.ii-graph-zoom-controls div:hover{
+	color:#9e9e9e;
+}
+
+.ii-legend-toggle {
+	cursor: pointer;
+}
+
+.ii-legend-toggle:hover{
+	color:#9e9e9e;
+}
+
+.ii-graph-action-image {
+	cursor: pointer;
+}
+
+.ii-graph-action-image:hover {
+	color:#9e9e9e;
+}
+
+.ii-graph-action-toggle-fullscreen {
+	cursor: pointer;
+}
+
+.ii-graph-action-toggle-fullscreen:hover {
+	color:#9e9e9e;
+}
+
+.cytoscape-legend-container-label span{
+	font-size:20px;
+}
+
+
