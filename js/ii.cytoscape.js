@@ -89,14 +89,15 @@
 		function exportAsImage( divId ) {
 			var png64 = g[ divId ].png( {
 					full: true
-				} ),
-			 hiddenElement = document.createElement( 'a' );
-			hiddenElement.href = png64;// 'data:attachment/text,' +
+				} );
+			return png64;
+			//hiddenElement = document.createElement( 'a' );
+			//hiddenElement.href = png64;// 'data:attachment/text,' +
 			// encodeURI(textToSave);
-			hiddenElement.target = '_blank';
+			//hiddenElement.target = '_blank';
 			// non funziona in IE
-			hiddenElement.download = 'export.png';
-			hiddenElement.click();
+			//hiddenElement.download = divId+'-export.png';
+			//hiddenElement.click();
 		}
 
 		/**

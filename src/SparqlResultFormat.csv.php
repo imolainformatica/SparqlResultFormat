@@ -125,7 +125,7 @@ class SparqlResultFormatCSV extends SparqlResultFormatBase implements SparqlForm
 		$escapedQuery = $this->getParameterValue( $options, 'sparqlEscapedQuery', '' );
 		$linkButtonCSSClass = $this->getParameterValue( $options, 'linkButtonCSSClass', '' );
 		$linkButtonLabel = $this->getParameterValue( $options, 'linkButtonLabel', '' );
-		$csvDownloadAction = "$wgScriptPath/extensions/SparqlResultFormat/api/download/index.php";
+		$csvDownloadAction = "$wgScriptPath/extensions/SparqlResultFormat/api/download/csv.php";
 		$label = $this->getParameterValue( $options, 'label', self::DEFAULT_LABEL );
 
 		$formHtml = "<form id='$divId-form' action=\"$csvDownloadAction\" method='POST'>

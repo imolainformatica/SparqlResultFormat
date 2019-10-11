@@ -309,6 +309,10 @@ spqlib.util = ( function ( sparqljs ) {
 		// csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent( csv );
 		return csv;
 	};
+	
+	my.message = function(messageKey){
+		return mw.message( messageKey ).text();
+	}
 
 	return my;
 }() );

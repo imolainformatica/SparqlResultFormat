@@ -28,7 +28,7 @@ class SparqlResultFormatBase {
 		return $this->queryStructure;
 	}
 
-	protected function getParameterValue( $options, $paramName, $defaultValue ) {
+	protected function getParameterValue( $options, $paramName, $defaultValue, $asBoolean = false ) {
 		$paramName = trim( $paramName );
 		if ( !isset( $this->params[$paramName] ) ) {
 			throw new Exception( "Param $paramName is not defined in params definition. " );
@@ -40,7 +40,12 @@ class SparqlResultFormatBase {
 			if (is_array($options[$paramName])){
 				return array_map("html_entity_decode",$options[$paramName]);
 			}else {
-				return html_entity_decode( $options[$paramName], ENT_QUOTES );
+				if ($asBoolean){
+					//ritorno l'elemento come elemento booleano
+					return filter_var($options[$paramName], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+				} else {
+					return html_entity_decode( $options[$paramName], ENT_QUOTES );
+				}
 			}
 		} else {
 			// parametro non passato
@@ -78,6 +83,11 @@ class SparqlResultFormatBase {
 	protected function getSparqlProxyEndpoint(  ) {
 		global $wgScriptPath;
 		return "$wgScriptPath/extensions/SparqlResultFormat/api/query/sparql.php";
+	}
+	
+	protected function getDownloadImageEndpoint(){
+		global $wgScriptPath;
+		return "$wgScriptPath/extensions/SparqlResultFormat/api/download/image.php";
 	}
 	
 

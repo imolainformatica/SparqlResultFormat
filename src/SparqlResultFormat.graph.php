@@ -146,6 +146,24 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 					"description" => wfMessage( "sprf.param.maxNumNodes" ),
 					"example" => "",
 					"default" => 200
+				),
+				"action.fullscreen.visible" => array(
+					"mandatory" => false,
+					"description" => wfMessage( "sprf.param.action.fullscreen.visible" ),
+					"example" => "|action.fullscreen.visible=false",
+					"default" => "true"
+				),
+				"action.donwload.image.visible" => array(
+					"mandatory" => false,
+					"description" => wfMessage( "sprf.param.action.donwload.image.visible" ),
+					"example" => "action.donwload.image.visible|false",
+					"default" => "true"
+				),
+				"action.zoom.controls.visible" => array(
+					"mandatory" => false,
+					"description" => wfMessage( "sprf.param.action.zoom.controls.visible" ),
+					"example" => "|action.zoom.controls.visible=false",
+					"default" => "true"
 				)
 	   ); 
 		$this->queryStructure = wfMessage("sprf.format.graph.query.structure").wfMessage("sprf.format.graph.query.structure.example")
@@ -156,10 +174,11 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 	function generateHtmlContainerCode( $options ) {
 		$divId = $this->getParameterValue( $options, 'divId', '' );
 		$divStyle = $this->getParameterValue( $options, 'divStyle', '' );
+		$showZoomControls = $this->getParameterValue( $options, 'action.zoom.controls.visible', 'true',true );
 		$divCssClass = $this->getParameterValue( $options, 'divCssClass', '' );
 		$htmlContainer = "<div id='$divId-container' style='$divStyle' class='$divCssClass ii-graph-container'>
 			<div id='$divId' class='cytoscape-graph' style='width:100%; height:100%;' sparql-query=''></div>";
-		$htmlContainer .="<div id='$divId-zoom-controls' class='ii-graph-zoom-controls'>"
+		$htmlContainer .="<div id='$divId-zoom-controls' style='".($showZoomControls==false ? "display:none;" : "")."' class='ii-graph-zoom-controls'>"
                        ."<div class='ii-graph-zoom-controls-in  fa fa-search-plus' sprf-graph-id='$divId'></div>"
                        ."<div class='ii-graph-zoom-controls-out  fa fa-search-minus' sprf-graph-id='$divId'></div>"
                        ."</div>";
@@ -217,7 +236,7 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 		$rootElement = rawurlencode( $this->getParameterValue( $options, 'rootElement', '' ) );
 		$rootElementColor = $this->getParameterValue( $options, 'rootElementColor', '' );
 		$rootElementImage = $this->getParameterValue( $options, 'rootElementImage', '' );
-		$showLegend = $this->getParameterValue( $options, 'showLegend', 'true' );
+		$showLegend = $this->getParameterValue( $options, 'showLegend', 'true',true );
 		$defaultNodeColor = $this->getParameterValue( $options, 'defaultNodeColor', '#CCC' );
 		$defaultEdgeColor = $this->getParameterValue( $options, 'defaultEdgeColor', '#CCC' );
 		$splitQueryByUnion = $this->getParameterValue( $options, 'splitQueryByUnion', 'false' );
@@ -234,10 +253,15 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 		$escapedQuery = rawurlencode( $this->getParameterValue( $options, 'sparqlEscapedQuery', '' ) );
 		$maxNumNodes = $this->getParameterValue( $options, 'maxNumNodes', $wgSrfMaxNumNodes );
 		$sparqlEndpoint = $this->getSparqlProxyEndpoint();
+		$downloadImageEndpoint = $this->getDownloadImageEndpoint();
+		$showZoomControls = $this->getParameterValue( $options, 'action.zoom.controls.visible', 'true',true );
+		$showFullscreenLink = $this->getParameterValue( $options, 'action.zoom.controls.visible', 'true',true );
+		$showDownloadImageLink = $this->getParameterValue( $options, 'action.donwload.image.visible', 'true',true );
 		$config = "var config = {};
 			config.divId = '$divId';
 			config.endpointName='$endpointIndex';
 			config.endpoint='$sparqlEndpoint';
+			config.downloadImageEndpoint='$downloadImageEndpoint';
 			config.sparql=decodeURIComponent(\"$escapedQuery\");
 			config.queryPrefixes=prefixes;
 			config.queryTimeout=$queryTimeout;
@@ -249,7 +273,7 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 			config.rootElement=decodeURIComponent(\"$rootElement\");
 			config.rootElementColor='$rootElementColor';
 			config.rootElementImage='$rootElementImage';
-			config.showLegend='$showLegend';
+			config.showLegend=".($showLegend ? "true" : "false").";
 			config.defaultNodeColor='$defaultNodeColor';
 			config.defaultEdgeColor='$defaultEdgeColor';
 			config.splitQueryByUnion='$splitQueryByUnion';
@@ -264,6 +288,9 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 			config.labelLinkPattern='$labelLinkPattern';
 			config.categoryLinkPattern='$categoryLinkPattern';
 			config.maxNumNodes=$maxNumNodes;
+			config.showZoomControls=".($showZoomControls ? "true" : "false").";
+			config.showDownloadImageLink=".($showDownloadImageLink ? "true" : "false").";
+			config.showFullscreenLink=".($showFullscreenLink ? "true" : "false").";
 			";
 
 		return $config;

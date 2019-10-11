@@ -58,31 +58,62 @@ spqlib.graph = ( function () {
 	};
 
 	my.exportAsImage = function () {
-		spqlib.graph.graphImpl().exportAsImage();
+		var id=$(this).attr("sprf-graph-id");
+		var config=spqlib.getById(id).config;
+		var png = spqlib.graph.graphImpl().exportAsImage(id);
+		$("<form method='POST' action='"+config.downloadImageEndpoint+"'><input type='hidden' name='png_file_name' value='"+id+"-export.png'><input type='hidden' name='png_string' value='"+png+"'></form>").appendTo("body").submit();
 	};
 
-	my.toggleFullScreen = function ( graphId ) {
-		var goFullscreenLabel = mw.message( 'sprf.js.graph.go.fullscreen' ).text(),
-		 exitFullscreenLabel = mw.message( 'sprf.js.graph.exit.fullscreen' ).text(),
+	my.toggleFullScreen = function ( obj ) {
+		var graphId = $(this).attr("sprf-graph-id");
+		var goFullscreenLabel = spqlib.util.message( 'sprf.js.graph.go.fullscreen' ),
+		 exitFullscreenLabel = spqlib.util.message( 'sprf.js.graph.exit.fullscreen' ),
 		 containerSelector = '#' + graphId + '-container',
 		 legendSelector = '#' + graphId + '-legend-container';
-		// $(containerSelector).toggleClass('ii-container-graph-full-screen');
 		if ( screenfull.enabled ) {
 			var el = document.getElementById( graphId + '-container' );
 			screenfull.toggle( el );
 		}
 
-		var icon = $( legendSelector ).find( 'i' );
+		var icon = $( legendSelector ).find( '.ii-graph-action-toggle-fullscreen' );
 		icon.toggleClass( 'fa-compress' );
 		icon.toggleClass( 'fa-expand' );
 		if ( icon.hasClass( 'fa-expand' ) ) {
-			$( legendSelector ).find( '.action-fullscreen' ).find( 'span' ).text( goFullscreenLabel );
+			$( legendSelector ).find( '.ii-graph-action-toggle-fullscreen' ).text( " "+goFullscreenLabel );
 		} else {
-			$( legendSelector ).find( '.action-fullscreen' ).find( 'span' ).text( exitFullscreenLabel );
+			$( legendSelector ).find( '.ii-graph-action-toggle-fullscreen' ).text( " "+exitFullscreenLabel );
 		}
 		spqlib.graph.graphImpl().resize( graphId );
 		centerGraphToNode( graphId, spqlib.graph.graphImpl().getGraph( graphId ).config.rootElement );
 	};
+	
+	my.zoomIn = function(obj){
+		var id=$(this).attr("sprf-graph-id");
+		var graph = spqlib.getById(id);
+		var max=graph.maxZoom();
+		var min=graph.minZoom();
+		var step = (max-min)/10;
+		var actualZoom = graph.zoom();
+		actualZoom+=step;
+		graph.zoom(actualZoom);
+	}
+	
+	my.zoomOut = function(obj){
+		var id=$(this).attr("sprf-graph-id");
+		var graph = spqlib.getById(id);
+		var max=graph.maxZoom();
+		var min=graph.minZoom();
+		var step = (max-min)/10;
+		var actualZoom = graph.zoom();
+		actualZoom-=step;
+		graph.zoom(actualZoom);
+	}
+	
+	my.toggleLegend = function(obj){
+		var id=$(this).attr("sprf-graph-id");
+		$("#"+id+"-legend-container").toggle();
+	}
+	
 
 	my.preQuery = function ( configuration ) {
 		if ( configuration.spinnerImagePath ) {
@@ -107,8 +138,8 @@ spqlib.graph = ( function () {
 	}
 
 	my.initHtml = function ( config ) {
-		var goFullscreenLabel = mw.message( 'sprf.js.graph.go.fullscreen' ).text(),
-		 exitFullscreenLabel = mw.message( 'sprf.js.graph.exit.fullscreen' ).text(),
+		var goFullscreenLabel = spqlib.util.message( 'sprf.js.graph.go.fullscreen' ),
+		 exitFullscreenLabel = spqlib.util.message( 'sprf.js.graph.exit.fullscreen' ),
 		 idContainer = config.divId + '-container',
 		 idLoader = config.divId + '-loader',
 		 idLegendBox = config.divId + '-legend-box',
@@ -116,40 +147,38 @@ spqlib.graph = ( function () {
 		 idLegendContainerLabel = config.divId + '-legend-container-label',
 		 idLegendHeader = config.divId + '-legend-header',
 		 idLegend = config.divId + '-legend',
-		 idLegendActionList = config.divId + '-legend-actions-list',
-		 actionFullScreen = "<a href='#' onclick=\"javascript:spqlib.graph.toggleFullScreen('" + config.divId + "');\" class='action-fullscreen'><i class='fas fa-expand'> \
-		</i><span class='fullscreen-label' style='padding-left:10px;'>" + goFullscreenLabel + '</span></a>';
+		 idLegendActionList = config.divId + '-legend-actions-list';
+		var actionFullScreen = "<div style='"+(config.showFullscreenLink==false ? 'display:none' : '')+"'><span class='fa fa-expand ii-graph-action-toggle-fullscreen' sprf-graph-id="+config.divId+"> "+goFullscreenLabel+"</span></div>";
+		var actionDownloadImage="<div style='"+(config.showDownloadImageLink==false ? 'display:none' : '')+"'><span class='fa fa-image ii-graph-action-image' sprf-graph-id="+config.divId+"> "+spqlib.util.message("sprf.js.graph.download.image")+"</span></div>";
 		$( '#' + idContainer ).before( "<div id='" + idLoader + "' class='ii-graph-loader-box'></div>" );
 		$( '#' + idContainer ).prepend( "<div id='" + idLegendBox + "' class='ii-graph-legend-box'></div>" );
-		$( '#' + idLegendBox ).prepend( "<div id='" + idLegendContainer + "' class='ii-graph-legend-container cytoscape-legend-container'></div>" );
-		$( '#' + idLegendBox ).prepend( "<div id='" + idLegendContainerLabel + "' class='ii-graph-legend-container cytoscape-legend-container-label'><span>Show legend<span><!--i class='fas fa-chevron-down'></i--></div>" );
+		$( '#' + idLegendBox ).prepend( "<div id='" + idLegendContainer + "' class='ii-graph-legend-container cytoscape-legend-container' style='"+(config.showLegend==false ? 'display:none' : '')+"'></div>" );
+		$( '#' + idLegendBox ).prepend( "<div id='" + idLegendContainerLabel + "' class='ii-graph-legend-container cytoscape-legend-container-label'><span id='"+config.divId+"-legend-toggle' class='fa fa-bars ii-legend-toggle' sprf-graph-id="+config.divId+"><span><!--i class='fas fa-chevron-down'></i--></div>" );
 		$( '#' + idLegendContainer ).append( "<div id='" + idLegendHeader + "' class='ii-graph-legend-header'>" + createLegendHeader( config ) + '</div> ' );
 		$( '#' + idLegendContainer ).append( "<div id='" + idLegend + "' class='ii-graph-legend'></div> " );
 		$( '#' + idLegendContainer ).append( "<div id='" + idLegendActionList + "' class='ii-graph-legend-actions-list cytoscape-actions-list'></div> " );
-		$( '#' + idLegendActionList ).append( "<div class='ii-graph-legend-action cytoscape-action'>" + actionFullScreen + '</div>' );
+		$( '#' + idLegendActionList ).append( "<div class='ii-graph-legend-action cytoscape-action'>" + actionFullScreen +'</div>' );
+		$( '#' + idLegendActionList ).append( "<div class='ii-graph-legend-action cytoscape-action'>" + actionDownloadImage +'</div>' );
 		if ( config.splitQueryByUnion && config.splitQueryByUnion == 'true' ) {
 			$( '#' + idContainer ).after( "<div class='progress'><div class='progress-bar ii-graph-progress-bar ' role='progressbar' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100' style='width:0%'>0%</div></div>" );
 		}
+		$(".ii-graph-zoom-controls-in").click(spqlib.graph.zoomIn);
+		$(".ii-graph-zoom-controls-out").click(spqlib.graph.zoomOut);
+		$("#"+config.divId+"-legend-toggle").click(spqlib.graph.toggleLegend);
+		$(".ii-graph-action-image").click(spqlib.graph.exportAsImage);
+		$(".ii-graph-action-toggle-fullscreen").click(spqlib.graph.toggleFullScreen);
+		
 	};
 
 	function createLegendHeader( config ) {
-		var html = '';
-		if ( config.legendConfiguration ) {
-			var conf = config.legendConfiguration;
-			if ( conf.expandable == 'true' ) {
-				html += "<a href='#' onclick='javascript:spqlib.graph.toggleLegendExpansion('" + config.divId + "')'>Legend</a>";
-			} else {
-
-			}
-		}
-		return html;
+		return "";
 	}
 
 	my.render = function ( json, config ) {
 		var head = json.head.vars,
 		 data = json.results.bindings;
-		$( '#' + config.divId + '-container' ).find( '.ii-graph-legend-actions-list' ).show();
-		$( '#' + config.divId + '-legend-container' ).attr( 'style', '' );
+		//$( '#' + config.divId + '-container' ).find( '.ii-graph-legend-actions-list' ).show();
+		//$( '#' + config.divId + '-legend-container' ).attr( 'style', '' );
 		$( '#' + config.divId + '-loader' ).html( 'Rendering...' );
 
 		var edges = [],
@@ -432,11 +461,7 @@ spqlib.graph = ( function () {
 		enableTooltipOnNodes( divId );
 		enableTooltipOnEdges( divId );
 		spqlib.addToRegistry( config.divId, graph );
-		if ( config.showLegend == 'true' || config.rootElement ) {
-			spqlib.graph.drawLegend( config );
-		} else {
-			hideLegend( config.divId + '-legend' );
-		}
+		spqlib.graph.drawLegend( config );
 		$( '#' + config.divId ).trigger( 'done' );
 	}
 
@@ -760,17 +785,13 @@ spqlib.graph = ( function () {
 	 */
 	my.drawLegend = function ( config ) {
 
-		var showLegendLabel = mw.message( 'sprf.js.graph.show.legend' ).text(),
-		 hideLegendLabel = mw.message( 'sprf.js.graph.hide.legend' ).text(),
-		 divId = config.divId + '-legend',
+		 var divId = config.divId + '-legend',
 		 table = $( '<table>' ).attr( 'id', 'table-' + divId ),
-		 showLegend = false,
 		 nodeConfiguration = config.nodeConfiguration,
 		 edgeConfiguration = config.edgeConfiguration;
 		// aggiungo la voce per l'elemento root
 		if ( config.rootElement ) {
 			if ( config.rootElementColor || config.rootElementImage ) {
-				showLegend = true;
 				var colorDiv = $( '<div>' ).addClass( 'legend-circle-node' )
 						.attr( 'type', 'rootElement' ).attr(
 							'style',
@@ -794,7 +815,6 @@ spqlib.graph = ( function () {
 			 col2 = $( '<td>' ).append( nodeConfiguration[ i ].category ),
 			 row = $( '<tr>' ).append( col1 ).append( col2 );
 			table.append( row );
-			showLegend = true;
 		}
 		for ( var i = 0; i < edgeConfiguration.length; i++ ) {
 			var colorDiv = $( '<div>' ).addClass( 'legend-arrow-line' ).attr(
@@ -804,40 +824,8 @@ spqlib.graph = ( function () {
 			 col2 = $( '<td>' ).append( edgeConfiguration[ i ].relation ),
 			 row = $( '<tr>' ).append( col1 ).append( col2 );
 			table.append( row );
-			showLegend = true;
 		}
-		if ( showLegend ) {
-			$( '#' + divId ).append( table );
-		} else {
-			hideLegend( divId );
-		}
-		// Aggiungo eventi per show e hide della legenda
-		var divLegendContainer = divId + '-container',
-		 divLegendLabel = divId + '-container-label';
-
-		// Aggiungo gli eventi
-		$( '#' + divLegendLabel ).on( 'click', function () {
-			var value = $( '#' + divLegendLabel + ' span' ).text();
-			if ( value == showLegendLabel ) {
-				// $("#" + divLegendContainer).show();
-				$( '#' + divLegendContainer ).slideDown( 'slow' );
-				$( '#' + divLegendLabel + ' span' ).text( hideLegendLabel );
-			} else if ( value == hideLegendLabel ) {
-				$( '#' + divLegendContainer ).slideUp( 'slow' );
-				// $("#" + divLegendContainer).hide();
-				$( '#' + divLegendLabel + ' span' ).text( showLegendLabel );
-			}
-		} );
-
-		$( '#' + divLegendContainer ).on( 'mouseenter ', function () {
-			$( '#' + divLegendContainer ).show();
-			$( '#' + divLegendLabel + ' span' ).text( hideLegendLabel );
-		} );
-
-		$( '#' + divLegendContainer ).on( 'mouseleave', function () {
-			$( '#' + divLegendContainer ).slideUp( 'slow' );
-			$( '#' + divLegendLabel + ' span' ).text( showLegendLabel );
-		} );
+		$( '#' + divId ).append( table );
 	};
 
 	my.createGlobalCategoryConfiguration = function ( nodeConfiguration, edgeConfiguration ) {
