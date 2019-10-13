@@ -57,7 +57,7 @@
 		},
 		"ext.SparqlResultFormat.table": {
 			"scripts":["js/ii.sparql.format.table.js","js/ii.sparql.format.csv.js"],
-			"dependencies":[],
+			"dependencies":["ext.numeral.js"],
 			"styles":["css/ii.style.css"]
 		},
 		"ext.SparqlResultFormat.jqplot": {
@@ -128,6 +128,11 @@
 		},
 		"ext.screenfull.js":{
 			"scripts":["js/libs/screenfull.js/screenfull.min.js"],
+			"dependencies":[],
+			"styles":[]
+		},
+		"ext.numeral.js":{
+			"scripts":["js/libs/numeral.js/numeral.min.js","js/libs/numeral.js/locales.min.js"],
 			"dependencies":[],
 			"styles":[]
 		},

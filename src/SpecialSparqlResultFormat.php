@@ -80,7 +80,8 @@ class SpecialSparqlResultFormat extends SpecialPage {
 		$output->addHTML( "</ul>" );
 
 		foreach ( $formats as $key => $value ) {
-			$output->addHTML( "<div id='$key'>" );
+			$formatName = $value->getName();
+			$output->addHTML( "<div id='$key'><h1 style='background: #cbc8c8; padding: 5px; border-radius: 5px;'>$formatName</h1>" );
 			$output->addHTML( "<h2>" . wfMessage( "sprf.common.description" ) . "</h2>" );
 			$desc = $value->getDescription();
 			$output->addHTML( "<div class='description'>$desc</div>" );

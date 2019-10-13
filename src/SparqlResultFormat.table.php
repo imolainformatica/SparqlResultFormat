@@ -34,7 +34,8 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 			),
 			"columnConfiguration" => array(
 				"mandatory" => false,
-				"description" => wfMessage("sprf.param.columnConfiguration")
+				"description" => wfMessage("sprf.param.columnConfiguration"),
+				"example" => "columnConfiguration=[{queryField:'type_label', label:'Asset type', showLink:'false',cellValuePattern:'value={%s}'}] </br> columnConfiguration=[{queryField:'totalCost', label:'Total cost', showLink:'false',cellValuePattern:'€ {%n[0,00.00]@it}'}]"
 			),
 			"cssEvenRowClass" => array(
 				"mandatory" => false,
@@ -122,6 +123,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 	function generateConfig( $options ) {
 		global $wgServer;
 		global $wgScriptPath;
+		global $wgSparqlResultFormatTableNumberDefaultLocale;
 		$endpointIndex = $this->getParameterValue( $options, 'sparqlEndpoint', '' );
 		$endpointData = $this->getSparqlEndpointByName( $endpointIndex );
 		$endpoint = $endpointData['url'];
@@ -144,6 +146,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 		$csvLinkLabel = $this->getParameterValue( $options, 'csvLinkLabel', 'Export as CSV' );
 		$csvDownloadAction = "$wgScriptPath/extensions/SparqlResultFormat/api/download/csv.php";
 		$sparqlEndpoint = $this->getSparqlProxyEndpoint();
+		$tableNumberLocale = (isset($wgSparqlResultFormatTableNumberDefaultLocale) ? $wgSparqlResultFormatTableNumberDefaultLocale : "en");
 
 		$config = "var config = {};
 			config.divId = '$divId';
@@ -164,7 +167,8 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 			config.csvFileName='$csvFileName';
 			config.csvLinkLabel='$csvLinkLabel';
 			config.csvFormAction='$csvDownloadAction';
-			config.spinnerImagePath='$spinnerImagePath';";
+			config.spinnerImagePath='$spinnerImagePath';
+			config.numberFormatDefaultLocale='$tableNumberLocale'";
 
 		return $config;
 	}

@@ -80,9 +80,9 @@ spqlib.table = ( function () {
 				 linkCellValue = '';
 				if ( mappedColumnInfo ) {
 					if ( mappedColumnInfo.showLink == 'true' ) {
-						linkCellValue = getCellLinkValue( config, cellValue, mappedColumnInfo );
+						linkCellValue = getCellLinkValue( config, cellValue, mappedColumnInfo,data[ i ] );
 					} else {
-						linkCellValue = getCellValue( cellValue, mappedColumnInfo );
+						linkCellValue = getCellValue( cellValue, mappedColumnInfo,config );
 					}
 				} else {
 					linkCellValue = cellValue;
@@ -127,29 +127,66 @@ spqlib.table = ( function () {
 		$( '#' + config.divId ).trigger( 'done' );
 	};
 
-	function getCellLinkValue( config, cellValue, columnConfiguration ) {
+	function getCellLinkValue( config, cellValue, columnConfiguration,rowData ) {
 
 		var link = '';
 		if ( columnConfiguration.cellLinkPattern ) {
-			link = formatString( columnConfiguration.cellLinkPattern, cellValue );
+			link = formatString( columnConfiguration.cellLinkPattern, cellValue,config,rowData );
 		} else {
 			link = cellValue;
 		}
-		var formattedCellValue = getCellValue( cellValue, columnConfiguration );
+		var formattedCellValue = getCellValue( cellValue, columnConfiguration,config,rowData );
 		return "<a href='" + spqlib.util.htmlEncode( link ).replace( /'/g, '&apos;' ) + "'>" + formattedCellValue + '</a>';
 	}
 
-	function getCellValue( cellValue, columnConfiguration ) {
+	function getCellValue( cellValue, columnConfiguration,config,rowData ) {
 		if ( columnConfiguration.cellValuePattern ) {
-			return formatString( columnConfiguration.cellValuePattern, cellValue );
+			return formatString( columnConfiguration.cellValuePattern, cellValue,config,rowData );
 		}
 		return cellValue;
 	}
 
-	function formatString( format, param ) {
-		 var formatted = format.replace( '{%s}', param );
-		 return formatted;
+	function formatString( format, param,config,rowData ) {
+		// {%n[<format>]@<locale>}
+		var placeholderWithOtherField = /{%s\[.*\]}/gm;
+		var otherFieldNameRegex = /(?<={%s\[).*(?=\])/gm;
+		
+		var regex = /{%n\[.*\](@[a-z-]+)?}/gm;
+		var numberLocaleRegex = /(?<={%n\[.*]@).*(?=})/gm;
+		var numberFormatRegex =  /(?<={%n\[).*(?=\])/gm;
+		var output = format;
+		 if (format.includes("{%s}")){
+			output = output.replace( '{%s}', param );
+		 }
+		 //format= {%s[fds]} - {%s[dsfa]}
+		 if (output.match(placeholderWithOtherField)){
+			output = output.replace(placeholderWithOtherField,function(match,offset,str,rowData){
+				var otherFieldNameRegex = /(?<={%s\[).*(?=\])/gm;
+				var fieldName = otherFieldNameRegex.exec(match)[0];
+				//devo recuperare il valore dell'altro campo e restituirlo
+				return "XXXX";
+				
+			});
+		 }
+		 
+		 if (output.match(regex)){
+			 //devo formattare il numero
+			 if (output.match(numberLocaleRegex)){
+				var numberLocale=numberLocaleRegex.exec(output)[0];
+				numeral.locale(numberLocale);
+			 } else {
+				numeral.locale(config.numberFormatDefaultLocale);
+			 }			 
+			
+			var numberFormat = numberFormatRegex.exec(output)[0];
+			var formattedNumber=numeral(param).format(numberFormat);
+			output = output.replace(regex,formattedNumber);
+			
+		 }
+		 return output;
 	}
+
+	
 
 	function isEven( i ) {
 		return ( i % 2 == 0 );
