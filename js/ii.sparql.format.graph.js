@@ -66,22 +66,9 @@ spqlib.graph = ( function () {
 
 	my.toggleFullScreen = function ( obj ) {
 		var graphId = $(this).attr("sprf-graph-id");
-		var goFullscreenLabel = spqlib.util.message( 'sprf.js.graph.go.fullscreen' ),
-		 exitFullscreenLabel = spqlib.util.message( 'sprf.js.graph.exit.fullscreen' ),
-		 containerSelector = '#' + graphId + '-container',
-		 legendSelector = '#' + graphId + '-legend-container';
 		if ( screenfull.enabled ) {
 			var el = document.getElementById( graphId + '-container' );
 			screenfull.toggle( el );
-		}
-
-		var icon = $( legendSelector ).find( '.ii-graph-action-toggle-fullscreen' );
-		icon.toggleClass( 'fa-compress' );
-		icon.toggleClass( 'fa-expand' );
-		if ( icon.hasClass( 'fa-expand' ) ) {
-			$( legendSelector ).find( '.ii-graph-action-toggle-fullscreen' ).text( " "+goFullscreenLabel );
-		} else {
-			$( legendSelector ).find( '.ii-graph-action-toggle-fullscreen' ).text( " "+exitFullscreenLabel );
 		}
 		spqlib.graph.graphImpl().resize( graphId );
 		centerGraphToNode( graphId, spqlib.graph.graphImpl().getGraph( graphId ).config.rootElement );
@@ -148,12 +135,12 @@ spqlib.graph = ( function () {
 		 idLegendHeader = config.divId + '-legend-header',
 		 idLegend = config.divId + '-legend',
 		 idLegendActionList = config.divId + '-legend-actions-list';
-		var actionFullScreen = "<div style='"+(config.showFullscreenLink==false ? 'display:none' : '')+"'><span class='fa fa-expand ii-graph-action-toggle-fullscreen' sprf-graph-id="+config.divId+"> "+goFullscreenLabel+"</span></div>";
+		var actionFullScreen = "<div style='"+(config.showFullscreenLink==false ? 'display:none' : '')+"'><span id='"+config.divId+"-ii-graph-action-toggle-fullscreen' class='fa fa-expand ii-graph-action-toggle-fullscreen' sprf-graph-id="+config.divId+"> "+goFullscreenLabel+"</span></div>";
 		var actionDownloadImage="<div style='"+(config.showDownloadImageLink==false ? 'display:none' : '')+"'><span class='fa fa-image ii-graph-action-image' sprf-graph-id="+config.divId+"> "+spqlib.util.message("sprf.js.graph.download.image")+"</span></div>";
 		$( '#' + idContainer ).before( "<div id='" + idLoader + "' class='ii-graph-loader-box'></div>" );
 		$( '#' + idContainer ).prepend( "<div id='" + idLegendBox + "' class='ii-graph-legend-box'></div>" );
 		$( '#' + idLegendBox ).prepend( "<div id='" + idLegendContainer + "' class='ii-graph-legend-container cytoscape-legend-container' style='"+(config.showLegend==false ? 'display:none' : '')+"'></div>" );
-		$( '#' + idLegendBox ).prepend( "<div id='" + idLegendContainerLabel + "' class='ii-graph-legend-container cytoscape-legend-container-label'><span id='"+config.divId+"-legend-toggle' class='fa fa-bars ii-legend-toggle' sprf-graph-id="+config.divId+"><span><!--i class='fas fa-chevron-down'></i--></div>" );
+		$( '#' + idLegendBox ).prepend( "<div id='" + idLegendContainerLabel + "' class='ii-graph-legend-container cytoscape-legend-container-label'><span id='"+config.divId+"-legend-toggle' class='fa fa-ellipsis-v ii-legend-toggle' sprf-graph-id="+config.divId+"><span><!--i class='fas fa-chevron-down'></i--></div>" );
 		$( '#' + idLegendContainer ).append( "<div id='" + idLegendHeader + "' class='ii-graph-legend-header'>" + createLegendHeader( config ) + '</div> ' );
 		$( '#' + idLegendContainer ).append( "<div id='" + idLegend + "' class='ii-graph-legend'></div> " );
 		$( '#' + idLegendContainer ).append( "<div id='" + idLegendActionList + "' class='ii-graph-legend-actions-list cytoscape-actions-list'></div> " );
@@ -166,8 +153,8 @@ spqlib.graph = ( function () {
 		$(".ii-graph-zoom-controls-out").click(spqlib.graph.zoomOut);
 		$("#"+config.divId+"-legend-toggle").click(spqlib.graph.toggleLegend);
 		$(".ii-graph-action-image").click(spqlib.graph.exportAsImage);
-		$(".ii-graph-action-toggle-fullscreen").click(spqlib.graph.toggleFullScreen);
-		
+		$("#"+config.divId+"-ii-graph-action-toggle-fullscreen").click(spqlib.graph.toggleFullScreen);
+
 	};
 
 	function createLegendHeader( config ) {
@@ -266,6 +253,26 @@ spqlib.graph = ( function () {
 			throw 'Errore troppi nodi';
 		}
 		drawGraph( nodes, edges, config );
+		
+		if (screenfull.enabled) {
+			screenfull.on('change', () => {
+				var goFullscreenLabel = spqlib.util.message( 'sprf.js.graph.go.fullscreen' ),
+				 exitFullscreenLabel = spqlib.util.message( 'sprf.js.graph.exit.fullscreen' );
+				var icon = $('.ii-graph-action-toggle-fullscreen' );
+				if (screenfull.isFullscreen){
+					icon.addClass( 'fa-compress' );
+					icon.removeClass( 'fa-expand' );
+					$( '.ii-graph-action-toggle-fullscreen' ).text( " "+exitFullscreenLabel )
+				}else {
+					icon.removeClass( 'fa-compress' );
+					icon.addClass( 'fa-expand' );
+					$( '.ii-graph-action-toggle-fullscreen' ).text( " "+goFullscreenLabel );
+					
+				}
+			
+			});
+		}
+		
 	};
 
 	my.addNodes = function ( json, config, caller ) {
