@@ -127,6 +127,7 @@ spqlib.graph = ( function () {
 	my.initHtml = function ( config ) {
 		var goFullscreenLabel = spqlib.util.message( 'sprf.js.graph.go.fullscreen' ),
 		 exitFullscreenLabel = spqlib.util.message( 'sprf.js.graph.exit.fullscreen' ),
+		 exportImageLabel = spqlib.util.message('sprf.js.graph.download.image'),
 		 idContainer = config.divId + '-container',
 		 idLoader = config.divId + '-loader',
 		 idLegendBox = config.divId + '-legend-box',
@@ -136,7 +137,7 @@ spqlib.graph = ( function () {
 		 idLegend = config.divId + '-legend',
 		 idLegendActionList = config.divId + '-legend-actions-list';
 		var actionFullScreen = "<div style='"+(config.showFullscreenLink==false ? 'display:none' : '')+"'><span id='"+config.divId+"-ii-graph-action-toggle-fullscreen' class='fa fa-expand ii-graph-action-toggle-fullscreen' sprf-graph-id="+config.divId+"> "+goFullscreenLabel+"</span></div>";
-		var actionDownloadImage="<div style='"+(config.showDownloadImageLink==false ? 'display:none' : '')+"'><span class='fa fa-image ii-graph-action-image' sprf-graph-id="+config.divId+"> "+spqlib.util.message("sprf.js.graph.download.image")+"</span></div>";
+		var actionDownloadImage="<div style='"+(config.showDownloadImageLink==false ? 'display:none' : '')+"'><span class='fa fa-image ii-graph-action-image' sprf-graph-id="+config.divId+"> "+exportImageLabel+"</span></div>";
 		$( '#' + idContainer ).before( "<div id='" + idLoader + "' class='ii-graph-loader-box'></div>" );
 		$( '#' + idContainer ).prepend( "<div id='" + idLegendBox + "' class='ii-graph-legend-box'></div>" );
 		$( '#' + idLegendBox ).prepend( "<div id='" + idLegendContainer + "' class='ii-graph-legend-container cytoscape-legend-container' style='"+(config.showLegend==false ? 'display:none' : '')+"'></div>" );

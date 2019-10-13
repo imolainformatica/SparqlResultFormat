@@ -47,7 +47,7 @@
 			],
 			"dependencies": ["mediawiki.jqueryMsg","ext.jquery.qtip", "ext.screenfull.js", "ext.fontawesome"],
 			"styles":["css/ii.style.treemap.css"],
-			"messages":["sprf.js.graph.show.legend","sprf.js.graph.hide.legend","sprf.js.graph.go.fullscreen","sprf.js.graph.exit.fullscreen"
+			"messages":["sprf.js.graph.show.legend","sprf.js.graph.hide.legend","sprf.js.graph.go.fullscreen","sprf.js.graph.exit.fullscreen","sprf.js.graph.download.image"
 			]
 		},
 		"ext.SparqlResultFormat.graph": {
