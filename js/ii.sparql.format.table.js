@@ -57,7 +57,6 @@ spqlib.table = ( function () {
 			
 			var mappedColumnInfo = mapColumnTitle( head[ i ], colTitleMapping ),
 			 colTitle = '';
-			 debugger;
 			var isVisible=true;
 			if ( mappedColumnInfo == null ) {
 				colTitle = head[ i ];
@@ -109,7 +108,7 @@ spqlib.table = ( function () {
 			 csvFormAction = config.csvFormAction,
 			 formId = config.divId + '-form';
 			if ( !csvFormAction ) {
-				throw ( "csvFormAction vuota -> l'export pdf non funzionerà" );
+				throw ( "csvFormAction vuota -> l'export csv non funzionerà" );
 			}
 			var tableContainer = $( '#' + config.divId ).find( 'table' ),
 			 exporter = $( "<span class='export-table-csv' table-container-id='" + config.divId + "'> </span>" )

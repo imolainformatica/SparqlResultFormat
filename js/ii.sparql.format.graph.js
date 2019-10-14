@@ -136,12 +136,12 @@ spqlib.graph = ( function () {
 		 idLegendHeader = config.divId + '-legend-header',
 		 idLegend = config.divId + '-legend',
 		 idLegendActionList = config.divId + '-legend-actions-list';
-		var actionFullScreen = "<div style='"+(config.showFullscreenLink==false ? 'display:none' : '')+"'><span id='"+config.divId+"-ii-graph-action-toggle-fullscreen' class='fa fa-expand ii-graph-action-toggle-fullscreen' sprf-graph-id="+config.divId+"> "+goFullscreenLabel+"</span></div>";
-		var actionDownloadImage="<div style='"+(config.showDownloadImageLink==false ? 'display:none' : '')+"'><span class='fa fa-image ii-graph-action-image' sprf-graph-id="+config.divId+"> "+exportImageLabel+"</span></div>";
+		var actionFullScreen = "<div style='"+(config.showFullscreenLink==false ? 'display:none' : '')+"'><span id='"+config.divId+"-ii-graph-action-toggle-fullscreen' class='fa fa-expand ii-graph-action-toggle-fullscreen' sprf-graph-id="+config.divId+"><span class='ii-graph-legend-label'> "+goFullscreenLabel+"</span></span></div>";
+		var actionDownloadImage="<div style='"+(config.showDownloadImageLink==false ? 'display:none' : '')+"'><span class='fa fa-image ii-graph-action-image' sprf-graph-id="+config.divId+"><span class='ii-graph-legend-label'> "+exportImageLabel+"</span></span></div>";
 		$( '#' + idContainer ).before( "<div id='" + idLoader + "' class='ii-graph-loader-box'></div>" );
 		$( '#' + idContainer ).prepend( "<div id='" + idLegendBox + "' class='ii-graph-legend-box'></div>" );
 		$( '#' + idLegendBox ).prepend( "<div id='" + idLegendContainer + "' class='ii-graph-legend-container cytoscape-legend-container' style='"+(config.showLegend==false ? 'display:none' : '')+"'></div>" );
-		$( '#' + idLegendBox ).prepend( "<div id='" + idLegendContainerLabel + "' class='ii-graph-legend-container cytoscape-legend-container-label'><span id='"+config.divId+"-legend-toggle' class='fa fa-ellipsis-v ii-legend-toggle' sprf-graph-id="+config.divId+"><span><!--i class='fas fa-chevron-down'></i--></div>" );
+		$( '#' + idLegendBox ).prepend( "<div id='" + idLegendContainerLabel + "' class='ii-graph-legend-container cytoscape-legend-container-label'><span id='"+config.divId+"-legend-toggle' class='fa fa-ellipsis-v ii-legend-toggle' sprf-graph-id="+config.divId+"><span class='ii-legend-toggle-text'> Legend</span><span></div>" );
 		$( '#' + idLegendContainer ).append( "<div id='" + idLegendHeader + "' class='ii-graph-legend-header'>" + createLegendHeader( config ) + '</div> ' );
 		$( '#' + idLegendContainer ).append( "<div id='" + idLegend + "' class='ii-graph-legend'></div> " );
 		$( '#' + idLegendContainer ).append( "<div id='" + idLegendActionList + "' class='ii-graph-legend-actions-list cytoscape-actions-list'></div> " );
@@ -263,11 +263,11 @@ spqlib.graph = ( function () {
 				if (screenfull.isFullscreen){
 					icon.addClass( 'fa-compress' );
 					icon.removeClass( 'fa-expand' );
-					$( '.ii-graph-action-toggle-fullscreen' ).text( " "+exitFullscreenLabel )
+					$( '.ii-graph-action-toggle-fullscreen > span' ).text( " "+exitFullscreenLabel )
 				}else {
 					icon.removeClass( 'fa-compress' );
 					icon.addClass( 'fa-expand' );
-					$( '.ii-graph-action-toggle-fullscreen' ).text( " "+goFullscreenLabel );
+					$( '.ii-graph-action-toggle-fullscreen > span' ).text( " "+goFullscreenLabel );
 					
 				}
 			

@@ -118,7 +118,13 @@ cursor: pointer;
 }
 
 .cytoscape-legend-container-label span{
-	font-size:20px;
+	
+}
+
+.ii-legend-toggle-text, .ii-graph-legend-label{
+	font-family: sans-serif;
+	font-size:15px;
+	font-weight:100;
 }
 
 
