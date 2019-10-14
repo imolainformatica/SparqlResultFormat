@@ -148,7 +148,7 @@ spqlib.table = ( function () {
 
 	function formatString( format, param,config,rowData ) {
 		// {%n[<format>]@<locale>}
-		var placeholderWithOtherField = /{%s\[.*\]}/gm;
+		var placeholderWithOtherField = /{%s\[[^}]*\]}/gm;
 		var otherFieldNameRegex = /(?<={%s\[).*(?=\])/gm;
 		
 		var regex = /{%n\[.*\](@[a-z-]+)?}/gm;
@@ -158,16 +158,52 @@ spqlib.table = ( function () {
 		 if (format.includes("{%s}")){
 			output = output.replace( '{%s}', param );
 		 }
+		 
+		 var temp = output;
+		 if (placeholderWithOtherField.test(temp)){
+			 debugger;
+			 var res = temp.match(placeholderWithOtherField);
+			 for (var i=0;i<res.length;i++){
+				var m = res[i];
+				var fieldName=m.match(otherFieldNameRegex)[0];
+				var fieldValue=rowData[fieldName].value;
+				output=output.replace(m,fieldValue);
+			 }
+			 
+			 /*while ((m = placeholderWithOtherField.exec(temp)) !== null) {
+				// This is necessary to avoid infinite loops with zero-width matches
+				if (m.index === placeholderWithOtherField.lastIndex) {
+					placeholderWithOtherField.lastIndex++;
+				}
+				// The result can be accessed through the `m`-variable.
+				
+				var fieldName=otherFieldNameRegex.exec(m[0])[0];
+				var fieldValue=rowData[fieldName].value;
+				output=output.replace(m[0],fieldValue);
+			}*/
+
+			 
+			/* while (m = placeholderWithOtherField.exec(output)) {
+				var fieldName=otherFieldNameRegex.exec(m[0])[0];
+				 var fieldValue=rowData[fieldName].value;
+				 output=output.replace(m,fieldValue);
+			
+			
+			}*/
+
+		 }
+		 
 		 //format= {%s[fds]} - {%s[dsfa]}
-		 if (output.match(placeholderWithOtherField)){
+		 /*if (output.match(placeholderWithOtherField)){
 			output = output.replace(placeholderWithOtherField,function(match,offset,str,rowData){
 				var otherFieldNameRegex = /(?<={%s\[).*(?=\])/gm;
 				var fieldName = otherFieldNameRegex.exec(match)[0];
+				debugger;
 				//devo recuperare il valore dell'altro campo e restituirlo
 				return "XXXX";
 				
 			});
-		 }
+		 }*/
 		 
 		 if (output.match(regex)){
 			 //devo formattare il numero
