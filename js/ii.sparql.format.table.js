@@ -31,11 +31,9 @@ spqlib.table = ( function () {
 	my.renderTable = function ( json, config ) {
 		var head = json.head.vars,
 		 data = json.results.bindings;
-		// hide legend div
-		$( '#' + config.divId + '-legend-container' ).hide();
 
 	   if ( data.length == 0 ) {
-			$( '#' + config.divId ).html( "<div class'warning'>" + config.noResultMessage + '</div>' );
+			$( '#' + config.divId ).html( "<div class'ii-sprf-table-no-result warning'>" + config.noResultMessage + '</div>' );
 			return;
 	   }
 	   var colTitles = config.columnTitles || config.columnConfiguration,
@@ -44,6 +42,7 @@ spqlib.table = ( function () {
 		   for ( var i = 0; i < colTitles.length; i++ ) {
 			   colTitleMapping[ colTitles[ i ].queryField ] = {
 				   label: colTitles[ i ].label,
+				   visible: ((typeof colTitles[i].visible !== 'undefined') ? colTitles[i].visible : true) ,
 				   showLink: colTitles[ i ].showLink,
 				   cellValuePattern: colTitles[ i ].cellValuePattern,
 				   cellLinkPattern: colTitles[ i ].cellLinkPattern
@@ -55,15 +54,21 @@ spqlib.table = ( function () {
 		var headers = [],
 		 thead = '<thead>';
 		for ( var i = 0; i < head.length; i++ ) {
-			headers.push( head[ i ] );
+			
 			var mappedColumnInfo = mapColumnTitle( head[ i ], colTitleMapping ),
 			 colTitle = '';
+			 debugger;
+			var isVisible=true;
 			if ( mappedColumnInfo == null ) {
 				colTitle = head[ i ];
 			} else {
 				colTitle = mappedColumnInfo.label;
+				isVisible = mappedColumnInfo.visible;
 			}
-			thead += '<th>' + colTitle + '</th>';
+			if (isVisible){
+				headers.push( head[ i ] );
+				thead += '<th>' + colTitle + '</th>';
+			}
 		}
 		thead += '</thead>';
 
@@ -161,7 +166,6 @@ spqlib.table = ( function () {
 		 
 		 var temp = output;
 		 if (placeholderWithOtherField.test(temp)){
-			 debugger;
 			 var res = temp.match(placeholderWithOtherField);
 			 for (var i=0;i<res.length;i++){
 				var m = res[i];
