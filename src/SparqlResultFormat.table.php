@@ -35,6 +35,7 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 			"columnConfiguration" => array(
 				"mandatory" => false,
 				"description" => wfMessage("sprf.param.columnConfiguration"),
+				"useComplexType" => array ("columnConfiguration"),
 				"example" => "columnConfiguration=[{queryField:'type_label', label:'Asset type', showLink:'false',cellValuePattern:'value={%s}'}] </br> columnConfiguration=[{queryField:'totalCost', label:'Total cost', showLink:'false',cellValuePattern:'€ {%n[0,00.00]@it}'}]"
 			),
 			"cssEvenRowClass" => array(
@@ -78,6 +79,40 @@ class SparqlResultFormatTable extends SparqlResultFormatBase implements SparqlFo
 			)	
 	   );   
 		$this->queryStructure =	wfMessage("sprf.format.table.query.structure");
+		$this->complexTypes = array(
+			"columnConfiguration" => array(
+				"queryField" => array(
+					"mandatory" => true,
+					"description" => wfMessage("sprf.param.columnConfiguration.queryField"),
+					"default" => ""
+				),
+				"label" => array(
+					"mandatory" => true,
+					"description" => wfMessage("sprf.param.columnConfiguration.label"),
+					"default" => ""
+				),
+				"showLink" => array(
+					"mandatory" => true,
+					"description" => wfMessage("sprf.param.columnConfiguration.showLink"),
+					"default" => "false"
+				),
+				"cellValuePattern" => array(
+					"mandatory" => true,
+					"description" => wfMessage("sprf.param.columnConfiguration.cellValuePattern"),
+					"default" => ""
+				),
+				"cellLinkPattern" => array(
+					"mandatory" => true,
+					"description" => wfMessage("sprf.param.columnConfiguration.cellLinkPattern"),
+					"default" => ""
+				),
+				"visible" => array(
+					"mandatory" => true,
+					"description" => wfMessage("sprf.param.columnConfiguration.visible"),
+					"default" => "true"
+				)	
+			)
+		);
 	}
 
 	function generateHtmlContainerCode( $options ) {

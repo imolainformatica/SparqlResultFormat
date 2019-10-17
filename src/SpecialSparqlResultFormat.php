@@ -29,6 +29,30 @@ class SpecialSparqlResultFormat extends SpecialPage {
 			.indent {
 				padding-left:50px;
 			}
+			.ii-sprf-badge{
+				display: inline-block;
+				min-width: 10px;
+				padding: 3px 7px;
+				font-size: x-small;
+				font-weight: 300;
+				
+				line-height: 1;
+				vertical-align: baseline;
+				white-space: nowrap;
+				text-align: center;
+				border-radius: 4px;
+			} 
+			
+			.ii-sprf-since-badge {
+				background-color: #236b9b;
+				color: #ffffff;
+			}
+			
+			.ii-sprf-deprecated-badge {
+				background-color: #ffc800;
+				color: #000000;
+			}
+			
 		</style>" );
 
 		$formats = array(
@@ -110,32 +134,60 @@ class SpecialSparqlResultFormat extends SpecialPage {
 
 	private function paramDefinitionToHtml( $output, $format ) {
 		$params = $format->getParams();
-		$this->printParamTable( $output, $params );
+		$complexTypes=$format->getComplexTypes();
+		//$output->addHTML(print_r($complexTypes,true));
+		$this->printParamTable( $output, $params,$complexTypes );
 
 		$extra = $format->getExtraOptions();
 		if ( is_array( $extra ) && count( $extra ) > 0 ) {
 			$output->addHTML( "<h2>" . wfMessage( "sprf.special.extra.options" ) . "</h2>" );
-			$this->printParamTable( $output, $extra );
+			$this->printParamTable( $output, $extra,$complexTypes );
 		}
 	}
 
-	private function printParamTable( $output, $data ) {
+	private function printParamTable( $output, $data,$complexTypes ) {
 		$header = ( "<tr><th>" . wfMessage( "sprf.special.parameter.name" ) . "</th><th>" . wfMessage( "sprf.special.parameter.description" ) . "</th>
 		<th>" . wfMessage( "sprf.special.parameter.mandatory" ) . "</th><th>" . wfMessage( "sprf.special.parameter.default" ) . "</th><th>" . wfMessage( "sprf.special.parameter.example" ) . "</th></tr>" );
 		$rows = "";
 		foreach ( $data as $key => $value ) {
 			$description = $value['description'];
+			$since = isset($value['since']) ? $value['since'] : false;
+			$useComplexType=isset($value['useComplexType']) ? $value['useComplexType'] : null;
 			$mandatory = isset( $value['mandatory'] ) ? ( $value['mandatory'] == true ? "True" : "False" ) : "False";
 			$default = isset( $value['default'] ) ? $value['default'] : "";
 			$example = isset( $value['example'] ) ? $value['example'] : "";
 			$deprecated = isset( $value['deprecated'] ) ? $value['deprecated'] : false;
-			if ( $deprecated ) {
-				$key = "<del>$key</del>";
-				$description = "<del>$description</del>";
-			}
-			$rows .= "<tr><td> $key </td><td>$description</td><td><span class='mandatory-$mandatory'>$mandatory</span></td><td>$default</td><td>$example</td></tr>";
+			$rows .= "<tr><td> $key ". ($deprecated ? "<span class='ii-sprf-badge ii-sprf-deprecated-badge'>".wfMessage( "sprf.special.parameter.deprecated")."</span>" : "")." ". ($since!=false ? "<span class='ii-sprf-badge ii-sprf-since-badge'>".wfMessage( "sprf.special.parameter.since",$since )."</span>" : "") 
+			."</td><td>$description ".$this->generateParametersTable($complexTypes,$useComplexType)."</td><td>"
+			."<span class='mandatory-$mandatory'>$mandatory</span></td><td>$default</td><td>$example</td></tr>";
 		}
 		$output->addHTML( "<table class='wikitable'><tbody>$header$rows</tbody></table>" );
+	}
+	
+	private function generateParametersTable($paramsList,$cpName){
+		
+		if (is_null($cpName) || empty($cpName)){
+			return "";
+		}
+		$rows = "";
+		$name = $cpName[0];
+		$data = $paramsList[$name];
+		$header = ( "<tr><th>" . wfMessage( "sprf.special.parameter.name" ) . "</th><th>" . wfMessage( "sprf.special.parameter.description" ) . "</th>
+		<th>" . wfMessage( "sprf.special.parameter.mandatory" ) . "</th><th>" . wfMessage( "sprf.special.parameter.default" ) . "</th><th>" . wfMessage( "sprf.special.parameter.example" ) . "</th></tr>" );
+		
+		foreach ( $data as $key => $value ) {
+			$description = $value['description'];
+			$since = isset($value['since']) ? $value['since'] : false;
+			$mandatory = isset( $value['mandatory'] ) ? ( $value['mandatory'] == true ? "True" : "False" ) : "False";
+			$default = isset( $value['default'] ) ? $value['default'] : "";
+			$example = isset( $value['example'] ) ? $value['example'] : "";
+			$deprecated = isset( $value['deprecated'] ) ? $value['deprecated'] : false;
+			$rows .= "<tr><td> $key ". ($deprecated ? "<span class='ii-sprf-badge ii-sprf-deprecated-badge'>".wfMessage( "sprf.special.parameter.deprecated")."</span>" : "")." ". ($since!=false ? "<span class='ii-sprf-badge ii-sprf-since-badge'>".wfMessage( "sprf.special.parameter.since",$since )."</span>" : "") 
+			."</td><td>$description </td><td>"
+			."<span class='mandatory-$mandatory'>$mandatory</span></td><td>$default</td><td>$example</td></tr>";
+		}
+		return "<table class='wikitable'><tbody>$header$rows</tbody></table>";
+		
 	}
 
 }

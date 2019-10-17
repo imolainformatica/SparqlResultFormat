@@ -7,6 +7,7 @@ class SparqlResultFormatBase {
 	protected $params = array();
 	protected $extraOpts = array();
 	protected $queryStructure = "";
+	protected $complexTypes = array();
 
 	public function getName() {
 		return $this->name;
@@ -18,6 +19,10 @@ class SparqlResultFormatBase {
 
 	public function getParams() {
 		return $this->params;
+	}
+	
+	public function getComplexTypes() {
+		return $this->complexTypes;
 	}
 
 	public function getExtraOptions() {

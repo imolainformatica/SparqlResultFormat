@@ -151,19 +151,22 @@ class SparqlResultFormatGraph extends SparqlResultFormatBase implements SparqlFo
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.action.fullscreen.visible" ),
 					"example" => "|action.fullscreen.visible=false",
-					"default" => "true"
+					"default" => "true",
+					"since" => "1.0.15"
 				),
 				"action.donwload.image.visible" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.action.donwload.image.visible" ),
 					"example" => "action.donwload.image.visible|false",
-					"default" => "true"
+					"default" => "true",
+					"since" => "1.0.15"
 				),
 				"action.zoom.controls.visible" => array(
 					"mandatory" => false,
 					"description" => wfMessage( "sprf.param.action.zoom.controls.visible" ),
 					"example" => "|action.zoom.controls.visible=false",
-					"default" => "true"
+					"default" => "true",
+					"since" => "1.0.15"
 				)
 	   ); 
 		$this->queryStructure = wfMessage("sprf.format.graph.query.structure").wfMessage("sprf.format.graph.query.structure.example")
