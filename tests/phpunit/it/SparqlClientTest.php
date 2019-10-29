@@ -42,11 +42,11 @@ final class SparqlClientTest extends TestCase
      * @expectedException Exception
 	 * @expectedExceptionMessage Error: Failed to connect to blablabla port 443: Connection refused
      */
-	public function testQueryKONonExistentEndpoint(): void
+	/*public function testQueryKONonExistentEndpoint(): void
     {
 		$client = new SparqlClient(self::nonExistentEndpoint);
 		$resp = $client->doQuery(self::queryOK);
-    }
+    }*/
 	
 	//altri test case
 	// - timeout
