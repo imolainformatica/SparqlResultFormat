@@ -1,0 +1,9 @@
+ Download CSV con elemento button
+
+{{#sparql2csv:
+|divId=chart6 
+|linkButtonLabel=CSV
+|sparqlEndpoint=wikidata
+|sparqlEscapedQuery=
+SELECT ?item ?itemLabel WHERE {  ?item wdt:P31 wd:Q146.  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". } }
+}}

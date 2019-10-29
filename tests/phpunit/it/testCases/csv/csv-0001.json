@@ -1,0 +1,40 @@
+{
+	"description": "Test download CSV con tutti i valori di default",
+	"setup": [
+		{
+			"namespace": "NS_MAIN",
+			"page": "Test-CSV-0001",
+			"contents": {
+				"import-from": "/csv/contents/csv-0001.txt"
+			}
+		}
+	],
+	"tests": [
+		{
+			"type": "parser-html",
+			"about": "#0 simple debug output",
+			"subject": "Test-CSV-0001",
+			"assert-output": {
+				"to-contain": [
+					"div[id='chart6']",
+					"div[id='chart6'] > form[id='chart6-form']",
+					"div[id='chart6'] > form[id='chart6-form'] > a[id='chart6-click']",
+					"//a[@id='chart6-click' and text()='Download as CSV']"
+				]
+			}
+		}
+	],
+	"settings": {
+		"wgContLang": "en",
+		"wgLang": "en",
+		"smwgNamespacesWithSemanticLinks": {
+			"NS_MAIN": true,
+			"SMW_NS_PROPERTY": true
+		}
+	},
+	"meta": {
+		"version": "2",
+		"is-incomplete": false,
+		"debug": false
+	}
+}

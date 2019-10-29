@@ -1,0 +1,30 @@
+{
+	"description": "",
+	"setup": [
+		{
+			"namespace": "NS_MAIN",
+			"page": "Test-Text-0003",
+			"contents": {
+				"import-from": "/text/contents/text-0003.txt"
+			}
+		}
+	],
+	"tests": [
+		{
+			"type": "parser-html",
+			"about": "#0 simple debug output",
+			"subject": "Test-Text-0003",
+			"assert-output": {
+				"to-contain": [
+					"//p[starts-with(.,'errorParam sparqlEndpoint must be specified')]"
+				]
+			}
+		}
+	],
+	"settings": {},
+	"meta": {
+		"version": "2",
+		"is-incomplete": false,
+		"debug": false
+	}
+}

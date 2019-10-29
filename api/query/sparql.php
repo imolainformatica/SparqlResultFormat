@@ -1,5 +1,8 @@
 <?php
 
+require_once __DIR__."/../../src/SparqlClient.php";
+use SparqlResultFormat\SparqlClient;
+
 if ( getenv( 'MW_INSTALL_PATH' ) === false ) {
 	putenv( "MW_INSTALL_PATH=" . __DIR__ . "/../../../../" );
 }
@@ -69,8 +72,22 @@ try {
 	
 	
 try {
+	
+	$client = new SparqlClient($sparqlEndpoint);
+	
+	if (isset($sslServerCertificateVerification)){
+		$client->setSslServerCertificateVerification($sslServerCertificateVerification);
+	}
+	if ( isset( $user ) && isset( $password ) ) {
+		$client->setUser($user);
+		$client->setPassword($password);
+	}
+	$client->setConnectionTimeout($connectionTimeout);
+	$client->setRequestTimeout($requestTimeout);
+	$resp = $client->doQuery($query);
+	
 	// set post fields
-	$post = array(
+	/*$post = array(
 		'query'   => $query,
 	);
 	$fields_string = "";
@@ -104,10 +121,10 @@ try {
 		throw new Exception('Error: '.curl_error($ch));
 	}
 	// close the connection, release resources used
-	curl_close( $ch );
-	header( 'Content-Type: ' . $ct, true );
-	setHTTPStatusCode($rc);
-	echo $response;
+	curl_close( $ch );*/
+	header( 'Content-Type: ' . $resp->contentType, true );
+	setHTTPStatusCode($resp->returnCode);
+	echo $resp->responseBody;
 } catch ( Exception $e ) {
 	echo 'Caught exception: ',  $e->getMessage(), "\n";
 	setHTTPStatusCode(500);

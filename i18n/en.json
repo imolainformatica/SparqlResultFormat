@@ -163,6 +163,12 @@
 	"sprf.js.graph.exit.fullscreen":"Exit Fullscreen",
 	"sprf.param.action.zoom.controls.visible":"Specify if zoom controls must be visible or not",
 	"sprf.param.action.donwload.image.visible":"Specify if the download image button must be visible or not",
-	"sprf.param.action.fullscreen.visible":"Specify if the fullscreen button must be visible or not"
+	"sprf.param.action.fullscreen.visible":"Specify if the fullscreen button must be visible or not",
+	"sprf.format.text.title":"Text",
+	"sprf.format.text.description":"Convert the result of a sparql query to a simple text that can be used in conjunction with other wiki magic words",
+	"sprf.format.text.usage":"<nowiki>{{#sparql2text:|sparqlEndpoint=endpoint1|sparqlEscapedQuery=select ?p ?....}}</nowiki>",
+	"sprf.format.text.query.structure":"No constraint on sparql query. All fields in select list will be shown.",
+	"sprf.param.text.fieldSeparator":"string that will be used to separate fields",
+	"sprf.param.text.rowSeparator":"string that will be used to separate rows"
 	
 }

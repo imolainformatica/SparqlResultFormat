@@ -1,0 +1,8 @@
+ Download CSV con tutti i valori di default
+
+{{#sparql2csv:
+|divId=chart6 
+|sparqlEndpoint=wikidata
+|sparqlEscapedQuery=
+SELECT ?item ?itemLabel WHERE {  ?item wdt:P31 wd:Q146.  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". } }
+}}

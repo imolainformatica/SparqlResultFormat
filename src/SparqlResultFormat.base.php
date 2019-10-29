@@ -33,7 +33,7 @@ class SparqlResultFormatBase {
 		return $this->queryStructure;
 	}
 
-	protected function getParameterValue( $options, $paramName, $defaultValue, $asBoolean = false ) {
+	protected function getParameterValue( $options, $paramName, $defaultValue = null, $asBoolean = false ) {
 		$paramName = trim( $paramName );
 		if ( !isset( $this->params[$paramName] ) ) {
 			throw new Exception( "Param $paramName is not defined in params definition. " );
@@ -56,10 +56,11 @@ class SparqlResultFormatBase {
 			// parametro non passato
 			// era obbligatorio
 			$mandatory = isset( $paramDefinition["mandatory"] ) ? $paramDefinition["mandatory"] : false;
+			$def = isset($paramDefinition["default"] ) ? $paramDefinition["default"] : null;
 			if ( $mandatory ) {
 				throw new Exception( "Param $paramName must be specified" );
 			} else {
-				return $defaultValue;
+				return (!is_null($defaultValue) ? $defaultValue : $def) ;
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 <?php
 use SMW\Exporter\Escaper;
+use SparqlResultFormat\SparqlClient;
 
 class ExtSparqlResultFormat {
 
@@ -85,6 +86,15 @@ class ExtSparqlResultFormat {
 		$options_array = array_slice( func_get_args(), 1 );
 		$format = new SparqlResultFormatCSV;
 		return self::sparql2FormatTemplate( $parser, $options_array, $format );
+	}
+	
+	public static function sparql2text( $parser ) {
+		$parser->disableCache();
+		$options_array = array_slice( func_get_args(), 1 );
+		$format = new SparqlResultFormatText;
+		# parsing options array
+		$options = self::extractOptions( $options_array );
+		return $format->sparql2text($options);
 	}
 
 	public static function extractOptions( array $options ) {

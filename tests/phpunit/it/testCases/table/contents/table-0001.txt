@@ -1,0 +1,17 @@
+ HTML Table con valori di default
+
+{{#sparql2table:
+|divId=chart2
+|sparqlEndpoint=wikidata
+|sparqlEscapedQuery=
+SELECT DISTINCT ?country ?countryLabel ?population
+{
+  ?country wdt:P31 wd:Q6256 ;
+           wdt:P1082 ?population .
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
+}
+GROUP BY ?population ?countryLabel ?country
+ORDER BY DESC(?population)
+limit 20
+
+}}

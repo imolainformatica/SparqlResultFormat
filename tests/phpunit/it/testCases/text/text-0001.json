@@ -1,0 +1,30 @@
+{
+	"description": "",
+	"setup": [
+		{
+			"namespace": "NS_MAIN",
+			"page": "Test-Text-0001",
+			"contents": {
+				"import-from": "/text/contents/text-0001.txt"
+			}
+		}
+	],
+	"tests": [
+		{
+			"type": "parser-html",
+			"about": "#0 simple debug output",
+			"subject": "Test-Text-0001",
+			"assert-output": {
+				"to-contain": [
+					"//p[starts-with(.,'http://www.wikidata.org/entity/Q34020,Niue,1612')]"
+				]
+			}
+		}
+	],
+	"settings": {},
+	"meta": {
+		"version": "2",
+		"is-incomplete": false,
+		"debug": false
+	}
+}

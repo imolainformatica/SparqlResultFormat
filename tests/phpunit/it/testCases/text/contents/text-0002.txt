@@ -1,0 +1,18 @@
+ Text con valorizzate property fieldSeparator e rowSeparator
+
+{{#sparql2text:
+|sparqlEndpoint=wikidata
+|fieldSeparator=<PROP>
+|rowSeparator=<REC>
+|sparqlEscapedQuery=
+SELECT DISTINCT ?country  ?population
+{
+  ?country wdt:P31 wd:Q6256 ;
+           wdt:P1082 ?population .
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
+}
+GROUP BY ?population ?country
+ORDER BY DESC(?population)
+limit 2
+
+}}

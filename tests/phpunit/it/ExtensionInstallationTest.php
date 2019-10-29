@@ -8,7 +8,7 @@ final class ExtensionInstallationTest extends TestCase
 	
 	public function testCanAccessSpecialVersionPage(): void
     {
-		$ch = curl_init("http://localhost:8080/index.php/Special:Version");
+		$ch = curl_init("http://localhost:80/index.php/Special:Version");
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_exec($ch);
@@ -21,7 +21,7 @@ final class ExtensionInstallationTest extends TestCase
 	
     public function testCanAccessSpecialPage(): void
     {
-		$ch = curl_init("http://localhost:8080/index.php/Special:SparqlResultFormat");
+		$ch = curl_init("http://localhost:80/index.php/Special:SparqlResultFormat");
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_exec($ch);

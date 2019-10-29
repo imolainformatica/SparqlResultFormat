@@ -26,6 +26,7 @@
 		]
   },
   "require": {
-    "phan/phan": "^1.2"
+    "phan/phan": "^1.2",
+    "symfony/css-selector": "^4.3"
   }
 }

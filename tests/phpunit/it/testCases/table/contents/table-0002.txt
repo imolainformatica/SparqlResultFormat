@@ -1,0 +1,19 @@
+ HTML Table con tableClass e column configuration
+
+{{#sparql2table:
+|divId=chart2
+|sparqlEndpoint=wikidata
+|tableClass=wikitable dashboard-table sortable
+|columnConfiguration=[{queryField:'country',visible:false},{queryField:'countryLabel', label:'Country', showLink:'true', cellLinkPattern:'{%s[country]}'}, {queryField:'population', label:'Population', showLink:'false',cellValuePattern:'{%n[0,00.00]@en}'}]
+|sparqlEscapedQuery=
+SELECT DISTINCT ?country ?countryLabel ?population
+{
+  ?country wdt:P31 wd:Q6256 ;
+           wdt:P1082 ?population .
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
+}
+GROUP BY ?population ?countryLabel ?country
+ORDER BY DESC(?population)
+limit 20
+
+}}

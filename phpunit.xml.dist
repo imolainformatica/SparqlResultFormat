@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="tests/bootstrap.php"
+         cacheTokens="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         stopOnError="false"
+         stopOnFailure="false"
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         verbose="true">
+    <testsuites>
+        <testsuite name="sparql-result-format-tests">
+            <directory>tests/phpunit/includes</directory>
+            <directory>tests/phpunit/it</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+            <directory suffix=".php">includes</directory>
+            <directory suffix=".php">maintenance</directory>
+        </whitelist>
+    </filter>
+    <php>
+       <var name="smwgSemanticsEnabled" value="true"/>
+       <var name="smwgMainCacheType" value="hash"/>
+       <var name="wgUseFileCache" value="false"/>
+       <var name="smwgEntityCollation" value="identity"/>
+       <var name="smwgFieldTypeFeatures" value="false"/>
+       <var name="smwgCreateProtectionRight" value="false"/>
+       <var name="smwgSparqlDefaultGraph" value="http://example.org/phpunit-testrun"/>
+       <var name="smwgSparqlQFeatures" value="false"/>
+       <var name="smwgElasticsearchProfile" value="false"/>
+       <var name="smwgEnabledDeferredUpdate" value="false"/>
+       <var name="smwgImportReqVersion" value="false"/>
+       <var name="smwgEnabledFulltextSearch" value="true"/>
+       <var name="smwgEnabledQueryDependencyLinksStore" value="true"/>
+       <var name="smwgQueryResultCacheType" value="hash"/>
+       <var name="benchmarkPageCopyCount" value="1000"/>
+       <var name="benchmarkPageEditRepetitionCount" value="50"/>
+    </php>
+</phpunit>

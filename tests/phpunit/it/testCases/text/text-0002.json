@@ -1,0 +1,30 @@
+{
+	"description": "",
+	"setup": [
+		{
+			"namespace": "NS_MAIN",
+			"page": "Test-Text-0002",
+			"contents": {
+				"import-from": "/text/contents/text-0002.txt"
+			}
+		}
+	],
+	"tests": [
+		{
+			"type": "parser-html",
+			"about": "#0 simple debug output",
+			"subject": "Test-Text-0002",
+			"assert-output": {
+				"to-contain": [
+					"//p[starts-with(.,'http://www.wikidata.org/entity/Q148<PROP>1409517397<REC>http://www.wikidata.org/entity/Q668<PROP>1349217956')]"
+				]
+			}
+		}
+	],
+	"settings": {},
+	"meta": {
+		"version": "2",
+		"is-incomplete": false,
+		"debug": false
+	}
+}

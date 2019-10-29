@@ -47,13 +47,13 @@ before_install:
   - docker-compose -f tests/travis/docker-compose.yml up -d
   - sleep 20
   - docker exec wiki sh -c "php maintenance/install.php wiki admin --pass password --dbtype mysql --dbname mediawiki_db --dbserver wikidb --dbport 33306 --dbuser wikiuser --dbpass password --installdbuser wikiuser --installdbpass password --server http://localhost:8080 --scriptpath ''"
-  - curl -Lv http://localhost:8080
+#  - curl -Lv http://localhost:8080
   - docker exec wiki sh -c "echo 'wfLoadExtension( \"SparqlResultFormat\" );' >> LocalSettings.php"
-  - curl -Lv http://localhost:8080/index.php/Special:SparqlResultFormat
+#  - curl -Lv http://localhost:8080/index.php/Special:SparqlResultFormat
   
 script: 
   - ls -l
-  - ./vendor/bin/phpunit --bootstrap vendor/autoload.php tests/phpunit
+  - composer phpunit
 
 cache:
   directories:

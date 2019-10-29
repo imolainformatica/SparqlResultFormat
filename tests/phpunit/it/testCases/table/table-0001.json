@@ -1,0 +1,30 @@
+{
+	"description": "Test download CSV con tutti i valori di default",
+	"setup": [
+		{
+			"namespace": "NS_MAIN",
+			"page": "Test-Table-0001",
+			"contents": {
+				"import-from": "/table/contents/table-0001.txt"
+			}
+		}
+	],
+	"tests": [
+		{
+			"type": "parser-html",
+			"about": "#0 simple debug output",
+			"subject": "Test-Table-0001",
+			"assert-output": {
+				"to-contain": [
+					"div[id='chart2']"
+				]
+			}
+		}
+	],
+	"settings": {},
+	"meta": {
+		"version": "2",
+		"is-incomplete": false,
+		"debug": false
+	}
+}

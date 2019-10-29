@@ -63,7 +63,8 @@ class SpecialSparqlResultFormat extends SpecialPage {
 			"barchart" => new SparqlResultFormatBarChart,
 			"bubblechart" => new SparqlResultFormatBubbleChart,
 			"treemap" => new SparqlResultFormatTreemap,
-			"graph" => new SparqlResultFormatGraph
+			"graph" => new SparqlResultFormatGraph,
+			"text" => new SparqlResultFormatText
 		);
 		//tab
 		$output->addHTML("<h1>".wfMessage("sprf.common.step1")."</h1>");
