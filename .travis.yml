@@ -53,8 +53,6 @@ before_install:
   
 script: 
   - ls -l
-  - cd extensions/SparqlResultFormat
-  - composer install
   - composer phpunit
 
 cache:
