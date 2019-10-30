@@ -153,11 +153,14 @@ spqlib.table = ( function () {
 	function formatString( format, param,config,rowData ) {
 		// {%n[<format>]@<locale>}
 		var placeholderWithOtherField = /{%s\[[^}]*\]}/gm;
-		var otherFieldNameRegex = /(?<={%s\[).*(?=\])/gm;
+		//old expression -> browser js does not support lookbehind - /(?<={%s\[).*(?=\])/gm;
+		var otherFieldNameRegex = /.*(?=\])/gm; 
 		
 		var regex = /{%n\[.*\](@[a-z-]+)?}/gm;
-		var numberLocaleRegex = /(?<={%n\[.*]@).*(?=})/gm;
-		var numberFormatRegex =  /(?<={%n\[).*(?=\])/gm;
+		//old expression -> browser js does not support lookbehind - /(?<={%n\[.*]@).*(?=})/gm;
+		var numberLocaleRegex = /@.*(?=})/gm; 
+		//old expression -> browser js does not support lookbehind - /(?<={%n\[).*(?=\])/gm;
+		var numberFormatRegex =  /().*(?=\])/gm;
 		var output = format;
 		 if (format.includes("{%s}")){
 			output = output.replace( '{%s}', param );
@@ -168,7 +171,8 @@ spqlib.table = ( function () {
 			 var res = temp.match(placeholderWithOtherField);
 			 for (var i=0;i<res.length;i++){
 				var m = res[i];
-				var fieldName=m.match(otherFieldNameRegex)[0];
+				var t=m.replace("{%s[","");
+				var fieldName=t.match(otherFieldNameRegex)[0];
 				var fieldValue=rowData[fieldName].value;
 				output=output.replace(m,fieldValue);
 			 }
@@ -177,13 +181,15 @@ spqlib.table = ( function () {
 		 if (output.match(regex)){
 			 //devo formattare il numero
 			 if (output.match(numberLocaleRegex)){
-				var numberLocale=numberLocaleRegex.exec(output)[0];
+				var extr = numberLocaleRegex.exec(output)[0];
+				var numberLocale=extr.replace("@","");
 				numeral.locale(numberLocale);
 			 } else {
 				numeral.locale(config.numberFormatDefaultLocale);
 			 }			 
 			
-			var numberFormat = numberFormatRegex.exec(output)[0];
+			var t = output.replace("{%n[","");
+			var numberFormat = numberFormatRegex.exec(t)[0];
 			var formattedNumber=numeral(param).format(numberFormat);
 			output = output.replace(regex,formattedNumber);
 			
