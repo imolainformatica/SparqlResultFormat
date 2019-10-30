@@ -12,9 +12,9 @@ if ( PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg' ) {
 	die( 'Not an entry point' );
 }
 
-if ( !defined( 'MEDIAWIKI' ) ) {
-	die( 'MediaWiki is not available.' );
-}
+//if ( !defined( 'MEDIAWIKI' ) ) {
+//	die( 'MediaWiki is not available.' );
+//}
 
 $basePath = getenv( 'MW_INSTALL_PATH' ) !== false ? getenv( 'MW_INSTALL_PATH' ) : __DIR__ . '/../../..';
 
@@ -61,6 +61,7 @@ $autoloader->addClassMap( [
 	'SparqlResultFormat\Tests\ParserHtmlTestCaseProcessor'  => __DIR__ . '/phpunit/ParserHtmlTestCaseProcessor.php',
 	'SparqlResultFormat\Tests\ParserTestCaseProcessor'  => __DIR__ . '/phpunit/ParserTestCaseProcessor.php',
 ] );
+
 
 // 3.0
 //class_alias( '\SMW\Tests\DatabaseTestCase', '\SMW\Tests\MwDBaseUnitTestCase' );

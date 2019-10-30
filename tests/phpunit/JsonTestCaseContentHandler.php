@@ -4,7 +4,6 @@ namespace SparqlResultFormat\Tests;
 
 use SMW\Message;
 use SparqlResultFormat\Tests\Utils\File\ContentsReader;
-use SparqlResultFormat\Tests\Utils\File\LocalFileUpload;
 use SparqlResultFormat\Tests\Utils\PageCreator;
 use SparqlResultFormat\Tests\Utils\PageDeleter;
 use Title;
@@ -54,10 +53,9 @@ class JsonTestCaseContentHandler {
 	 * @param PageDeleter $pageDeleter
 	 * @param LocalFileUpload $localFileUpload
 	 */
-	public function __construct( PageCreator $pageCreator, PageDeleter $pageDeleter, LocalFileUpload $localFileUpload ) {
+	public function __construct( PageCreator $pageCreator, PageDeleter $pageDeleter ) {
 		$this->pageCreator = $pageCreator;
 		$this->pageDeleter = $pageDeleter;
-		$this->localFileUpload = $localFileUpload;
 	}
 
 	/**
@@ -134,10 +132,6 @@ class JsonTestCaseContentHandler {
 			$namespace
 		);
 
-		if ( $namespace === NS_FILE && isset( $page['contents']['upload'] ) ) {
-			return $this->doUploadFile( $title, $page['contents']['upload'] );
-		}
-
 		if ( is_array( $page['contents'] ) && isset( $page['contents']['import-from'] ) ) {
 			$contents = ContentsReader::readContentsFrom(
 				$this->testCaseLocation . $page['contents']['import-from']
@@ -175,18 +169,6 @@ class JsonTestCaseContentHandler {
 		);
 
 		$this->pages[] = $target;
-	}
-
-	private function doUploadFile( $title, array $contents ) {
-
-		$this->localFileUpload->doUploadCopyFromLocation(
-			$this->testCaseLocation . $contents['file'],
-			$title->getText(),
-			$contents['text']
-		);
-
-		TestEnvironment::executePendingDeferredUpdates();
-		$this->pages[] = $title;
 	}
 
 }

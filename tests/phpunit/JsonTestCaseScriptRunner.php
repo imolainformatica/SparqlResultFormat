@@ -82,7 +82,7 @@ abstract class JsonTestCaseScriptRunner extends TestCase {
 		$this->jsonTestCaseContentHandler = new JsonTestCaseContentHandler(
 			$utilityFactory->newPageCreator(),
 			$utilityFactory->newPageDeleter(),
-			$utilityFactory->newLocalFileUpload()
+			null
 		);
 
 		/*if ( $this->getStore() instanceof \SMWSparqlStore ) {

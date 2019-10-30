@@ -26,22 +26,4 @@
             <directory suffix=".php">maintenance</directory>
         </whitelist>
     </filter>
-    <php>
-       <var name="smwgSemanticsEnabled" value="true"/>
-       <var name="smwgMainCacheType" value="hash"/>
-       <var name="wgUseFileCache" value="false"/>
-       <var name="smwgEntityCollation" value="identity"/>
-       <var name="smwgFieldTypeFeatures" value="false"/>
-       <var name="smwgCreateProtectionRight" value="false"/>
-       <var name="smwgSparqlDefaultGraph" value="http://example.org/phpunit-testrun"/>
-       <var name="smwgSparqlQFeatures" value="false"/>
-       <var name="smwgElasticsearchProfile" value="false"/>
-       <var name="smwgEnabledDeferredUpdate" value="false"/>
-       <var name="smwgImportReqVersion" value="false"/>
-       <var name="smwgEnabledFulltextSearch" value="true"/>
-       <var name="smwgEnabledQueryDependencyLinksStore" value="true"/>
-       <var name="smwgQueryResultCacheType" value="hash"/>
-       <var name="benchmarkPageCopyCount" value="1000"/>
-       <var name="benchmarkPageEditRepetitionCount" value="50"/>
-    </php>
 </phpunit>

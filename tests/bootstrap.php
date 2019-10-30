@@ -10,6 +10,16 @@ ini_set( 'display_errors', '1' );
 
 $autoloader = require __DIR__ . '/autoloader.php';
 
+global $wgSparqlEndpointDefinition;
+$wgSparqlEndpointDefinition['wikidata'] = array(
+		'url' => 'https://query.wikidata.org/sparql',
+		'connectionTimeout' => 0,
+		'requestTimeout' => 30,
+		'prefixes' => array(
+			'wdt' => 'http://www.wikidata.org/prop/direct/',
+			'wd' => 'http://www.wikidata.org/entity/'
+			));
+
 /*$autoloader->addPsr4( 'SMW\\Test\\', __DIR__ . '/phpunit' );
 $autoloader->addPsr4( 'SMW\\Tests\\', __DIR__ . '/phpunit' );
 
