@@ -48,6 +48,7 @@ before_install:
   - sleep 20
   - docker exec wiki sh -c "php maintenance/install.php wiki admin --pass password --dbtype mysql --dbname mediawiki_db --dbserver wikidb --dbport 33306 --dbuser wikiuser --dbpass password --installdbuser wikiuser --installdbpass password --server http://localhost:8080 --scriptpath ''"
   - docker exec wiki sh -c "echo 'wfLoadExtension( \"SparqlResultFormat\" );' >> LocalSettings.php"
+  - docker exec wiki sh -c "apt-get update && apt-get install zip unzip"  
   - docker exec wiki sh -c "curl -sS https://getcomposer.org/installer | php && chmod +x composer.phar && mv composer.phar /usr/local/bin/composer"  
   - docker exec wiki sh -c "composer install"
   - docker exec wiki sh -c "cd extensions/SparqlResultFormat && composer install"
