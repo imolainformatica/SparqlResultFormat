@@ -53,7 +53,7 @@ before_install:
   
 script: 
   - ls -l
-  - docker exec wiki sh "cd extensions/SparqlResultFormat && composer phpunit"
+  - docker exec wiki sh -c "cd extensions/SparqlResultFormat && composer phpunit"
 
 cache:
   directories:
