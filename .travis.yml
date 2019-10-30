@@ -43,7 +43,6 @@ before_install:
   - sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
   - ip addr # for confirmation. can be skipped
   - cat /etc/hosts # optionally check the content *before*
-  - composer install
   - docker-compose -f tests/travis/docker-compose.yml up -d
   - sleep 20
   - docker exec wiki sh -c "php maintenance/install.php wiki admin --pass password --dbtype mysql --dbname mediawiki_db --dbserver wikidb --dbport 33306 --dbuser wikiuser --dbpass password --installdbuser wikiuser --installdbpass password --server http://localhost:8080 --scriptpath ''"
