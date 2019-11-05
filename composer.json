@@ -13,7 +13,7 @@
       "phpcs -p -s",
       "minus-x check ."
     ],
-	"phpunit": "../../tests/phpunit/phpunit.php -c phpunit.xml.dist",
+	"phpunit": "../../tests/phpunit/phpunit.php -v -c phpunit.xml.dist",
     "fix": [
       "minus-x fix .",
       "phpcbf"
