@@ -35,6 +35,8 @@ $autoloader->addClassMap( [
 	'SMW\Maintenance\RemoveDuplicateEntities'    => __DIR__ . '/../maintenance/removeDuplicateEntities.php'
 ] );*/
 
+const NS_MAIN = 0;
+
 /**
  * Register a shutdown function the invoke a final clean-up
  */

@@ -6,6 +6,7 @@ use SMW\DIWikiPage;
 use SparqlResultFormat\Tests\Utils\UtilityFactory;
 use SparqlResultFormat\Tests\Utils\Validators\HtmlValidator;
 use Title;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group semantic-mediawiki
@@ -16,7 +17,7 @@ use Title;
  *
  * @author Stephan Gambke
  */
-class ParserHtmlTestCaseProcessor extends \PHPUnit_Framework_TestCase {
+class ParserHtmlTestCaseProcessor extends TestCase {
 
 	/**
 	 * @var HtmlValidator

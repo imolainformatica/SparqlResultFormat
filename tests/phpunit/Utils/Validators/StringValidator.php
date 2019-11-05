@@ -1,6 +1,8 @@
 <?php
 
 namespace SparqlResultFormat\Tests\Utils\Validators;
+use PHPUnit\Framework\Assert;
+
 
 /**
  * @license GNU GPL v2+
@@ -8,7 +10,7 @@ namespace SparqlResultFormat\Tests\Utils\Validators;
  *
  * @author mwjames
  */
-class StringValidator extends \PHPUnit_Framework_Assert {
+class StringValidator extends Assert {
 
 	/**
 	 * @since 2.1

@@ -4,6 +4,7 @@ namespace SparqlResultFormat\Tests\Utils\Validators;
 
 use DOMDocument;
 use Symfony\Component\CssSelector\CssSelectorConverter;
+use PHPUnit\Framework\Assert;
 
 /**
  * @license GNU GPL v2+
@@ -11,7 +12,7 @@ use Symfony\Component\CssSelector\CssSelectorConverter;
  *
  * @author Stephan Gambke
  */
-class HtmlValidator extends \PHPUnit_Framework_Assert {
+class HtmlValidator extends Assert {
 
 	/**
 	 * @var array

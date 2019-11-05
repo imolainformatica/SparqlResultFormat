@@ -6,6 +6,7 @@ use RuntimeException;
 use SMW\DIWikiPage;
 use SMW\MediaWiki\MediaWikiNsContentReader;
 use SparqlResultFormat\Tests\Utils\UtilityFactory;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group semantic-mediawiki
@@ -16,7 +17,7 @@ use SparqlResultFormat\Tests\Utils\UtilityFactory;
  *
  * @author mwjames
  */
-class ParserTestCaseProcessor extends \PHPUnit_Framework_TestCase {
+class ParserTestCaseProcessor extends TestCase {
 
 	/**
 	 * @var Store
