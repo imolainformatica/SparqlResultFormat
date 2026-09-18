@@ -39,6 +39,10 @@ class SparqlResultFormatDonutChart extends SparqlResultFormatBase implements Spa
 				"mandatory" => false,
 				"description" => wfMessage("sprf.param.extraOption")
 			),
+			"noResultMessage" => array(
+				"mandatory" => false,
+				"description" => wfMessage("sprf.param.noResultMessage")
+			),
 	   );
 	   
 	   $this->extraOpts = array(
@@ -46,6 +50,30 @@ class SparqlResultFormatDonutChart extends SparqlResultFormatBase implements Spa
 					"description" => wfMessage("sprf.options.chart.title"),
 					"default" => "",
 					"example" => "|extraOption=chart.title:New Title"
+				),
+			// The JS side (ii.sparql.format.donutchart.js, defaultDonutChartTooltipContent)
+			// already implements these — only the PHP-side declaration was missing,
+			// so any page using them (as wiki.imolinfo.it's real dashboards do) hit
+			// "Extra Option ... is not declared as a valid option for this format!".
+			"chart.tooltip.label.link.show" => array(
+					"description" => wfMessage("sprf.options.chart.tooltip.label.link.show"),
+					"default" => "",
+					"example" => "|extraOption=chart.tooltip.label.link.show:false"
+				),
+			"chart.tooltip.label.link.pattern" => array(
+					"description" => wfMessage("sprf.options.chart.tooltip.label.link.pattern"),
+					"default" => "",
+					"example" => "|extraOption=chart.tooltip.label.link.pattern:http://www.google.it?q={%s}"
+				),
+			"chart.tooltip.label.pattern" => array(
+					"description" => wfMessage("sprf.options.chart.tooltip.label.pattern"),
+					"default" => "{%s}",
+					"example" => "|extraOption=chart.tooltip.label.pattern:Category {%s}"
+				),
+			"chart.tooltip.value.pattern" => array(
+					"description" => wfMessage("sprf.options.chart.tooltip.value.pattern"),
+					"default" => "{%d}",
+					"example" => "|extraOption=chart.tooltip.value.pattern:{%d} €"
 				)
 
 	   );
@@ -98,6 +126,7 @@ class SparqlResultFormatDonutChart extends SparqlResultFormatBase implements Spa
 		$divCssClass = $this->getParameterValue( $options, 'divCssClass', '' );
 		$divCssClassFullScreen = $this->getParameterValue( $options, 'divCssClassFullScreen', '' );
 		$sparqlEndpoint = $this->getSparqlProxyEndpoint();
+		$noResultMessage = $this->getParameterValue( $options, 'noResultMessage', 'Nessun dato disponibile.' );
 		$extraOption = $this->getParameterValue( $options, 'extraOption', '' );
 		$this->checkExtraOptions( $extraOption );
 		if ( is_array( $extraOption ) ) {
@@ -114,7 +143,8 @@ class SparqlResultFormatDonutChart extends SparqlResultFormatBase implements Spa
 			config.spinnerImagePath='$spinnerImagePath';
 			config.divCssClass='$divCssClass';
 			config.divCssClassFullScreen='$divCssClassFullScreen';
-			config.extraOptionsString=\"$extraOptionString\";";
+			config.extraOptionsString=\"$extraOptionString\";
+			config.noResultMessage=\"$noResultMessage\";";
 
 		return $config;
 	}
