@@ -39,6 +39,10 @@ class SparqlResultFormatBubbleChart extends SparqlResultFormatBase implements Sp
 				"mandatory" => false,
 				"description" => wfMessage("sprf.param.extraOption")
 			),
+			"noResultMessage" => array(
+				"mandatory" => false,
+				"description" => wfMessage("sprf.param.noResultMessage")
+			),
 	   );
 	   
 	    $this->extraOpts = array(
@@ -198,6 +202,7 @@ class SparqlResultFormatBubbleChart extends SparqlResultFormatBase implements Sp
 		$divCssClass = $this->getParameterValue( $options, 'divCssClass', '' );
 		$divCssClassFullScreen = $this->getParameterValue( $options, 'divCssClassFullScreen', '' );
 
+		$noResultMessage = $this->getParameterValue( $options, 'noResultMessage', 'Nessun dato disponibile.' );
 		$extraOption = $this->getParameterValue( $options, 'extraOption', '' );
 		$this->checkExtraOptions( $extraOption );
 		$extraOptionString = implode( "||", $extraOption );
@@ -209,7 +214,8 @@ class SparqlResultFormatBubbleChart extends SparqlResultFormatBase implements Sp
 			config.endpointName='$endpointIndex';
 			config.queryPrefixes=prefixes;
 			config.spinnerImagePath='$spinnerImagePath';
-			config.extraOptionsString='$extraOptionString';";
+			config.extraOptionsString='$extraOptionString';
+			config.noResultMessage='$noResultMessage';";
 
 		return $config;
 	}

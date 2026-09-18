@@ -39,6 +39,10 @@ class SparqlResultFormatPieChart extends SparqlResultFormatBase implements Sparq
 				"mandatory" => false,
 				"description" => wfMessage("sprf.param.extraOption")
 			),
+			"noResultMessage" => array(
+				"mandatory" => false,
+				"description" => wfMessage("sprf.param.noResultMessage")
+			),
 	   );
 	   
 	   $this->extraOpts = array(
@@ -128,6 +132,7 @@ class SparqlResultFormatPieChart extends SparqlResultFormatBase implements Sparq
 		$divCssClass = $this->getParameterValue( $options, 'divCssClass', '' );
 		$divCssClassFullScreen = $this->getParameterValue( $options, 'divCssClassFullScreen', '' );
 
+		$noResultMessage = $this->getParameterValue( $options, 'noResultMessage', 'Nessun dato disponibile.' );
 		$extraOption = $this->getParameterValue( $options, 'extraOption', '' );
 		$this->checkExtraOptions( $extraOption );
 		$extraOptionString = implode( "||", $extraOption );
@@ -141,7 +146,8 @@ class SparqlResultFormatPieChart extends SparqlResultFormatBase implements Sparq
 			config.spinnerImagePath='$spinnerImagePath';
 			config.divCssClass='$divCssClass';
 			config.divCssClassFullScreen='$divCssClassFullScreen';
-			config.extraOptionsString=\"$extraOptionString\";";
+			config.extraOptionsString=\"$extraOptionString\";
+			config.noResultMessage=\"$noResultMessage\";";
 
 		return $config;
 	}

@@ -18,10 +18,10 @@ function setHTTPStatusCode($code){
 }
 
 
-// URL safety checks
-if ( !$wgRequest->checkUrlExtension() ) {
-	return;
-}
+// NOTE: WebRequest::checkUrlExtension() was removed in MediaWiki 1.39
+// (it mitigated an old Internet Explorer MIME-sniffing issue that no
+// longer applies to any modern browser; MediaWiki core itself dropped
+// the check outright, with no replacement). The call used to sit here.
 
 $query = "";
 $sparqlEndpoint = "";

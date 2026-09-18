@@ -43,6 +43,10 @@ class SparqlResultFormatBarChart extends SparqlResultFormatBase implements Sparq
 			"extraOption" => array(
 					"mandatory" => false,
 					"description" => wfMessage("sprf.param.extraOption")
+				),
+			"noResultMessage" => array(
+					"mandatory" => false,
+					"description" => wfMessage("sprf.param.noResultMessage")
 				)
 		
 	   );
@@ -187,6 +191,7 @@ class SparqlResultFormatBarChart extends SparqlResultFormatBase implements Sparq
 
 		$seriesConfiguration = $this->getParameterValue( $options, 'seriesConfiguration', '{}' );
 
+		$noResultMessage = $this->getParameterValue( $options, 'noResultMessage', 'Nessun dato disponibile.' );
 		$extraOption = $this->getParameterValue( $options, 'extraOption', '' );
 		$this->checkExtraOptions( $extraOption );
 		$extraOptionString = implode( "||", $extraOption );
@@ -201,7 +206,8 @@ class SparqlResultFormatBarChart extends SparqlResultFormatBase implements Sparq
 			config.divCssClass='$divCssClass';
 			config.divCssClassFullScreen='$divCssClassFullScreen';
 			config.seriesConfiguration=$seriesConfiguration;	
-			config.extraOptionsString=\"$extraOptionString\";";
+			config.extraOptionsString=\"$extraOptionString\";
+			config.noResultMessage=\"$noResultMessage\";";
 
 		return $config;
 	}

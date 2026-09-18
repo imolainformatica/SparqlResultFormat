@@ -46,6 +46,10 @@ spqlib.barchart = ( function () {
 		if ( !head || head.length < 2 ) {
 			throw 'Too few fields in sparql result. Need at least 2 columns';
 		}
+		if ( data.length === 0 ) {
+			$( '#' + config.divId ).html( "<div class='ii-sprf-no-result warning'>" + ( config.noResultMessage || '' ) + '</div>' );
+			return;
+		}
 		var fieldLabel = head[ 0 ],
 			numSeries = head.length - 1,
 			labels = [],

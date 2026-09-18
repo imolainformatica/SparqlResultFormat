@@ -6,10 +6,10 @@ if ( getenv( 'MW_INSTALL_PATH' ) === false ) {
 
 require __DIR__ . '/../../../../includes/WebStart.php';
 
-// URL safety checks
-if ( !$wgRequest->checkUrlExtension() ) {
-	return;
-}
+// NOTE: WebRequest::checkUrlExtension() was removed in MediaWiki 1.39
+// (it mitigated an old Internet Explorer MIME-sniffing issue that no
+// longer applies to any modern browser; MediaWiki core itself dropped
+// the check outright, with no replacement). The call used to sit here.
 
 try {
 	if ( isset( $_REQUEST['csv_file_name'] ) ) {
